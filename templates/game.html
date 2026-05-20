@@ -1,12 +1,25 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ game.name }} - Ministeam{% endblock %}
+{% block title %} {{ game.name }} - Ministeam {% endblock %}
 
 {% block content %}
+{% if show_modal %}
+<div class="modal-overlay">
+    <div class="modal-content">
+        <h2>Item adicionado ao carrinho!</h2>
+        <p>"{{ game.name }}" está pronto no seu carrinho.</p>
+        <div class="modal-actions">
+            <a href="{{ url_for('index') }}" class="btn-blue">Continuar Comprando</a>
+            <a href="{{ url_for('cart') }}" class="btn-green">Ver meu Carrinho</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <div class="game-detail">
     <h1>{{ game.name }}</h1>
     <div class="game-content">
-        <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}" onerror="this.style.display='none'">
+        <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}" class="main-img">
 
         <div class="game-sidebar">
             <p class="description">{{ game.description }}</p>
@@ -17,15 +30,28 @@
                     </span>
             </div>
 
+            {% if 'library' in session and game.id in session['library'] %}
+            <div class="owned-banner">
+                <strong>Você já possui este jogo na sua biblioteca.</strong><br>
+                Você ainda pode comprá-lo como presente para um amigo abaixo.
+            </div>
+            {% endif %}
+
             <div class="purchase-box">
                 <span class="price-large">R$ {{ "%.2f"|format(game.price) }}</span>
 
                 <form action="{{ url_for('add_to_cart', game_id=game.id) }}" method="POST">
                     {% if game.age_rating > 0 %}
+                    {% if session.get('user_dob') %}
+                    <p style="font-size: 13px; color: #66c0f4; margin-bottom: 12px;">
+                        ✔ Idade verificada automaticamente pelo seu perfil.
+                    </p>
+                    {% else %}
                     <div class="age-gate">
                         <label for="dob">Data de Nascimento:</label><br>
                         <input type="date" id="dob" name="dob" required>
                     </div>
+                    {% endif %}
                     {% else %}
                     <input type="hidden" name="dob" value="none">
                     <p style="font-size: 12px; margin-bottom: 10px; color: #8f98a0;">
@@ -33,7 +59,12 @@
                     </p>
                     {% endif %}
 
-                    <button type="submit" class="btn-green">Adicionar ao Carrinho</button>
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                        {% if game.id not in session['library'] %}
+                        <button type="submit" name="purchase_type" value="self" class="btn-green">Comprar para a minha conta</button>
+                        {% endif %}
+                        <button type="submit" name="purchase_type" value="gift" class="btn-blue" style="color: #fff; background: #3a688c;">Comprar como presente</button>
+                    </div>
                 </form>
             </div>
         </div>

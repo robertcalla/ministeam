@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Finalizar Compras - Ministeam{% endblock %}
+
+{% block content %}
+<h1>Revisão e Pagamento</h1>
+
+<form action="{{ url_for('process_payment') }}" method="POST">
+    <div class="checkout-container">
+        <div class="payment-methods">
+            <h3 style="margin-bottom: 15px;">Formas de Pagamento</h3>
+
+            {% if session['wallet'] > 0 %}
+            <div style="background: #171a21; padding: 15px; margin-bottom: 15px; border: 1px solid #2a475e;">
+                <label style="display: flex; align-items: center; gap: 10px; border: none; background: transparent; padding: 0; margin: 0;">
+                    <input type="checkbox" id="use_wallet" name="use_wallet" checked onchange="toggleWalletLogic({{ total }}, {{ session['wallet'] }})">
+                    <span>Usar saldo da minha Carteira Steam (Disponível: <strong>R$ {{ "%.2f"|format(session['wallet']) }}</strong>)</span>
+                </label>
+            </div>
+            {% else %}
+            <div style="background: rgba(0,0,0,0.1); padding: 15px; margin-bottom: 15px; border: 1px dashed #b52a1c;">
+                <span style="color: #b52a1c; font-size: 13px;">Saldo da Carteira Steam: <strong>R$ 0,00</strong> (Método complementar indisponível).</span>
+            </div>
+            {% endif %}
+
+            <div id="secondary_method_container">
+                <p style="color: #8f98a0; font-size: 13px; margin-bottom: 10px;" id="wallet_alert"></p>
+                <label><input type="radio" name="payment_method" value="Cartão de Crédito" id="method_cc"> MasterCard / Visa</label>
+                <label><input type="radio" name="payment_method" value="Pix" id="method_pix"> Pix</label>
+                <label><input type="radio" name="payment_method" value="Boleto" id="method_boleto"> Boleto Bancário</label>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <button type="submit" class="btn-green" style="width: 100%; font-size: 16px; padding: 15px;">Confirmar e Pagar</button>
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="{{ url_for('cart') }}" style="color: #8f98a0; font-size: 13px;">Voltar ao Carrinho</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="checkout-summary">
+            <h3 style="color: #66c0f4; border-bottom: 1px solid #2a475e; padding-bottom: 10px; margin-bottom: 15px;">Resumo do Pedido</h3>
+            <ul style="list-style: none; margin-bottom: 20px; font-size: 14px;">
+                {% for item in cart %}
+                <li style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span style="flex: 1;">
+                                {{ item.name }}
+                                {% if item.is_gift %}
+                                    <br><span style="color: #ff9900; font-size: 12px;">(🎁 para {{ item.recipient_name }})</span>
+                                {% endif %}
+                            </span>
+                    <span>R$ {{ "%.2f"|format(item.price) }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            <h2 style="display: flex; justify-content: space-between; font-size: 18px;">
+                <span>Total:</span>
+                <span class="total-price">R$ {{ "%.2f"|format(total) }}</span>
+            </h2>
+        </div>
+    </div>
+</form>
+
+<script>
+    function toggleWalletLogic(total, walletBalance) {
+        const checkbox = document.getElementById('use_wallet');
+        const container = document.getElementById('secondary_method_container');
+        const alertText = document.getElementById('wallet_alert');
+        const inputs = container.querySelectorAll('input[type="radio"]');
+        let usandoCarteira = checkbox ? checkbox.checked : false;
+
+        if (usandoCarteira) {
+            if (walletBalance >= total) {
+                container.style.display = 'none';
+                inputs.forEach(i => i.required = false);
+            } else {
+                container.style.display = 'block';
+                alertText.innerHTML = `O saldo não cobre o total. Selecione um método complementar para os restantes <strong style="color: #fff;">R$ ${(total - walletBalance).toFixed(2)}</strong>:`;
+                inputs.forEach(i => i.required = true);
+            }
+        } else {
+            container.style.display = 'block';
+            alertText.innerHTML = `Selecione um método de pagamento para o valor total de <strong style="color: #fff;">R$ ${total.toFixed(2)}</strong>:`;
+            inputs.forEach(i => i.required = true);
+        }
+    }
+    toggleWalletLogic({{ total }}, {{ session['wallet'] }});
+</script>
+{% endblock %}

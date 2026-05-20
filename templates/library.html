@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Minha Biblioteca - Ministeam{% endblock %}
+
+{% block content %}
+<h1>Minha Biblioteca de Jogos</h1>
+<p style="color: #8f98a0; margin-bottom: 20px;">Você possui {{ games|length }} jogo(s) vinculado(s) à sua conta.</p>
+
+<div class="game-grid">
+    {% if games %}
+    {% for id, game in games.items() %}
+    <div class="game-card" style="cursor: default;">
+        <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}">
+        <div class="game-info">
+            <h3>{{ game.name }}</h3>
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+                <button class="btn-green" style="width: 100%; background: #2a475e; color: #66c0f4;">Jogar</button>
+                <a href="{{ url_for('game', game_id=game.id) }}" class="btn-blue" style="text-align: center; text-decoration: none; font-size: 13px; padding: 10px;">
+                    Ir para a Loja
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div style="grid-column: 1/-1; background: rgba(0,0,0,0.2); padding: 40px; text-align: center;">
+        <p style="margin-bottom: 20px; color: #8f98a0;">Nenhum jogo adquirido ainda.</p>
+        <a href="{{ url_for('index') }}" class="btn-blue">Ir para a Loja</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

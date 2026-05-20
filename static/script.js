@@ -1,4 +1,4 @@
-// Remove as mensagens de erro/sucesso após 4 segundos para a tela não ficar poluída
+// remove as mensagens de erro ou sucesso apos 4 segundos para a tela nao ficar poluida
 document.addEventListener("DOMContentLoaded", function() {
     const flashes = document.querySelectorAll('.flash');
     if (flashes.length > 0) {
@@ -10,8 +10,3 @@ document.addEventListener("DOMContentLoaded", function() {
         }, 4000);
     }
 });
-
-// Função para simular o clique em "Finalizar Compra" do seu UC01
-function checkout() {
-    alert("Iniciando fluxo de pagamento... (Isso chamaria a próxima etapa do seu Caso de Uso!)");
-}

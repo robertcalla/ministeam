@@ -7,7 +7,7 @@
 <div class="game-grid">
     {% for id, game in games.items() %}
     <div class="game-card">
-        <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}" onerror="this.style.display='none'">
+        <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}">
         <div class="game-info">
             <h3>{{ game.name }}</h3>
             <div class="price-action">

@@ -26,6 +26,11 @@ def ensure_session_values():
     if 'user_dob' not in session:
         session['user_dob'] = None
 
+    if 'family' not in session:
+        session['family'] = None  
+    if 'family_cooldown' not in session:
+        session['family_cooldown'] = False
+
         # dados
     if 'user_profile' not in session:
         session['user_profile'] = {
@@ -217,6 +222,43 @@ def process_payment():
 
     flash(f"Compra finalizada com sucesso! ({', '.join(detalhes_pagamento)})", 'sucesso')
     return redirect(url_for('index'))
+
+@app.route('/family')
+def family():
+    # Passamos o dicionário GAMES e FRIENDS para a tela montar a biblioteca compartilhada e a lista de convites
+    return render_template('family.html', friends=FRIENDS, games=GAMES)
+
+@app.route('/create_family', methods=['POST'])
+def create_family():
+    family_name = request.form.get('family_name')
+
+    # Usuário já pertence a uma família
+    if session.get('family'):
+        flash("Você precisa sair da sua família atual antes de criar uma nova.", "error")
+        return redirect(url_for('family'))
+
+    # Período de Carência (Cooldown)
+    if session.get('family_cooldown'):
+        flash("Você saiu de uma família recentemente. A Steam exige um período de carência de 1 ano para criar ou entrar em um novo grupo.", "error")
+        return redirect(url_for('family'))
+
+    # Inicialização da Biblioteca Compartilhada
+    # Mapeamos os jogos que o usuário já tem para o pool da família
+    shared_library = list(set(session.get('library', [])))
+
+    # Criação do objeto Familia
+    session['family'] = {
+        'id': f"fam_{datetime.now().timestamp()}",
+        'name': family_name,
+        'created_at': datetime.now().strftime("%d/%m/%Y %H:%M"),
+        'founder': session['user_profile']['name'],
+        'members': [session['user_profile']['name']], # O fundador é o primeiro membro
+        'library_pool': shared_library
+    }
+    
+    session.modified = True
+    flash(f"Família '{family_name}' criada com sucesso!", "sucesso")
+    return redirect(url_for('family'))
 
 #limpeza dos cookies
 @app.route('/reset')

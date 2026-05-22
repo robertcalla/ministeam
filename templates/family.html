@@ -20,8 +20,9 @@
 {% if session['family'] %}
     <div style="background: rgba(0,0,0,0.2); border-top: 2px solid #5c7e10; padding: 25px; margin-bottom: 20px;">
         <h2 style="color: #d2efa9; margin-bottom: 10px;">👪 {{ session['family']['name'] }}</h2>
-        <p style="color: #8f98a0; font-size: 13px; margin-bottom: 20px;">Fundadada por {{ session['family']['founder'] }} | Regras Parentais Ativas</p>
-        
+            <p style="color: #8f98a0; font-size: 13px; margin-bottom: 20px;">
+            Fundada por <strong>{{ session['family']['founder'] }}</strong> em {{ session['family']['created_at'] }} | Regras Parentais Ativas
+            </p>        
         <div style="display: flex; gap: 30px; flex-direction: column;">
             
             <div>
@@ -42,7 +43,7 @@
                                     </span>
                                     <div style="font-size: 12px; color: #8f98a0; margin-top: 5px;">
                                         {% if not elegivel %}
-                                            <span style="color: #b52a1c; font-weight: bold;">❌ Não elegível para Compartilhamento Familiar [FE03]</span>
+                                            <span style="color: #b52a1c; font-weight: bold;">❌ Não elegível para Compartilhamento Familiar</span>
                                         {% else %}
                                             Licenças no Banco: <strong>{{ total_lic }}</strong> | 
                                             Em uso por parentes: <strong style="color: {% if npc_jogando %}#ff9900{% else %}#8f98a0{% endif %};">{% if npc_jogando %}1{% else %}0{% endif %}</strong>
@@ -84,7 +85,7 @@
                     {% endif %}
                 </div>
 
-            <div style="margin-top: 20px;">
+            <div style="margin-top: 20px; margin-bottom: 20px;">
                 <h3 style="color: #66c0f4; border-bottom: 1px solid #2a475e; padding-bottom: 5px; margin-bottom: 15px;">👥 Membros da Família ({{ session['family']['members']|length }}/6) </h3>
                 <ul style="list-style: none; color: white; display: flex; flex-direction: column; gap: 8px;">
                     {% for member in session['family']['members'] %}
@@ -100,9 +101,14 @@
 
         </div>
     </div>
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px;">
+    <div style="margin-top: 30px; margin-bottom: 15px;">
+            <h3 style="color: #ffffff; margin-bottom: 10px;">Convidar Amigos</h3>
+            <input type="text" id="friendSearch" onkeyup="filterFriends()" placeholder="Pesquisar amigo por nome..." style="width: 100%; padding: 12px; background: #1b2838; color: white; border: 1px solid #2a475e; border-radius: 3px;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px;" id="friendsGrid">
             {% for fid, fname in friends.items() %}
-                <div style="background: #1b2838; padding: 15px; border-radius: 3px; display: flex; flex-direction: column; gap: 10px; align-items: center; border: 1px solid rgba(255,255,255,0.1);">
+                <div class="friend-card" data-name="{{ fname | lower }}" style="background: #1b2838; padding: 15px; border-radius: 3px; display: flex; flex-direction: column; gap: 10px; align-items: center; border: 1px solid rgba(255,255,255,0.1);">
                     <div style="width: 50px; height: 50px; border-radius: 50%; background: #2a475e; border: 2px solid #66c0f4; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;">
                         {{ fname[0] }}
                     </div>
@@ -129,7 +135,25 @@
         </form>
     </div>
 {% endif %}
-
+<script>
+function filterFriends() {
+    // Obtém o valor digitado e converte para minúsculas
+    var input = document.getElementById('friendSearch').value.toLowerCase();
+    
+    // Seleciona todos os cartões de amigos
+    var cards = document.querySelectorAll('.friend-card');
+    
+    // Percorre cada cartão e esconde se não coincidir com a pesquisa
+    cards.forEach(function(card) {
+        var name = card.getAttribute('data-name');
+        if (name.includes(input)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+</script>
 <style>
 @keyframes blink {
     0% { opacity: 1; }

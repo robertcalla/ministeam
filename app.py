@@ -180,9 +180,15 @@ def proceed_checkout():
 
 @app.route('/library')
 def library():
-    owned_games = {gid: GAMES[gid] for gid in session['library'] if gid in GAMES}
+    # Usa a estrutura 'set' para juntar a biblioteca pessoal e a da família sem duplicatas
+    jogos_disponiveis = set(session['library'])
+    
+    if session.get('family'):
+        jogos_disponiveis.update(session['family']['library_pool'])
+        
+    owned_games = {gid: GAMES[gid] for gid in jogos_disponiveis if gid in GAMES}
+    
     return render_template('library.html', games=owned_games)
-
 @app.route('/checkout')
 def checkout():
     if not session['cart']:
@@ -296,6 +302,12 @@ def family_play(game_id):
         return redirect(url_for('family'))
 
     game_data = GAMES.get(game_id)
+
+    # TRAVA: Impede de abrir um jogo se já houver outro em execução
+    if session.get('active_game') and session.get('active_game') != game_id:
+        jogo_anterior = GAMES.get(session['active_game'])['name']
+        flash(f"Bloqueio: Você já está jogando '{jogo_anterior}'. Feche-o primeiro antes de iniciar outro título.", "error")
+        return redirect(url_for('family'))
 
     # [FE03] Jogo Não Elegível para Compartilhamento (Simulando que o jogo '3' possui trava de desenvolvedor)
     if game_id == '3':

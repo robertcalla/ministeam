@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}Gerenciamento de Família - Ministeam{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1>Gerenciamento da Família da Steam</h1>
+    
+    <div style="background: #171a21; padding: 10px; border: 1px dashed #66c0f4; display: flex; gap: 10px; border-radius: 4px;">
+        <span style="color: #66c0f4; font-size: 12px; align-self: center; font-weight: bold;">🧪 PAINEL DE TESTES:</span>
+        <a href="{{ url_for('family_toggle_role') }}" class="btn-blue" style="font-size: 11px; padding: 5px 10px;">
+            Perfil: <strong>{{ session['user_role'] }}</strong>
+        </a>
+        <a href="{{ url_for('family_toggle_offline') }}" class="btn-blue" style="font-size: 11px; padding: 5px 10px; background: {% if session['offline_mode'] %}#b52a1c{% else %}#2a475e{% endif %}; color: white;">
+            Modo Offline: <strong>{% if session['offline_mode'] %}ATIVADO{% else %}DESATIVADO{% endif %}</strong>
+        </a>
+    </div>
+</div>
+
+{% if session['family'] %}
+    <div style="background: rgba(0,0,0,0.2); border-top: 2px solid #5c7e10; padding: 25px; margin-bottom: 20px;">
+        <h2 style="color: #d2efa9; margin-bottom: 10px;">👪 {{ session['family']['name'] }}</h2>
+            <p style="color: #8f98a0; font-size: 13px; margin-bottom: 20px;">
+            Fundada por <strong>{{ session['family']['founder'] }}</strong> em {{ session['family']['created_at'] }} | Regras Parentais Ativas
+            </p>        
+        <div style="display: flex; gap: 30px; flex-direction: column;">
+            
+            <div>
+                <h3 style="color: #66c0f4; border-bottom: 1px solid #2a475e; padding-bottom: 5px; margin-bottom: 15px;">🎮 Pool de Licenças da Família</h3>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    {% for id, game in games.items() %}
+                        {% if id in session['family']['library_pool'] %}
+                            {% set elegivel = (id != '3') %}
+                            {% set total_lic = session['family']['licenses'].get(id, 0) if elegivel else 0 %}
+                            {% set npc_jogando = session['family']['occupied_by_others'].get(id, False) if elegivel else False %}
+                            
+                            <div style="background: #171a21; padding: 15px; border: 1px solid #2a475e; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="font-size: 16px; color: white;">{{ game.name }}</strong> 
+                                    <span class="age-badge {% if game.age_rating >= 18 %}mature{% endif %}" style="font-size: 10px; padding: 1px 5px; margin-left: 10px;">
+                                        {% if game.age_rating == 0 %}Livre{% else %}+{{ game.age_rating }}{% endif %}
+                                    </span>
+                                    <div style="font-size: 12px; color: #8f98a0; margin-top: 5px;">
+                                        {% if not elegivel %}
+                                            <span style="color: #b52a1c; font-weight: bold;">❌ Não elegível para Compartilhamento Familiar</span>
+                                        {% else %}
+                                            Licenças no Banco: <strong>{{ total_lic }}</strong> | 
+                                            Em uso por parentes: <strong style="color: {% if npc_jogando %}#ff9900{% else %}#8f98a0{% endif %};">{% if npc_jogando %}1{% else %}0{% endif %}</strong>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    {% if session['active_game'] == id %}
+                                        <span style="color: #79a016; font-size: 12px; font-weight: bold; animation: blink 1s infinite;">● Executando...</span>
+                                        <a href="{{ url_for('family_stop') }}" class="btn-blue" style="background: #b52a1c; color: white;">Fechar Jogo</a>
+                                    {% else %}
+                                        {% if elegivel %}
+                                            <a href="{{ url_for('family_toggle_npc', game_id=id) }}" class="btn-blue" style="font-size: 11px; background: #213545;">
+                                                {% if npc_jogando %}🔓 Liberar Parente{% else %}🔒 Simular Parente Jogando{% endif %}
+                                            </a>
+                                            <a href="{{ url_for('family_play', game_id=id) }}" class="btn-green" style="font-weight: bold;">Jogar</a>
+                                        {% else %}
+                                            <button class="btn-blue" style="background: #333; color: #555; cursor: not-allowed;" disabled>Indisponível</button>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            {% if session['show_pe01_for'] == id %}
+                                <div style="background: #213545; padding: 12px; margin-top: -10px; margin-bottom: 10px; border: 1px solid #ff9900; border-top: none; display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: 13px; color: #ff9900;">⚠️ Deseja comprar uma licença adicional para o pool da família?</span>
+                                    <a href="{{ url_for('family_buy_extra', game_id=id) }}" class="btn-green" style="font-size: 12px; padding: 5px 12px;">Comprar Cópia Extra (R$ {{ "%.2f"|format(game.price) }})</a>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if session['family']['library_pool']|length == 0 %}
+                        <div style="background: rgba(0,0,0,0.1); padding: 25px; text-align: center; color: #8f98a0; border: 1px dashed #2a475e; border-radius: 2px;">
+                            Nenhum jogo compartilhado no cofre da família ainda.<br>
+                            <span style="font-size: 12px;">Compre um jogo na loja ou convide amigos para unificar as bibliotecas!</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+            <div style="margin-top: 20px; margin-bottom: 20px;">
+                <h3 style="color: #66c0f4; border-bottom: 1px solid #2a475e; padding-bottom: 5px; margin-bottom: 15px;">👥 Membros da Família ({{ session['family']['members']|length }}/6) </h3>
+                <ul style="list-style: none; color: white; display: flex; flex-direction: column; gap: 8px;">
+                    {% for member in session['family']['members'] %}
+                        <li style="padding: 12px; background: #1b2838; border-left: 3px solid #79a016; font-size: 14px; display: flex; justify-content: space-between; align-items: center;">
+                            <span>{% if loop.first %}👑 {% else %}👤 {% endif %}{{ member.name }}</span>
+                            <span style="font-size: 11px; background: #171a21; color: #8f98a0; padding: 3px 10px; border-radius: 10px; border: 1px solid #2a475e;">
+                                <strong>{{ member.role }}</strong>
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div style="margin-top: 30px; margin-bottom: 15px;">
+            <h3 style="color: #ffffff; margin-bottom: 10px;">Convidar Amigos</h3>
+            <input type="text" id="friendSearch" onkeyup="filterFriends()" placeholder="Pesquisar amigo por nome..." style="width: 100%; padding: 12px; background: #1b2838; color: white; border: 1px solid #2a475e; border-radius: 3px;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px;" id="friendsGrid">
+            {% for fid, fname in friends.items() %}
+                <div class="friend-card" data-name="{{ fname | lower }}" style="background: #1b2838; padding: 15px; border-radius: 3px; display: flex; flex-direction: column; gap: 10px; align-items: center; border: 1px solid rgba(255,255,255,0.1);">
+                    <div style="width: 50px; height: 50px; border-radius: 50%; background: #2a475e; border: 2px solid #66c0f4; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;">
+                        {{ fname[0] }}
+                    </div>
+                    <strong style="color: white; font-size: 14px;">{{ fname }}</strong>
+                    
+                    <div style="display: flex; gap: 5px; width: 100%;">
+                        <a href="{{ url_for('family_invite', friend_id=fid, role='Adulto') }}" class="btn-blue" style="font-size: 11px; flex: 1; text-align: center; text-decoration: none; padding: 6px 0;">+ Adulto</a>
+                        <a href="{{ url_for('family_invite', friend_id=fid, role='Criança') }}" class="btn-green" style="font-size: 11px; flex: 1; text-align: center; text-decoration: none; padding: 6px 0; background: #3a688c; color: white;">+ Criança</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+{% else %}
+    <div style="background: rgba(0,0,0,0.2); padding: 30px; max-width: 500px; margin: 40px auto; border: 1px solid #2a475e;">
+        <h2 style="color: #ffffff; margin-bottom: 15px; text-align: center;">Criar um Novo Grupo Familiar</h2>
+        <p style="color: #8f98a0; font-size: 14px; margin-bottom: 25px; text-align: center;">Mapeie sua biblioteca automaticamente, compartilhe jogos e gerencie regras parentais.</p>
+        
+        <form action="{{ url_for('create_family') }}" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+            <div>
+                <label style="color: #66c0f4; font-size: 13px; font-weight: bold;">Nome da Família Steam</label>
+                <input type="text" name="family_name" required placeholder="Ex: Família Silva" style="width: 100%; padding: 12px; margin-top: 5px; background: #1b2838; color: white; border: 1px solid #3a688c; border-radius: 2px;">
+            </div>
+            <button type="submit" class="btn-green" style="padding: 15px; font-size: 16px; font-weight: bold;">Confirmar e Unificar Licenças</button>
+        </form>
+    </div>
+{% endif %}
+<script>
+function filterFriends() {
+    // Obtém o valor digitado e converte para minúsculas
+    var input = document.getElementById('friendSearch').value.toLowerCase();
+    
+    // Seleciona todos os cartões de amigos
+    var cards = document.querySelectorAll('.friend-card');
+    
+    // Percorre cada cartão e esconde se não coincidir com a pesquisa
+    cards.forEach(function(card) {
+        var name = card.getAttribute('data-name');
+        if (name.includes(input)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+</script>
+<style>
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+}
+</style>
+{% endblock %}

@@ -10,7 +10,7 @@ GAMES = {
     '3': {'id': '3', 'name': 'Corrida Divertida', 'price': 45.00, 'age_rating': 0, 'description': 'Corridas para toda a família. Karts coloridos e pistas malucas!'}
 }
 
-FRIENDS = {'1': 'Alan Turing', '2': 'Robert Ronald', '3': 'Isabelle Nazareth', '4': 'Hugo Barillo'}
+FRIENDS = {'1': 'Alan Turing', '2': 'Robert Ronald', '3': 'Isabelle Nazareth', '4': 'Hugo Barillo','5':'Ada Lovelace', '6': 'Grace Hopper'}
 
 @app.before_request
 def ensure_session_values():
@@ -26,17 +26,25 @@ def ensure_session_values():
     if 'user_dob' not in session:
         session['user_dob'] = None
 
-    if 'family' not in session:
-        session['family'] = None  
-    if 'family_cooldown' not in session:
-        session['family_cooldown'] = False
-
         # dados
     if 'user_profile' not in session:
         session['user_profile'] = {
             'name': 'Usuário Muito Legal',
             'details': 'Suas informações ou notas de IHC aqui...'
         }
+    
+    if 'family' not in session:
+        session['family'] = None
+    if 'family_cooldown' not in session:
+        session['family_cooldown'] = False
+    if 'user_role' not in session:
+        session['user_role'] = 'Adulto'  # RN03: Pode ser 'Adulto' ou 'Criança'
+    if 'offline_mode' not in session:
+        session['offline_mode'] = False  # A01: Simulação do modo offline
+    if 'active_game' not in session:
+        session['active_game'] = None  # Guarda o ID do jogo que o usuário está jogando agora
+    if 'show_pe01_for' not in session:
+        session['show_pe01_for'] = None  # Controla a exibição do ponto de extensão PE01
 
 @app.route('/')
 def index():
@@ -213,9 +221,29 @@ def process_payment():
                 session['gifts_sent'][fid] = []
             session['gifts_sent'][fid].append(item['id'])
             flash(f"Presente '{item['name']}' enviado para {item['recipient_name']}!", 'sucesso')
+            
+            # CORREÇÃO: Unificar licença de presente caso o destinatário seja da família
+            if session.get('family'):
+                # Verifica se o nome do destinatário existe na lista de membros da família
+                amigo_na_familia = any(m['name'] == item['recipient_name'] for m in session['family']['members'])
+                
+                if amigo_na_familia:
+                    if item['id'] not in session['family']['library_pool']:
+                        session['family']['library_pool'].append(item['id'])
+                    
+                    session['family']['licenses'][item['id']] = session['family']['licenses'].get(item['id'], 0) + 1
+                    flash(f"Como {item['recipient_name']} está na sua Família, a cópia de '{item['name']}' foi adicionada ao Pool Unificado!", 'sucesso')
+
         else:
             if item['id'] not in session['library']:
                 session['library'].append(item['id'])
+                
+                # Sincronização automática de compras próprias com a Família
+                if session.get('family'):
+                    if item['id'] not in session['family']['library_pool']:
+                        session['family']['library_pool'].append(item['id'])
+                    
+                    session['family']['licenses'][item['id']] = session['family']['licenses'].get(item['id'], 0) + 1
 
     session['cart'] = []
     session.modified = True
@@ -225,41 +253,199 @@ def process_payment():
 
 @app.route('/family')
 def family():
-    # Passamos o dicionário GAMES e FRIENDS para a tela montar a biblioteca compartilhada e a lista de convites
     return render_template('family.html', friends=FRIENDS, games=GAMES)
 
 @app.route('/create_family', methods=['POST'])
 def create_family():
     family_name = request.form.get('family_name')
 
-    # Usuário já pertence a uma família
     if session.get('family'):
         flash("Você precisa sair da sua família atual antes de criar uma nova.", "error")
         return redirect(url_for('family'))
 
-    # Período de Carência (Cooldown)
     if session.get('family_cooldown'):
-        flash("Você saiu de uma família recentemente. A Steam exige um período de carência de 1 ano para criar ou entrar em um novo grupo.", "error")
+        flash("Ação bloqueada: Período de carência de 1 ano ativo para esta conta.", "error")
         return redirect(url_for('family'))
 
-    # Inicialização da Biblioteca Compartilhada
-    # Mapeamos os jogos que o usuário já tem para o pool da família
+    # Mapeia os jogos que o usuário logado possui para o pool inicial
     shared_library = list(set(session.get('library', [])))
 
-    # Criação do objeto Familia
+    # [RN01 / RN03] Criamos a família APENAS com o fundador logado por padrão
     session['family'] = {
         'id': f"fam_{datetime.now().timestamp()}",
         'name': family_name,
         'created_at': datetime.now().strftime("%d/%m/%Y %H:%M"),
         'founder': session['user_profile']['name'],
-        'members': [session['user_profile']['name']], # O fundador é o primeiro membro
-        'library_pool': shared_library
+        # Agora members é uma lista de dicionários para guardar o cargo/role de cada um
+        'members': [{'name': session['user_profile']['name'], 'role': session.get('user_role', 'Adulto')}],
+        'library_pool': shared_library,
+        'licenses': {gid: 1 for gid in shared_library}, 
+        'occupied_by_others': {} 
     }
     
     session.modified = True
     flash(f"Família '{family_name}' criada com sucesso!", "sucesso")
     return redirect(url_for('family'))
 
+# ---- ROTAS EXCLUSIVAS DO FLUXO "COMPARTILHAR BIBLIOTECA" ----
+
+@app.route('/family/play/<game_id>')
+def family_play(game_id):
+    if not session.get('family'):
+        flash("Você não pertence a uma família.", "error")
+        return redirect(url_for('family'))
+
+    game_data = GAMES.get(game_id)
+
+    # [FE03] Jogo Não Elegível para Compartilhamento (Simulando que o jogo '3' possui trava de desenvolvedor)
+    if game_id == '3':
+        flash("Bloqueio: Este jogo possui restrições do Desenvolvedor/Estúdio que impedem o compartilhamento familiar.", "error")
+        return redirect(url_for('family'))
+
+    # [RN03] Controles Parentais (Se for Criança, bloqueia jogos com classificação 18 anos)
+    if session.get('user_role') == 'Criança' and game_data['age_rating'] >= 18:
+        flash(f"Bloqueio: Controle Parental Ativo. Membros classificados como 'Criança' não podem jogar {game_data['name']} (+18).", "error")
+        return redirect(url_for('family'))
+
+    # [A01] Validação de Licença prévia para Modo Offline
+    if session.get('offline_mode') and session.get('active_game') != game_id:
+        # Na simulação, se já estava jogando antes de ficar offline, permite continuar. Se não, bloqueia.
+        flash("Modo Offline [A01]: O sistema permitiu a execução pois validou a licença no último login online.", "sucesso")
+        session['active_game'] = game_id
+        session.modified = True
+        return redirect(url_for('family'))
+
+    # Contagem de Licenças 
+    total_licencas = session['family']['licenses'].get(game_id, 0) 
+    
+    # NOVA TRAVA: Se a família não tem o jogo, bloqueia logo de cara!
+    if total_licencas == 0:
+        flash("Bloqueio: Ninguém da sua família comprou este jogo ainda.", "error")
+        return redirect(url_for('family'))
+
+    em_uso_por_outros = 1 if session['family']['occupied_by_others'].get(game_id, False) else 0
+    
+
+    if em_uso_por_outros >= total_licencas:
+        flash(f"Bloqueio: Todas as licenças ({total_licencas}) estão em uso. Sua família não possui licenças disponíveis para este título no momento.", "error")
+        session['show_pe01_for'] = game_id 
+        session.modified = True
+        return redirect(url_for('family'))
+
+    # Fluxo Principal - Sucesso
+    session['active_game'] = game_id
+    session['show_pe01_for'] = None
+    session.modified = True
+    flash(f"Jogo '{game_data['name']}' iniciado! Licença temporária alocada com sucesso. Saves e Conquistas serão individuais.", "sucesso")
+    return redirect(url_for('family'))
+
+@app.route('/family/stop')
+def family_stop():
+    session['active_game'] = None
+    session.modified = True
+    flash("Jogo encerrado. A licença foi devolvida ao banco da família.", "sucesso")
+    return redirect(url_for('family'))
+
+# ---- ROTAS DE SIMULAÇÃO PARA APRESENTAÇÃO ACADÊMICA ----
+
+@app.route('/family/toggle_npc/<game_id>')
+def family_toggle_npc(game_id):
+    """ Simula que outro membro da família abriu o jogo em outro computador """
+    if 'family' in session and session['family']:
+        atual = session['family']['occupied_by_others'].get(game_id, False)
+        session['family']['occupied_by_others'][game_id] = not atual
+        session.modified = True
+        status = "OCUPOU" if not atual else "LIBEROU"
+        flash(f"Simulação: Outro membro da família {status} uma licença deste jogo!", "sucesso")
+    return redirect(url_for('family'))
+
+@app.route('/family/toggle_role')
+def family_toggle_role():
+    """ Alterna o perfil entre Adulto e Criança para testar a RN03 """
+    session['user_role'] = 'Criança' if session.get('user_role', 'Adulto') == 'Adulto' else 'Adulto'
+    session.modified = True
+    flash(f"Perfil alterado para: {session['user_role']}", "sucesso")
+    return redirect(url_for('family'))
+
+@app.route('/family/toggle_offline')
+def family_toggle_offline():
+    """ Alterna o modo offline para testar o fluxo alternativo A01 """
+    session['offline_mode'] = not session.get('offline_mode', False)
+    session.modified = True
+    status = "LIGADO" if session['offline_mode'] else "DESLIGADO"
+    flash(f"Modo Offline da Steam: {status} [A01]", "sucesso")
+    return redirect(url_for('family'))
+
+@app.route('/family/buy_extra/<game_id>')
+def family_buy_extra(game_id):
+    """ Ponto de Extensão [PE01]: Compra uma cópia extra para o banco da família """
+    game_data = GAMES.get(game_id)
+    if session['wallet'] >= game_data['price']:
+        session['wallet'] -= game_data['price']
+        session['family']['licenses'][game_id] = session['family']['licenses'].get(game_id, 1) + 1
+        session['show_pe01_for'] = None
+        session.modified = True
+        flash(f"[PE01] Sucesso: Cópia adicional comprada! Banco da família agora possui {session['family']['licenses'][game_id]} licenças unificadas de '{game_data['name']}'.", "sucesso")
+    else:
+        flash("Saldo insuficiente na carteira para comprar uma cópia adicional.", "error")
+    return redirect(url_for('family'))
+
+@app.route('/family/invite/<friend_id>/<role>')
+def family_invite(friend_id, role):
+    if not session.get('family'):
+        flash("Você precisa criar uma família primeiro.", "error")
+        return redirect(url_for('family'))
+    
+    family_data = session['family']
+    
+    # [RN01] Restrição de Cardinalidade: Limite Máximo de 6 membros
+    if len(family_data['members']) >= 6:
+        flash("Bloqueio: Uma Família não pode conter mais do que 6 instâncias de Usuário ativas.", "error")
+        return redirect(url_for('family'))
+    
+    friend_name = FRIENDS.get(friend_id)
+    if not friend_name:
+        flash("Amigo não encontrado.", "error")
+        return redirect(url_for('family'))
+    
+    # Valida se o amigo já foi adicionado
+    if any(m['name'] == friend_name for m in family_data['members']):
+        flash(f"{friend_name} já faz parte desta família.", "error")
+        return redirect(url_for('family'))
+    
+    # Adiciona o novo membro com a função escolhida (Adulto ou Criança) [RN03]
+    family_data['members'].append({'name': friend_name, 'role': role})
+    
+    # CORREÇÃO [RN04]: Buscar os jogos REAIS que o amigo já possuía antes de entrar na família
+    jogos_do_amigo = session.get('gifts_sent', {}).get(friend_id, [])
+    jogos_adicionados = []
+    
+    # Usamos set() para agrupar os IDs únicos que o amigo tem
+    for jogo_id in set(jogos_do_amigo):
+        qtd_copias = jogos_do_amigo.count(jogo_id)
+        
+        # Se a família ainda não tinha esse título, adiciona à lista visual do pool
+        if jogo_id not in family_data['library_pool']:
+            family_data['library_pool'].append(jogo_id)
+            
+        # Soma as licenças reais do amigo com as que a família já possuía
+        family_data['licenses'][jogo_id] = family_data['licenses'].get(jogo_id, 0) + qtd_copias
+        
+        # Salva o nome do jogo para mostrar na mensagem de sucesso
+        game_name = GAMES.get(jogo_id, {}).get('name', 'Jogo Desconhecido')
+        jogos_adicionados.append(game_name)
+    
+    session['family'] = family_data
+    session.modified = True
+    
+    # Mensagem dinâmica: avisa se ele trouxe jogos ou se entrou de mãos vazias
+    if jogos_adicionados:
+        nomes_jogos = ", ".join(jogos_adicionados)
+        flash(f"Convite aceito! {friend_name} entrou como '{role}' e trouxe os seguintes jogos para o Pool: {nomes_jogos}.", "sucesso")
+    else:
+        flash(f"Convite aceito! {friend_name} entrou como '{role}', mas não possuía jogos anteriores para adicionar à Família.", "sucesso")
+        
+    return redirect(url_for('family'))
 #limpeza dos cookies
 @app.route('/reset')
 def reset_session():

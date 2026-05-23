@@ -70,6 +70,26 @@ GAMES = {
         'languages': ['Português', 'Inglês', 'Espanhol', 'Italiano'],
         'req_minimo': 'SO: Windows 10 64-bit · CPU: Intel i3-6100 · RAM: 4 GB · GPU: GTX 650 · 15 GB',
         'req_recomendado': 'SO: Windows 10 64-bit · CPU: Intel i5-7400 · RAM: 8 GB · GPU: GTX 1050 · 15 GB SSD',
+    },
+    '4': {
+        'id': '4', 'name': 'Lombriguinha', 'price': 120.00, 'age_rating': 16,
+        'description': 'Jogo de combate de guerra com os amigos. Que vença a lombriguinha melhor!',
+        'developer': 'Worm Wars Studio',
+        'publisher': 'Ministeam Publishing',
+        'release_date': '10 de janeiro de 2025',
+        'genres': ['Ação', 'Estratégia', 'Multijogador', 'Tático'],
+        'tags': ['Combate', 'Guerra', 'Multijogador', 'Estratégico', 'Competitivo', 'Engraçado'],
+        'features': ['Multijogador online', 'Cooperativo online', 'Conquistas Steam', 'Nuvem Steam', 'Suporte a controle'],
+        'long_description': (
+            'Lombriguinha é um jogo de combate de guerra hilário e estratégico onde você comanda '
+            'um exército de lombrigas armadas até os dentes. Enfrente seus amigos em batalhas '
+            'táticas por turnos em cenários destrutíveis, use um arsenal absurdo de armas '
+            'criativas e prove que a sua lombriguinha é a melhor do campo de batalha!'
+        ),
+        'reviews': 'Muito positivas', 'review_count': 3210,
+        'languages': ['Português', 'Inglês', 'Espanhol', 'Francês'],
+        'req_minimo': 'SO: Windows 10 64-bit · CPU: Intel i3-7100 · RAM: 4 GB · GPU: GTX 750 · 10 GB',
+        'req_recomendado': 'SO: Windows 11 64-bit · CPU: Intel i5-9400 · RAM: 8 GB · GPU: GTX 1060 · 10 GB SSD',
     }
 }
 
@@ -893,9 +913,10 @@ def garantir_valores_sessao():
         return
     padroes = {
         'wallet': 100.00, 'library': [], 'wishlist': [], 'cart': [], 'gifts_sent': {},
-        'user_dob': None, 'user_profile': {'name': 'Usuário', 'details': ''},
+        'user_dob': None, 'user_profile': {'name': 'Usuário', 'details': '', 'linguagem': 'portuguesBrasil'},
         'family': None, 'family_cooldown': False,
-        'offline_mode': False, 'active_game': None, 'show_pe01_for': None
+        'offline_mode': False, 'active_game': None, 'show_pe01_for': None,
+        'reviews': {}
     }
     for chave, valor in padroes.items():
         if chave not in session:
@@ -1287,6 +1308,19 @@ def trocar_usuario():
 # ROTAS PRINCIPAIS DA LOJA
 # ==============================================================================
 
+    if 'reviews' not in session:
+        # Simulamos uma base de dados populada com os idiomas do EnumLinguagemAvaliacao do seu UML
+        session['reviews'] = {
+            '1': [
+                {'author': 'Isabelle Nazareth', 'recomenda': True, 'comentario': 'Jogo excelente! Muito divertido para jogar em grupo.', 'data': '20/05/2026', 'linguagem': 'portuguesBrasil', 'votos_uteis': 12},
+                {'author': 'John Doe', 'recomenda': True, 'comentario': 'Amazing gameplay and graphics. Highly recommended to play with friends!', 'data': '19/05/2026', 'linguagem': 'ingles', 'votos_uteis': 5},
+                {'author': 'Hans Müller', 'recomenda': False, 'comentario': 'Das Spiel hat zu viele Bugs. Ich kann es im Moment nicht empfehlen.', 'data': '18/05/2026', 'linguagem': 'alemao', 'votos_uteis': 2},
+                {'author': 'Alan Turing', 'recomenda': True, 'comentario': 'A lógica por trás dos puzzles deste jogo é fantástica.', 'data': '21/05/2026', 'linguagem': 'portuguesBrasil', 'votos_uteis': 8}
+            ],
+            '2': [
+                {'author': 'Grace Hopper', 'recomenda': True, 'comentario': 'Great horror atmosphere! Found a few system bugs though.', 'data': '15/05/2026', 'linguagem': 'ingles', 'votos_uteis': 14}
+            ]
+        }
 @app.route('/')
 def index():
     return render_template('index.html', games=GAMES)
@@ -1299,16 +1333,29 @@ def game(game_id):
         return "Jogo não encontrado", 404
     show_modal = request.args.get('added') == '1'
     na_wishlist = game_id in session.get('wishlist', [])
-    return render_template('game.html', game=game_data, show_modal=show_modal,
-                           na_wishlist=na_wishlist)
 
+    selected_lang = request.args.get('lang', 'todos')
+    all_reviews = session.get('reviews', {}).get(game_id, [])
+
+    if selected_lang != 'todos':
+        filtered_reviews = [r for r in all_reviews if r.get('linguagem') == selected_lang]
+    else:
+        filtered_reviews = all_reviews
+
+    filtered_reviews = sorted(filtered_reviews, key=lambda x: x.get('votos_uteis', 0), reverse=True)
+
+    return render_template('game.html', game=game_data, show_modal=show_modal,
+                           na_wishlist=na_wishlist,
+                           reviews=filtered_reviews,
+                           selected_lang=selected_lang)
 
 @app.route('/update_profile', methods=['POST'])
 def update_profile():
     name    = request.form.get('name')
     details = request.form.get('details')
     dob_str = request.form.get('dob')
-    session['user_profile'] = {'name': name, 'details': details}
+    linguagem = request.form.get('linguagem', 'portuguesBrasil')
+    session['user_profile'] = {'name': name, 'details': details, 'linguagem': linguagem}
     if dob_str:
         session['user_dob'] = dob_str
     session.modified = True
@@ -1364,6 +1411,84 @@ def add_to_cart(game_id):
     session.modified = True
     return redirect(url_for('game', game_id=game_id, added=1))
 
+
+@app.route('/game/<game_id>/review', methods=['POST'])
+def submit_review(game_id):
+    owned = game_id in session.get('library', [])
+    if session.get('family') and game_id in session['family'].get('library_pool', []):
+        owned = True
+
+    if not owned:
+        flash("Bloqueio [FE01]: Você precisa possuir este jogo para publicar uma análise.", "error")
+        return redirect(url_for('game', game_id=game_id))
+
+    recomenda = request.form.get('recomenda') == 'sim'
+    comentario = request.form.get('comentario', '').strip()
+
+    if not comentario:
+        flash("Erro [FE02]: Por favor, escreva um comentário para descrever sua experiência.", "error")
+        return redirect(url_for('game', game_id=game_id))
+
+    if 'reviews' not in session:
+        session['reviews'] = {}
+    if game_id not in session['reviews']:
+        session['reviews'][game_id] = []
+
+    user_name = session['user_profile']['name']
+
+    session['reviews'][game_id] = [r for r in session['reviews'][game_id] if r['author'] != user_name]
+
+    idioma_usuario = session['user_profile'].get('linguagem', 'portuguesBrasil')
+
+    nova_analise = {
+        'author': user_name,
+        'recomenda': recomenda,
+        'comentario': comentario,
+        'data': datetime.now().strftime("%d/%m/%Y"),
+        'linguagem': idioma_usuario,
+        'voted_users': {}
+    }
+
+    session['reviews'][game_id].append(nova_analise)
+    session.modified = True
+    flash("Sua análise foi publicada com sucesso!", "sucesso")
+    return redirect(url_for('game', game_id=game_id))
+
+
+@app.route('/game/<game_id>/review/<author>/vote/<vote_type>')
+def vote_review(game_id, author, vote_type):
+    reviews = session.get('reviews', {}).get(game_id, [])
+    current_user = session['user_profile']['name']
+
+    for r in reviews:
+        if r['author'] == author:
+            if author == current_user:
+                flash("Bloqueio: Você não pode classificar sua própria análise.", "error")
+                return redirect(url_for('game', game_id=game_id))
+
+            if 'voted_users' not in r or isinstance(r['voted_users'], list):
+                r['voted_users'] = {}
+
+            voto_anterior = r['voted_users'].get(current_user)
+
+            if voto_anterior == vote_type:
+                flash("Você já classificou esta análise com esta mesma opção.", "error")
+                return redirect(url_for('game', game_id=game_id))
+
+            if vote_type == 'sim':
+                r['votos_uteis'] = r.get('votos_uteis', 0) + 1
+                flash("Voto atualizado! O voto útil foi registrado e ajudará a comunidade.", "sucesso")
+            elif vote_type == 'nao':
+                if voto_anterior == 'sim':
+                    r['votos_uteis'] = max(0, r.get('votos_uteis', 0) - 1)
+                flash("Voto atualizado! Registramos que esta análise não foi útil para você.", "sucesso")
+
+            r['voted_users'][current_user] = vote_type
+
+            session.modified = True
+            break
+
+    return redirect(url_for('game', game_id=game_id))
 
 @app.route('/cart')
 def cart():

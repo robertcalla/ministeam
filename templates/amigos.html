@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Minha Lista de Amigos - Ministeam{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+    <h1>Lista de Amigos</h1>
+    <span style="color: #8f98a0; font-size: 13px;">
+        {{ meus_amigos|length }} amigo(s) adicionado(s)
+    </span>
+</div>
+
+{# ================================================================= #}
+{# SEÇÃO 1 — AMIGOS ATUAIS                                           #}
+{# ================================================================= #}
+{% if meus_amigos %}
+<div style="background: rgba(0,0,0,0.2); padding: 20px; margin-bottom: 30px; border-top: 2px solid #5c7e10;">
+    <h3 style="color: #d2efa9; margin-bottom: 15px;">👥 Meus Amigos</h3>
+
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+        {% for amigo in meus_amigos %}
+        <div style="background: #1b2838; padding: 12px 16px; border: 1px solid #2a475e; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                {# Avatar com inicial do nome #}
+                <div style="
+                    width: 44px; height: 44px; border-radius: 50%;
+                    background: #2a475e; border: 2px solid #66c0f4;
+                    display: flex; align-items: center; justify-content: center;
+                    font-size: 18px; font-weight: bold; color: white; flex-shrink: 0;">
+                    {{ amigo.nome[0].upper() }}
+                </div>
+                <div>
+                    <div style="color: white; font-size: 15px; font-weight: bold;">{{ amigo.nome }}</div>
+                    <div style="color: #8f98a0; font-size: 12px; margin-top: 2px;">
+                        @{{ amigo.username }}
+                        {% if amigo.dob %}
+                            &nbsp;·&nbsp;
+                            <span style="color: #66c0f4;">
+                                ✔ Idade registrada
+                            </span>
+                        {% else %}
+                            &nbsp;·&nbsp;
+                            <span style="color: #ff9900;">⚠ Sem data de nascimento cadastrada</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <a href="{{ url_for('amigos_remover', friend_id=amigo.id) }}"
+               onclick="return confirm('Remover {{ amigo.nome }} da sua lista de amigos?')"
+               style="font-size: 12px; color: #b52a1c; text-decoration: none; padding: 5px 12px; border: 1px solid #b52a1c; border-radius: 2px; white-space: nowrap;">
+                Remover
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div style="background: rgba(0,0,0,0.15); padding: 25px; text-align: center; margin-bottom: 30px; border: 1px dashed #2a475e; color: #8f98a0;">
+    <p style="font-size: 15px; margin-bottom: 6px;">Você ainda não tem amigos adicionados.</p>
+    <p style="font-size: 13px;">Encontre outros usuários cadastrados na seção abaixo e adicione-os!</p>
+</div>
+{% endif %}
+
+
+{# ================================================================= #}
+{# SEÇÃO 2 — ADICIONAR NOVOS AMIGOS                                  #}
+{# ================================================================= #}
+<div style="background: rgba(0,0,0,0.2); padding: 20px; border-top: 2px solid #3a688c;">
+    <h3 style="color: #66c0f4; margin-bottom: 15px;">🔍 Encontrar Usuários</h3>
+
+    {% if outros_usuarios %}
+    <input type="text" id="buscaUsuario" onkeyup="filtrarUsuarios()"
+           placeholder="Buscar por nome ou usuário..."
+           style="width: 100%; padding: 11px; background: #1b2838; color: white; border: 1px solid #2a475e; border-radius: 3px; margin-bottom: 15px; font-size: 14px;">
+
+    <div id="listaOutros" style="display: flex; flex-direction: column; gap: 8px;">
+        {% for u in outros_usuarios %}
+        <div class="usuario-card"
+             data-busca="{{ (u.nome + ' ' + u.username) | lower }}"
+             style="background: #171a21; padding: 12px 16px; border: 1px solid #2a475e; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="
+                    width: 44px; height: 44px; border-radius: 50%;
+                    background: #213545; border: 2px solid #3a688c;
+                    display: flex; align-items: center; justify-content: center;
+                    font-size: 18px; font-weight: bold; color: #66c0f4; flex-shrink: 0;">
+                    {{ u.nome[0].upper() }}
+                </div>
+                <div>
+                    <div style="color: #c7d5e0; font-size: 15px; font-weight: bold;">{{ u.nome }}</div>
+                    <div style="color: #8f98a0; font-size: 12px; margin-top: 2px;">@{{ u.username }}</div>
+                </div>
+            </div>
+            <a href="{{ url_for('amigos_adicionar', friend_id=u.id) }}"
+               class="btn-green"
+               style="font-size: 12px; padding: 7px 16px; text-decoration: none; white-space: nowrap;">
+                + Adicionar Amigo
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div id="semResultados" style="display: none; text-align: center; padding: 20px; color: #8f98a0; font-size: 13px;">
+        Nenhum usuário encontrado com esse termo.
+    </div>
+
+    {% else %}
+    <div style="text-align: center; padding: 20px; color: #8f98a0; font-size: 13px; border: 1px dashed #2a475e; border-radius: 3px;">
+        {% if meus_amigos %}
+        Todos os usuários cadastrados já são seus amigos!
+        {% else %}
+        Nenhum outro usuário cadastrado ainda. Convide alguém para criar uma conta!
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function filtrarUsuarios() {
+    var termo   = document.getElementById('buscaUsuario').value.toLowerCase();
+    var cards   = document.querySelectorAll('.usuario-card');
+    var visiveis = 0;
+
+    cards.forEach(function(card) {
+        var dados = card.getAttribute('data-busca');
+        if (dados.includes(termo)) {
+            card.style.display = 'flex';
+            visiveis++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    document.getElementById('semResultados').style.display = visiveis === 0 ? 'block' : 'none';
+}
+</script>
+{% endblock %}

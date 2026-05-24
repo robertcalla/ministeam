@@ -1,0 +1,8 @@
+# =============================================================================
+# MINISTEAM - Contas desta Máquina
+# Cada linha contém o ID de um usuário que já fez login neste computador.
+# Este arquivo permite a seleção rápida de conta na tela de login.
+# =============================================================================
+1
+2
+103

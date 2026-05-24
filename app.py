@@ -22,6 +22,10 @@ MAQUINA_FILE    = os.path.join(DATA_DIR, 'maquina.txt')
 AMIZADES_FILE   = os.path.join(DATA_DIR, 'amizades.txt')
 BIBLIOTECA_FILE = os.path.join(DATA_DIR, 'biblioteca.txt')
 FAMILIAS_FILE   = os.path.join(DATA_DIR, 'familias.txt')
+CARTEIRAS_FILE  = os.path.join(DATA_DIR, 'carteiras.txt')
+SESSOES_FILE    = os.path.join(DATA_DIR, 'sessoes.txt')
+
+CARTEIRA_INICIAL = 100.00
 
 
 def _garantir_arquivos():
@@ -67,6 +71,23 @@ def _garantir_arquivos():
             f.write("# Cada linha é um objeto JSON representando uma família.\n")
             f.write("# Campos: id, name, created_at, founder, founder_id, members,\n")
             f.write("#         member_ids, library_pool, licenses\n")
+            f.write("# =============================================================================\n")
+
+    if not os.path.exists(CARTEIRAS_FILE):
+        with open(CARTEIRAS_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Banco de Dados de Carteiras dos Usuários\n")
+            f.write("# Formato: user_id | saldo\n")
+            f.write("# Exemplo: 1 | 100.00\n")
+            f.write("# =============================================================================\n")
+
+    if not os.path.exists(SESSOES_FILE):
+        with open(SESSOES_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Sessões de Jogo Ativas (Compartilhamento Familiar)\n")
+            f.write("# Cada linha = um usuário jogando agora um título do pool da família.\n")
+            f.write("# Formato: user_id | family_id | game_id | modo  (modo: online|offline)\n")
+            f.write("# Usado para contar 'Em uso por parentes' de forma persistente entre contas.\n")
             f.write("# =============================================================================\n")
 
 
@@ -270,6 +291,65 @@ def salvar_biblioteca_usuario(uid, game_ids):
         f.writelines(linhas_novas)
 
 
+# ---- FUNÇÕES DE CARTEIRA ----
+
+def ler_carteira_usuario(uid):
+    """Retorna o saldo persistido do usuário (float). Default: CARTEIRA_INICIAL."""
+    _garantir_arquivos()
+    uid = str(uid)
+    try:
+        with open(CARTEIRAS_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s or s.startswith('#'):
+                    continue
+                partes = [p.strip() for p in s.split('|', 1)]
+                if partes[0] == uid and len(partes) >= 2:
+                    try:
+                        return float(partes[1])
+                    except ValueError:
+                        return CARTEIRA_INICIAL
+    except FileNotFoundError:
+        pass
+    return CARTEIRA_INICIAL
+
+
+def salvar_carteira_usuario(uid, saldo):
+    """Salva/atualiza o saldo da carteira do usuário no banco de dados."""
+    _garantir_arquivos()
+    uid = str(uid)
+    try:
+        saldo = float(saldo)
+    except (TypeError, ValueError):
+        saldo = CARTEIRA_INICIAL
+    linhas_novas = []
+    encontrou = False
+    try:
+        with open(CARTEIRAS_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s or s.startswith('#'):
+                    linhas_novas.append(linha)
+                    continue
+                partes = [p.strip() for p in s.split('|', 1)]
+                if partes[0] == uid:
+                    linhas_novas.append(f"{uid} | {saldo:.2f}\n")
+                    encontrou = True
+                else:
+                    linhas_novas.append(linha)
+    except FileNotFoundError:
+        linhas_novas = [
+            "# =============================================================================\n",
+            "# MINISTEAM - Banco de Dados de Carteiras dos Usuários\n",
+            "# Formato: user_id | saldo\n",
+            "# =============================================================================\n"
+        ]
+    if not encontrou:
+        linhas_novas.append(f"{uid} | {saldo:.2f}\n")
+    with open(CARTEIRAS_FILE, 'w', encoding='utf-8') as f:
+        f.writelines(linhas_novas)
+
+
 # ---- FUNÇÕES DE FAMÍLIA ----
 
 def ler_familias():
@@ -283,7 +363,13 @@ def ler_familias():
                 if not s or s.startswith('#'):
                     continue
                 try:
-                    familias.append(json.loads(s))
+                    fam = json.loads(s)
+                    # Compatibilidade: famílias antigas não possuíam 'creator'.
+                    # O criador original é preservado (fallback para o fundador atual).
+                    if 'creator' not in fam:
+                        fam['creator'] = fam.get('founder', '')
+                        fam['creator_id'] = fam.get('founder_id', '')
+                    familias.append(fam)
                 except json.JSONDecodeError:
                     pass
     except FileNotFoundError:
@@ -341,6 +427,90 @@ def buscar_familia_do_usuario(uid):
     return None
 
 
+# ---- FUNÇÕES DE SESSÕES DE JOGO ATIVAS ----
+# Persistem quem está jogando agora cada título do pool da família, para que o
+# contador "Em uso por parentes" sobreviva à troca de conta na mesma máquina.
+
+def ler_sessoes_jogo():
+    """Retorna lista de dicts {user_id, family_id, game_id, modo}."""
+    _garantir_arquivos()
+    sessoes = []
+    try:
+        with open(SESSOES_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s or s.startswith('#'):
+                    continue
+                partes = [p.strip() for p in s.split('|')]
+                if len(partes) >= 3:
+                    sessoes.append({
+                        'user_id':   partes[0],
+                        'family_id': partes[1],
+                        'game_id':   partes[2],
+                        'modo':      partes[3] if len(partes) > 3 else 'online'
+                    })
+    except FileNotFoundError:
+        pass
+    return sessoes
+
+
+def _reescrever_sessoes_jogo(sessoes):
+    _garantir_arquivos()
+    with open(SESSOES_FILE, 'w', encoding='utf-8') as f:
+        f.write("# =============================================================================\n")
+        f.write("# MINISTEAM - Sessões de Jogo Ativas (Compartilhamento Familiar)\n")
+        f.write("# Formato: user_id | family_id | game_id | modo  (modo: online|offline)\n")
+        f.write("# =============================================================================\n")
+        for s in sessoes:
+            f.write(f"{s['user_id']} | {s['family_id']} | {s['game_id']} | {s['modo']}\n")
+
+
+def iniciar_sessao_jogo(user_id, family_id, game_id, modo='online'):
+    """Marca o usuário como jogando o título (um jogo por vez por usuário)."""
+    user_id = str(user_id)
+    sessoes = [s for s in ler_sessoes_jogo() if s['user_id'] != user_id]
+    sessoes.append({
+        'user_id':   user_id,
+        'family_id': str(family_id),
+        'game_id':   str(game_id),
+        'modo':      modo
+    })
+    _reescrever_sessoes_jogo(sessoes)
+
+
+def encerrar_sessao_jogo(user_id):
+    """Remove a sessão de jogo ativa do usuário (Fechar Jogo). Idempotente."""
+    user_id = str(user_id)
+    sessoes = [s for s in ler_sessoes_jogo() if s['user_id'] != user_id]
+    _reescrever_sessoes_jogo(sessoes)
+
+
+def sessao_ativa_do_usuario(user_id, family_id):
+    """Retorna a sessão de jogo ativa do usuário nesta família, ou None."""
+    user_id, family_id = str(user_id), str(family_id)
+    for s in ler_sessoes_jogo():
+        if s['user_id'] == user_id and s['family_id'] == family_id:
+            return s
+    return None
+
+
+def contar_em_uso(family_id, game_id):
+    """Conta quantos membros estão jogando online (consomem licença) este título."""
+    family_id, game_id = str(family_id), str(game_id)
+    return sum(
+        1 for s in ler_sessoes_jogo()
+        if s['family_id'] == family_id and s['game_id'] == game_id and s['modo'] == 'online'
+    )
+
+
+def em_uso_total(family, game_id):
+    """Licenças ocupadas = jogadores reais online + simulação de parente (testes)."""
+    if not family:
+        return 0
+    npc = 1 if family.get('occupied_by_others', {}).get(str(game_id), False) else 0
+    return contar_em_uso(family['id'], game_id) + npc
+
+
 # ---- FUNÇÃO DE LOGIN ----
 
 def fazer_login_sessao(usuario):
@@ -358,9 +528,17 @@ def fazer_login_sessao(usuario):
         familia_sessao = dict(familia_db)
         familia_sessao['occupied_by_others'] = {}  # campo de simulação, sempre começa vazio
 
+    # Restaura jogo em andamento: se o usuário deixou um título rodando antes de
+    # trocar de conta, ele continua "Executando..." ao voltar para esta conta.
+    active_game = None
+    if familia_sessao:
+        sessao_jogo = sessao_ativa_do_usuario(uid, familia_sessao['id'])
+        if sessao_jogo:
+            active_game = sessao_jogo['game_id']
+
     session['logged_in']     = True
     session['user_id']       = uid
-    session['wallet']        = 100.00
+    session['wallet']        = ler_carteira_usuario(uid)
     session['library']       = biblioteca_db
     session['cart']          = []
     session['gifts_sent']    = {}
@@ -372,7 +550,7 @@ def fazer_login_sessao(usuario):
     session['family']          = familia_sessao
     session['family_cooldown'] = False
     session['offline_mode']    = False
-    session['active_game']     = None
+    session['active_game']     = active_game
     session['show_pe01_for']   = None
     session.modified = True
     registrar_maquina(uid)
@@ -733,7 +911,7 @@ def library():
     todos_ids = minha_biblioteca | familia_pool
 
     jogos_disponiveis   = {}
-    ids_familia_pool    = []   # jogos presentes no pool da família (incluindo os que o usuário também possui)
+    ids_familia_pool    = []   # jogos disponíveis SOMENTE via Família Steam (o usuário não comprou)
     ids_minha_biblioteca = list(minha_biblioteca)
 
     for gid in todos_ids:
@@ -745,7 +923,9 @@ def library():
             if user_age is None or user_age < game['age_rating']:
                 continue
         jogos_disponiveis[gid] = game
-        if gid in familia_pool:
+        # "Via Família" = está no pool E NÃO foi comprado pelo próprio usuário.
+        # Assim o slider separa jogos próprios dos que existem graças à família.
+        if gid in familia_pool and gid not in minha_biblioteca:
             ids_familia_pool.append(gid)
 
     tem_familia = bool(session.get('family'))
@@ -818,6 +998,9 @@ def process_payment():
     # Persiste biblioteca do usuário
     salvar_biblioteca_usuario(session['user_id'], session['library'])
 
+    # Persiste o saldo da carteira (não se perde ao reconectar)
+    salvar_carteira_usuario(session['user_id'], session['wallet'])
+
     # Persiste família se foi modificada
     if familia_modificada and session.get('family'):
         atualizar_familia(session['family'])
@@ -836,7 +1019,15 @@ def process_payment():
 def family():
     uid     = session['user_id']
     friends = get_amigos_dict(uid)
-    return render_template('family.html', friends=friends, games=GAMES)
+
+    # Contagem persistida de licenças em uso por jogo (parentes jogando agora)
+    em_uso_por_jogo = {}
+    if session.get('family'):
+        for gid in session['family'].get('library_pool', []):
+            em_uso_por_jogo[gid] = em_uso_total(session['family'], gid)
+
+    return render_template('family.html', friends=friends, games=GAMES,
+                           em_uso_por_jogo=em_uso_por_jogo)
 
 
 @app.route('/create_family', methods=['POST'])
@@ -856,7 +1047,9 @@ def create_family():
         'id':                 f"fam_{datetime.now().timestamp()}",
         'name':               family_name,
         'created_at':         datetime.now().strftime("%d/%m/%Y %H:%M"),
-        'founder':            session['user_profile']['name'],
+        'creator':            session['user_profile']['name'],   # criador original (nunca muda)
+        'creator_id':         uid,
+        'founder':            session['user_profile']['name'],   # líder atual (muda com transferência)
         'founder_id':         uid,
         'members':            [{'name': session['user_profile']['name'], 'id': uid}],
         'member_ids':         [uid],
@@ -975,6 +1168,10 @@ def family_play(game_id):
 
     game_data = GAMES.get(game_id)
 
+    # Já está executando este mesmo título: nada a fazer (não recontabiliza).
+    if session.get('active_game') == game_id:
+        return redirect(url_for('family'))
+
     if session.get('active_game') and session.get('active_game') != game_id:
         jogo_anterior = GAMES.get(session['active_game'])['name']
         flash(f"Bloqueio: Você já está jogando '{jogo_anterior}'. Feche-o primeiro.", "error")
@@ -1001,10 +1198,14 @@ def family_play(game_id):
             flash("Erro ao verificar data de nascimento. Atualize seu perfil.", "error")
             return redirect(url_for('family'))
 
-    if session.get('offline_mode') and session.get('active_game') != game_id:
-        flash("Modo Offline [A01]: Licença validada no último login online. Acesso permitido.", "sucesso")
+    # Modo Offline: a licença foi validada no último login online, então o jogo
+    # abre sem ocupar uma licença do pool (não soma +1 em "Em uso por parentes").
+    if session.get('offline_mode'):
+        iniciar_sessao_jogo(session['user_id'], session['family']['id'], game_id, modo='offline')
         session['active_game'] = game_id
+        session['show_pe01_for'] = None
         session.modified = True
+        flash("Modo Offline [A01]: Licença validada no último login online. Acesso permitido (não ocupa licença do pool).", "sucesso")
         return redirect(url_for('family'))
 
     total_licencas = session['family']['licenses'].get(game_id, 0)
@@ -1012,13 +1213,16 @@ def family_play(game_id):
         flash("Bloqueio: Ninguém da sua família comprou este jogo ainda.", "error")
         return redirect(url_for('family'))
 
-    em_uso = 1 if session['family']['occupied_by_others'].get(game_id, False) else 0
+    # Licenças ocupadas por OUTROS no momento (o usuário atual ainda não iniciou)
+    em_uso = em_uso_total(session['family'], game_id)
     if em_uso >= total_licencas:
         flash(f"Bloqueio: Todas as {total_licencas} licença(s) estão em uso no momento.", "error")
         session['show_pe01_for'] = game_id
         session.modified = True
         return redirect(url_for('family'))
 
+    # Registra a sessão de forma persistente: continua valendo se trocar de conta.
+    iniciar_sessao_jogo(session['user_id'], session['family']['id'], game_id, modo='online')
     session['active_game']   = game_id
     session['show_pe01_for'] = None
     session.modified = True
@@ -1028,6 +1232,8 @@ def family_play(game_id):
 
 @app.route('/family/stop')
 def family_stop():
+    # Devolve a licença ao pool (decrementa "Em uso por parentes" de forma persistente).
+    encerrar_sessao_jogo(session['user_id'])
     session['active_game'] = None
     session.modified = True
     flash("Jogo encerrado. A licença foi devolvida ao banco da família.", "sucesso")
@@ -1047,26 +1253,15 @@ def family_toggle_npc(game_id):
 
 @app.route('/family/toggle_offline')
 def family_toggle_offline():
+    # Não permite alternar online/offline com um jogo em execução (evita
+    # inconsistência na contagem de licenças do pool).
+    if session.get('active_game'):
+        flash("Bloqueio: Feche o jogo em execução antes de alterar o Modo Offline.", "error")
+        return redirect(url_for('family'))
     session['offline_mode'] = not session.get('offline_mode', False)
     session.modified = True
     status = "LIGADO" if session['offline_mode'] else "DESLIGADO"
     flash(f"Modo Offline da Steam: {status} [A01]", "sucesso")
-    return redirect(url_for('family'))
-
-
-@app.route('/family/buy_extra/<game_id>')
-def family_buy_extra(game_id):
-    game_data = GAMES.get(game_id)
-    if session['wallet'] >= game_data['price']:
-        session['wallet'] -= game_data['price']
-        session['family']['licenses'][game_id] = session['family']['licenses'].get(game_id, 1) + 1
-        session['show_pe01_for'] = None
-        session.modified = True
-        qtd = session['family']['licenses'][game_id]
-        atualizar_familia(session['family'])
-        flash(f"[PE01] Cópia adicional comprada! Pool agora possui {qtd} licenças de '{game_data['name']}'.", "sucesso")
-    else:
-        flash("Saldo insuficiente na carteira.", "error")
     return redirect(url_for('family'))
 
 
@@ -1076,15 +1271,17 @@ def family_buy_extra(game_id):
 
 @app.route('/reset')
 def reset_session():
-    """Reseta os dados de jogo da sessão mantendo o usuário logado."""
-    if session.get('logged_in'):
-        uid     = session.get('user_id')
-        usuario = buscar_por_id(uid)
-        if usuario:
-            fazer_login_sessao(usuario)
-            flash('Estado de jogo reiniciado! Carteira e carrinho foram resetados. Biblioteca e família foram restauradas do banco de dados.', 'sucesso')
-            return redirect(url_for('index'))
+    """Limpa todos os cookies (sessão) e zera todos os arquivos de dados,
+    exceto usuarios.txt (as contas cadastradas são preservadas)."""
     session.clear()
+    for caminho in (MAQUINA_FILE, AMIZADES_FILE, BIBLIOTECA_FILE,
+                    FAMILIAS_FILE, CARTEIRAS_FILE, SESSOES_FILE):
+        try:
+            if os.path.exists(caminho):
+                os.remove(caminho)
+        except OSError:
+            pass
+    _garantir_arquivos()  # recria os arquivos vazios (apenas cabeçalhos)
     return redirect(url_for('login'))
 
 

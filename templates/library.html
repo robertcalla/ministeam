@@ -69,9 +69,13 @@
                     Classificação: +{{ game.age_rating }} anos
                 </p>
                 {% endif %}
-                {% if id in ids_familia_pool and id not in ids_minha_biblioteca %}
+                {% if id in ids_familia_pool %}
                 <p style="font-size: 11px; color: #4b9cd3; margin-top: 2px;">
                     Via Família Steam
+                </p>
+                {% else %}
+                <p style="font-size: 11px; color: #79a016; margin-top: 2px;">
+                    Comprado por você
                 </p>
                 {% endif %}
                 <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">

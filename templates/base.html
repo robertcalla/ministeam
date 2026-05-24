@@ -8,7 +8,9 @@
 <body>
 <header class="navbar">
     <div class="nav-left">
-        <a href="{{ url_for('reset_session') }}" title="Clique aqui para reiniciar o estado de jogo (carteira, biblioteca, família)" style="text-decoration: none; cursor: pointer;">
+        <a href="{{ url_for('reset_session') }}"
+           onclick="return confirm('Isto irá limpar os cookies e APAGAR todos os dados (amizades, famílias, bibliotecas, carteiras e sessões). As contas de usuário serão mantidas. Continuar?');"
+           title="Limpar tudo: cookies e todos os arquivos de dados (exceto as contas de usuário)" style="text-decoration: none; cursor: pointer;">
             <div class="logo">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="MINISTEAM Logo" style="height: 40px; display: block;">
             </div>

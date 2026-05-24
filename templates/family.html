@@ -16,9 +16,16 @@
 
     <div style="background: #171a21; padding: 10px; border: 1px dashed #66c0f4; display: flex; gap: 10px; border-radius: 4px;">
         <span style="color: #66c0f4; font-size: 12px; align-self: center; font-weight: bold;">🧪 PAINEL DE TESTES:</span>
+        {% if session['active_game'] %}
+        <span class="btn-blue" title="Não é possível alterar o Modo Offline com um jogo em execução. Feche o jogo primeiro."
+              style="font-size: 11px; padding: 5px 10px; background: #333; color: #777; cursor: not-allowed;">
+            🔒 Modo Offline: <strong>{% if session['offline_mode'] %}ATIVADO{% else %}DESATIVADO{% endif %}</strong>
+        </span>
+        {% else %}
         <a href="{{ url_for('family_toggle_offline') }}" class="btn-blue" style="font-size: 11px; padding: 5px 10px; background: {% if session['offline_mode'] %}#b52a1c{% else %}#2a475e{% endif %}; color: white;">
             Modo Offline: <strong>{% if session['offline_mode'] %}ATIVADO{% else %}DESATIVADO{% endif %}</strong>
         </a>
+        {% endif %}
     </div>
 </div>
 
@@ -26,7 +33,7 @@
 <div style="background: rgba(0,0,0,0.2); border-top: 2px solid #5c7e10; padding: 25px; margin-bottom: 20px;">
     <h2 style="color: #d2efa9; margin-bottom: 10px;">👪 {{ session['family']['name'] }}</h2>
     <p style="color: #8f98a0; font-size: 13px; margin-bottom: 20px;">
-        Fundada por <strong>{{ session['family']['founder'] }}</strong> em {{ session['family']['created_at'] }} | Controles Parentais por Idade Ativos
+        Fundada por <strong>{{ session['family']['creator'] }}</strong> em {{ session['family']['created_at'] }} | Controles Parentais por Idade Ativos
     </p>
 
     <div style="display: flex; gap: 30px; flex-direction: column;">
@@ -41,6 +48,7 @@
                 {% set elegivel = (id != '3') %}
                 {% set total_lic = session['family']['licenses'].get(id, 0) if elegivel else 0 %}
                 {% set npc_jogando = session['family']['occupied_by_others'].get(id, False) if elegivel else False %}
+                {% set em_uso = em_uso_por_jogo.get(id, 0) if elegivel else 0 %}
 
                 <div style="background: #171a21; padding: 15px; border: 1px solid #2a475e; display: flex; justify-content: space-between; align-items: center;">
                     <div>
@@ -53,7 +61,7 @@
                             <span style="color: #b52a1c; font-weight: bold;">❌ Não elegível para Compartilhamento Familiar</span>
                             {% else %}
                             Licenças no Banco: <strong>{{ total_lic }}</strong> |
-                            Em uso por parentes: <strong style="color: {% if npc_jogando %}#ff9900{% else %}#8f98a0{% endif %};">{% if npc_jogando %}1{% else %}0{% endif %}</strong>
+                            Em uso por parentes: <strong style="color: {% if em_uso > 0 %}#ff9900{% else %}#8f98a0{% endif %};">{{ em_uso }}</strong>{% if em_uso > total_lic %} <span style="color:#b52a1c;">(esgotado)</span>{% endif %}
                             {% endif %}
                         </div>
                     </div>
@@ -64,9 +72,15 @@
                         <a href="{{ url_for('family_stop') }}" class="btn-blue" style="background: #b52a1c; color: white;">Fechar Jogo</a>
                         {% else %}
                         {% if elegivel %}
+                        {% if npc_jogando %}
                         <a href="{{ url_for('family_toggle_npc', game_id=id) }}" class="btn-blue" style="font-size: 11px; background: #213545;">
-                            {% if npc_jogando %}🔓 Liberar Parente{% else %}🔒 Simular Parente Jogando{% endif %}
+                            🔓 Liberar Parente
                         </a>
+                        {% elif em_uso < total_lic %}
+                        <a href="{{ url_for('family_toggle_npc', game_id=id) }}" class="btn-blue" style="font-size: 11px; background: #213545;">
+                            🔒 Simular Parente Jogando
+                        </a>
+                        {% endif %}
                         <a href="{{ url_for('family_play', game_id=id) }}" class="btn-green" style="font-weight: bold;">Jogar</a>
                         {% else %}
                         <button class="btn-blue" style="background: #333; color: #555; cursor: not-allowed;" disabled>Indisponível</button>
@@ -78,7 +92,7 @@
                 {% if session['show_pe01_for'] == id %}
                 <div style="background: #213545; padding: 12px; margin-top: -10px; margin-bottom: 10px; border: 1px solid #ff9900; border-top: none; display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-size: 13px; color: #ff9900;">⚠️ Deseja comprar uma licença adicional para o pool da família?</span>
-                    <a href="{{ url_for('family_buy_extra', game_id=id) }}" class="btn-green" style="font-size: 12px; padding: 5px 12px;">Comprar Cópia Extra (R$ {{ "%.2f"|format(game.price) }})</a>
+                    <a href="{{ url_for('game', game_id=id) }}" class="btn-green" style="font-size: 12px; padding: 5px 12px;">Comprar Cópia Extra</a>
                 </div>
                 {% endif %}
                 {% endif %}

@@ -1,5 +1,5 @@
 # =============================================================================
-# MINISTEAM - Contas desta Máquina
-# Cada linha contém o ID de um usuário que já fez login neste computador.
+# MINISTEAM - Banco de Dados de Carteiras dos Usuários
+# Formato: user_id | saldo
+# Exemplo: 1 | 100.00
 # =============================================================================
-1

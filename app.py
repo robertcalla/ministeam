@@ -1,24 +1,27 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from datetime import datetime
 import os
+import json
 
 app = Flask(__name__)
 app.secret_key = 'chave_secreta_super_segura'
 
 # ---- CATÁLOGO DE JOGOS (DADOS FIXOS) ----
 GAMES = {
-    '1': {'id': '1', 'name': 'Aventura Épica',      'price': 150.00, 'age_rating': 10, 'description': 'Explore masmorras e derrote monstros com amigos nesta jornada incrível.'},
+    '1': {'id': '1', 'name': 'Aventura Épica',       'price': 150.00, 'age_rating': 10, 'description': 'Explore masmorras e derrote monstros com amigos nesta jornada incrível.'},
     '2': {'id': '2', 'name': 'Sobrevivência Sombria', 'price': 90.00,  'age_rating': 18, 'description': 'Jogo de terror com zumbis. Sobreviva a noites aterrorizantes com recursos escassos.'},
-    '3': {'id': '3', 'name': 'Corrida Divertida',    'price': 45.00,  'age_rating': 0,  'description': 'Corridas para toda a família. Karts coloridos e pistas malucas!'}
+    '3': {'id': '3', 'name': 'Corrida Divertida',     'price': 45.00,  'age_rating': 0,  'description': 'Corridas para toda a família. Karts coloridos e pistas malucas!'}
 }
 
 # ==============================================================================
 # BANCO DE DADOS EM ARQUIVO DE TEXTO
 # ==============================================================================
-DATA_DIR       = os.path.join(os.path.dirname(__file__), 'data')
-USUARIOS_FILE  = os.path.join(DATA_DIR, 'usuarios.txt')
-MAQUINA_FILE   = os.path.join(DATA_DIR, 'maquina.txt')
-AMIZADES_FILE  = os.path.join(DATA_DIR, 'amizades.txt')
+DATA_DIR        = os.path.join(os.path.dirname(__file__), 'data')
+USUARIOS_FILE   = os.path.join(DATA_DIR, 'usuarios.txt')
+MAQUINA_FILE    = os.path.join(DATA_DIR, 'maquina.txt')
+AMIZADES_FILE   = os.path.join(DATA_DIR, 'amizades.txt')
+BIBLIOTECA_FILE = os.path.join(DATA_DIR, 'biblioteca.txt')
+FAMILIAS_FILE   = os.path.join(DATA_DIR, 'familias.txt')
 
 
 def _garantir_arquivos():
@@ -40,23 +43,36 @@ def _garantir_arquivos():
             f.write("# =============================================================================\n")
             f.write("# MINISTEAM - Contas desta Máquina\n")
             f.write("# Cada linha contém o ID de um usuário que já fez login neste computador.\n")
-            f.write("# Este arquivo permite a seleção rápida de conta na tela de login.\n")
             f.write("# =============================================================================\n")
 
     if not os.path.exists(AMIZADES_FILE):
         with open(AMIZADES_FILE, 'w', encoding='utf-8') as f:
             f.write("# =============================================================================\n")
             f.write("# MINISTEAM - Banco de Dados de Amizades\n")
-            f.write("# Cada linha representa uma amizade mútua entre dois usuários.\n")
             f.write("# Formato: id_menor | id_maior  (IDs ordenados para evitar duplicatas)\n")
-            f.write("# Exemplo: 1 | 3  (usuário 1 e usuário 3 são amigos)\n")
+            f.write("# =============================================================================\n")
+
+    if not os.path.exists(BIBLIOTECA_FILE):
+        with open(BIBLIOTECA_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Banco de Dados de Bibliotecas de Usuários\n")
+            f.write("# Formato: user_id | game_id1,game_id2,...\n")
+            f.write("# Exemplo: 1 | 1,3  (usuário 1 possui os jogos 1 e 3)\n")
+            f.write("# =============================================================================\n")
+
+    if not os.path.exists(FAMILIAS_FILE):
+        with open(FAMILIAS_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Banco de Dados de Famílias\n")
+            f.write("# Cada linha é um objeto JSON representando uma família.\n")
+            f.write("# Campos: id, name, created_at, founder, founder_id, members,\n")
+            f.write("#         member_ids, library_pool, licenses\n")
             f.write("# =============================================================================\n")
 
 
 # ---- FUNÇÕES DE USUÁRIOS ----
 
 def ler_usuarios():
-    """Lê todos os usuários do arquivo de banco de dados."""
     _garantir_arquivos()
     usuarios = []
     try:
@@ -81,7 +97,6 @@ def ler_usuarios():
 
 
 def salvar_usuario(usuario):
-    """Adiciona um novo usuário ao final do arquivo de banco de dados."""
     _garantir_arquivos()
     with open(USUARIOS_FILE, 'a', encoding='utf-8') as f:
         dob_val   = usuario['dob'] if usuario['dob'] else 'none'
@@ -134,7 +149,6 @@ def registrar_maquina(uid):
 # ---- FUNÇÕES DE AMIZADES ----
 
 def ler_amizades():
-    """Retorna lista de tuplas (id_a, id_b) de todas as amizades."""
     _garantir_arquivos()
     pares = []
     try:
@@ -152,14 +166,11 @@ def ler_amizades():
 
 
 def _reescrever_amizades(pares):
-    """Sobrescreve o arquivo de amizades com a lista fornecida."""
     _garantir_arquivos()
     with open(AMIZADES_FILE, 'w', encoding='utf-8') as f:
         f.write("# =============================================================================\n")
         f.write("# MINISTEAM - Banco de Dados de Amizades\n")
-        f.write("# Cada linha representa uma amizade mútua entre dois usuários.\n")
         f.write("# Formato: id_menor | id_maior  (IDs ordenados para evitar duplicatas)\n")
-        f.write("# Exemplo: 1 | 3  (usuário 1 e usuário 3 são amigos)\n")
         f.write("# =============================================================================\n")
         for a, b in pares:
             f.write(f"{a} | {b}\n")
@@ -189,7 +200,6 @@ def remover_amizade(uid1, uid2):
 
 
 def get_amigos_usuario(uid):
-    """Retorna lista de objetos de usuário que são amigos do uid dado."""
     uid = str(uid)
     amigos = []
     for a, b in ler_amizades():
@@ -202,19 +212,156 @@ def get_amigos_usuario(uid):
 
 
 def get_amigos_dict(uid):
-    """Retorna {friend_id: nome_exibicao} para uso nos templates."""
     return {u['id']: u['nome'] for u in get_amigos_usuario(uid)}
+
+
+# ---- FUNÇÕES DE BIBLIOTECA ----
+
+def ler_biblioteca_usuario(uid):
+    """Retorna lista de IDs de jogos que o usuário possui."""
+    _garantir_arquivos()
+    uid = str(uid)
+    try:
+        with open(BIBLIOTECA_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s or s.startswith('#'):
+                    continue
+                partes = [p.strip() for p in s.split('|', 1)]
+                if partes[0] == uid:
+                    if len(partes) >= 2 and partes[1].strip():
+                        return [g for g in partes[1].strip().split(',') if g.strip()]
+                    return []
+    except FileNotFoundError:
+        pass
+    return []
+
+
+def salvar_biblioteca_usuario(uid, game_ids):
+    """Salva/atualiza a lista de jogos do usuário no arquivo de banco de dados."""
+    _garantir_arquivos()
+    uid = str(uid)
+    game_ids = list(dict.fromkeys(str(g) for g in game_ids if g))  # deduplica mantendo ordem
+    linhas_novas = []
+    encontrou = False
+    try:
+        with open(BIBLIOTECA_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s or s.startswith('#'):
+                    linhas_novas.append(linha)
+                    continue
+                partes = [p.strip() for p in s.split('|', 1)]
+                if partes[0] == uid:
+                    linhas_novas.append(f"{uid} | {','.join(game_ids)}\n")
+                    encontrou = True
+                else:
+                    linhas_novas.append(linha)
+    except FileNotFoundError:
+        linhas_novas = [
+            "# =============================================================================\n",
+            "# MINISTEAM - Banco de Dados de Bibliotecas de Usuários\n",
+            "# Formato: user_id | game_id1,game_id2,...\n",
+            "# =============================================================================\n"
+        ]
+    if not encontrou:
+        linhas_novas.append(f"{uid} | {','.join(game_ids)}\n")
+    with open(BIBLIOTECA_FILE, 'w', encoding='utf-8') as f:
+        f.writelines(linhas_novas)
+
+
+# ---- FUNÇÕES DE FAMÍLIA ----
+
+def ler_familias():
+    """Retorna lista de dicts com todas as famílias registradas."""
+    _garantir_arquivos()
+    familias = []
+    try:
+        with open(FAMILIAS_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s or s.startswith('#'):
+                    continue
+                try:
+                    familias.append(json.loads(s))
+                except json.JSONDecodeError:
+                    pass
+    except FileNotFoundError:
+        pass
+    return familias
+
+
+def _reescrever_familias(familias):
+    """Sobrescreve o arquivo de famílias com a lista fornecida."""
+    _garantir_arquivos()
+    with open(FAMILIAS_FILE, 'w', encoding='utf-8') as f:
+        f.write("# =============================================================================\n")
+        f.write("# MINISTEAM - Banco de Dados de Famílias\n")
+        f.write("# Cada linha é um objeto JSON representando uma família.\n")
+        f.write("# =============================================================================\n")
+        for familia in familias:
+            # Nunca salva o campo de sessão 'occupied_by_others'
+            dados = {k: v for k, v in familia.items() if k != 'occupied_by_others'}
+            f.write(json.dumps(dados, ensure_ascii=False) + '\n')
+
+
+def salvar_nova_familia(familia):
+    """Adiciona uma nova família ao final do arquivo."""
+    _garantir_arquivos()
+    dados = {k: v for k, v in familia.items() if k != 'occupied_by_others'}
+    with open(FAMILIAS_FILE, 'a', encoding='utf-8') as f:
+        f.write(json.dumps(dados, ensure_ascii=False) + '\n')
+
+
+def atualizar_familia(familia):
+    """Atualiza os dados de uma família existente no arquivo."""
+    familias = ler_familias()
+    novas = []
+    for f in familias:
+        if f['id'] == familia['id']:
+            dados = {k: v for k, v in familia.items() if k != 'occupied_by_others'}
+            novas.append(dados)
+        else:
+            novas.append(f)
+    _reescrever_familias(novas)
+
+
+def remover_familia_db(family_id):
+    """Remove uma família do arquivo pelo ID."""
+    familias = [f for f in ler_familias() if f['id'] != family_id]
+    _reescrever_familias(familias)
+
+
+def buscar_familia_do_usuario(uid):
+    """Retorna a família do usuário (como dict) ou None."""
+    uid = str(uid)
+    for familia in ler_familias():
+        if uid in [str(m) for m in familia.get('member_ids', [])]:
+            return familia
+    return None
 
 
 # ---- FUNÇÃO DE LOGIN ----
 
 def fazer_login_sessao(usuario):
-    """Limpa a sessão e a popula com os dados do usuário autenticado."""
+    """Limpa a sessão e a popula com os dados do usuário autenticado, carregando dados do banco."""
     session.clear()
+    uid = str(usuario['id'])
+
+    # Carrega biblioteca persistida
+    biblioteca_db = ler_biblioteca_usuario(uid)
+
+    # Carrega família persistida
+    familia_db = buscar_familia_do_usuario(uid)
+    familia_sessao = None
+    if familia_db:
+        familia_sessao = dict(familia_db)
+        familia_sessao['occupied_by_others'] = {}  # campo de simulação, sempre começa vazio
+
     session['logged_in']     = True
-    session['user_id']       = usuario['id']
+    session['user_id']       = uid
     session['wallet']        = 100.00
-    session['library']       = []
+    session['library']       = biblioteca_db
     session['cart']          = []
     session['gifts_sent']    = {}
     session['user_dob']      = usuario['dob']
@@ -222,13 +369,13 @@ def fazer_login_sessao(usuario):
         'name':    usuario['nome'],
         'details': usuario.get('notas', '')
     }
-    session['family']          = None
+    session['family']          = familia_sessao
     session['family_cooldown'] = False
     session['offline_mode']    = False
     session['active_game']     = None
     session['show_pe01_for']   = None
     session.modified = True
-    registrar_maquina(usuario['id'])
+    registrar_maquina(uid)
 
 
 # ==============================================================================
@@ -344,12 +491,62 @@ def logout():
 
 @app.route('/amigos')
 def amigos():
-    uid          = session['user_id']
-    meus_amigos  = get_amigos_usuario(uid)
-    ids_amigos   = {u['id'] for u in meus_amigos}
-    # Todos os outros usuários registrados que ainda não são amigos
-    outros       = [u for u in ler_usuarios() if u['id'] != uid and u['id'] not in ids_amigos]
-    return render_template('amigos.html', meus_amigos=meus_amigos, outros_usuarios=outros)
+    uid         = session['user_id']
+    meus_amigos = get_amigos_usuario(uid)
+    ids_amigos  = {u['id'] for u in meus_amigos}
+    q           = request.args.get('q', '').strip().lower()
+
+    sugestoes      = []
+    tipo_sugestao  = 'busca' if q else 'fof'
+
+    if q:
+        # Prefixo exato: apenas usuários cujo @ COMEÇA com a query
+        todos = ler_usuarios()
+        sugestoes = [
+            u for u in todos
+            if u['id'] != uid
+            and u['id'] not in ids_amigos
+            and u['username'].lower().startswith(q)
+        ]
+    else:
+        # Sugestões de amigos de amigos (máx 5, sem repetição)
+        vistos = set()
+        for amigo in meus_amigos:
+            for fof in get_amigos_usuario(amigo['id']):
+                if fof['id'] != uid and fof['id'] not in ids_amigos and fof['id'] not in vistos:
+                    vistos.add(fof['id'])
+                    sugestoes.append(fof)
+                    if len(sugestoes) >= 5:
+                        break
+            if len(sugestoes) >= 5:
+                break
+
+    return render_template('amigos.html',
+                           meus_amigos=meus_amigos,
+                           sugestoes=sugestoes,
+                           query=q,
+                           tipo_sugestao=tipo_sugestao)
+
+
+@app.route('/amigos/buscar')
+def amigos_buscar():
+    from flask import jsonify
+    uid       = session['user_id']
+    q         = request.args.get('q', '').strip().lower()
+    ids_amigos = {u['id'] for u in get_amigos_usuario(uid)}
+
+    if not q:
+        return jsonify([])
+
+    todos = ler_usuarios()
+    resultados = [
+        {'id': u['id'], 'username': u['username'], 'nome': u['nome']}
+        for u in todos
+        if u['id'] != uid
+        and u['id'] not in ids_amigos
+        and u['username'].lower().startswith(q)
+    ][:4]
+    return jsonify(resultados)
 
 
 @app.route('/amigos/adicionar/<friend_id>')
@@ -393,7 +590,7 @@ def index():
 
 @app.route('/game/<game_id>')
 def game(game_id):
-    game_data = GAMES.get(game_id)
+    game_data  = GAMES.get(game_id)
     if not game_data:
         return "Jogo não encontrado", 404
     show_modal = request.args.get('added') == '1'
@@ -459,12 +656,11 @@ def add_to_cart(game_id):
 
 @app.route('/cart')
 def cart():
-    uid    = session['user_id']
-    total  = sum(item['price'] for item in session['cart'])
-    # Apenas amigos reais do usuário logado podem ser destinatários de presentes
-    friends              = get_amigos_dict(uid)
-    gift_items           = [item for item in session['cart'] if item['is_gift']]
-    distinct_gift_ids    = set(item['id'] for item in gift_items)
+    uid                      = session['user_id']
+    total                    = sum(item['price'] for item in session['cart'])
+    friends                  = get_amigos_dict(uid)
+    gift_items               = [item for item in session['cart'] if item['is_gift']]
+    distinct_gift_ids        = set(item['id'] for item in gift_items)
     multiple_different_gifts = len(distinct_gift_ids) > 1
     return render_template('cart.html',
                            cart=session['cart'],
@@ -500,17 +696,13 @@ def proceed_checkout():
             if not friend_id:
                 flash('Por favor, selecione o destinatário para todos os presentes.', 'error')
                 return redirect(url_for('cart'))
-
-            # Valida que o destinatário ainda é amigo do usuário
             if friend_id not in friends:
                 flash('Destinatário inválido. Selecione um amigo da sua lista.', 'error')
                 return redirect(url_for('cart'))
-
             historico_amigo = session['gifts_sent'].get(friend_id, [])
             if item['id'] in historico_amigo:
                 flash(f"Remova ou altere: {friends[friend_id]} já possui '{item['name']}'!", 'error')
                 return redirect(url_for('cart'))
-
             item['recipient_id']   = friend_id
             item['recipient_name'] = friends[friend_id]
 
@@ -521,11 +713,48 @@ def proceed_checkout():
 
 @app.route('/library')
 def library():
-    jogos_disponiveis = set(session['library'])
+    uid          = session['user_id']
+    user_dob_str = session.get('user_dob')
+    user_age     = None
+
+    if user_dob_str:
+        try:
+            dob      = datetime.strptime(user_dob_str, '%Y-%m-%d')
+            hoje     = datetime.today()
+            user_age = hoje.year - dob.year - ((hoje.month, hoje.day) < (dob.month, dob.day))
+        except ValueError:
+            pass
+
+    minha_biblioteca = set(session.get('library', []) or [])
+    familia_pool     = set()
     if session.get('family'):
-        jogos_disponiveis.update(session['family']['library_pool'])
-    owned_games = {gid: GAMES[gid] for gid in jogos_disponiveis if gid in GAMES}
-    return render_template('library.html', games=owned_games)
+        familia_pool = set(session['family'].get('library_pool', []))
+
+    todos_ids = minha_biblioteca | familia_pool
+
+    jogos_disponiveis   = {}
+    ids_familia_pool    = []   # jogos presentes no pool da família (incluindo os que o usuário também possui)
+    ids_minha_biblioteca = list(minha_biblioteca)
+
+    for gid in todos_ids:
+        if gid not in GAMES:
+            continue
+        game = GAMES[gid]
+        # Filtro de idade: jogo com restrição NÃO aparece se usuário não tem DOB ou é menor de idade
+        if game['age_rating'] > 0:
+            if user_age is None or user_age < game['age_rating']:
+                continue
+        jogos_disponiveis[gid] = game
+        if gid in familia_pool:
+            ids_familia_pool.append(gid)
+
+    tem_familia = bool(session.get('family'))
+
+    return render_template('library.html',
+                           games=jogos_disponiveis,
+                           ids_familia_pool=ids_familia_pool,
+                           ids_minha_biblioteca=ids_minha_biblioteca,
+                           tem_familia=tem_familia)
 
 
 @app.route('/checkout')
@@ -557,6 +786,8 @@ def process_payment():
     if valor_a_pagar > 0:
         detalhes.append(f"R$ {valor_a_pagar:.2f} via {payment_method}")
 
+    familia_modificada = False
+
     for item in session['cart']:
         if item['is_gift']:
             fid = item['recipient_id']
@@ -565,11 +796,15 @@ def process_payment():
             session['gifts_sent'][fid].append(item['id'])
             flash(f"Presente '{item['name']}' enviado para {item['recipient_name']}!", 'sucesso')
             if session.get('family'):
-                amigo_na_familia = any(m['name'] == item['recipient_name'] for m in session['family']['members'])
+                amigo_na_familia = any(
+                    str(m.get('id', '')) == str(fid) or m.get('name') == item['recipient_name']
+                    for m in session['family']['members']
+                )
                 if amigo_na_familia:
                     if item['id'] not in session['family']['library_pool']:
                         session['family']['library_pool'].append(item['id'])
                     session['family']['licenses'][item['id']] = session['family']['licenses'].get(item['id'], 0) + 1
+                    familia_modificada = True
                     flash(f"Como {item['recipient_name']} está na Família, '{item['name']}' foi adicionado ao Pool!", 'sucesso')
         else:
             if item['id'] not in session['library']:
@@ -578,6 +813,14 @@ def process_payment():
                     if item['id'] not in session['family']['library_pool']:
                         session['family']['library_pool'].append(item['id'])
                     session['family']['licenses'][item['id']] = session['family']['licenses'].get(item['id'], 0) + 1
+                    familia_modificada = True
+
+    # Persiste biblioteca do usuário
+    salvar_biblioteca_usuario(session['user_id'], session['library'])
+
+    # Persiste família se foi modificada
+    if familia_modificada and session.get('family'):
+        atualizar_familia(session['family'])
 
     session['cart'] = []
     session.modified = True
@@ -599,6 +842,8 @@ def family():
 @app.route('/create_family', methods=['POST'])
 def create_family():
     family_name = request.form.get('family_name')
+    uid         = session['user_id']
+
     if session.get('family'):
         flash("Saia da sua família atual antes de criar uma nova.", "error")
         return redirect(url_for('family'))
@@ -606,25 +851,28 @@ def create_family():
         flash("Bloqueio: Período de carência de 1 ano ativo para esta conta.", "error")
         return redirect(url_for('family'))
 
-    shared_library = list(set(session.get('library', [])))
-    session['family'] = {
+    shared_library = list(dict.fromkeys(session.get('library', [])))
+    nova_familia = {
         'id':                 f"fam_{datetime.now().timestamp()}",
         'name':               family_name,
         'created_at':         datetime.now().strftime("%d/%m/%Y %H:%M"),
         'founder':            session['user_profile']['name'],
-        'members':            [{'name': session['user_profile']['name']}],
+        'founder_id':         uid,
+        'members':            [{'name': session['user_profile']['name'], 'id': uid}],
+        'member_ids':         [uid],
         'library_pool':       shared_library,
         'licenses':           {gid: 1 for gid in shared_library},
         'occupied_by_others': {}
     }
-    session.modified = True
+    session['family'] = nova_familia
+    session.modified  = True
+    salvar_nova_familia(nova_familia)
     flash(f"Família '{family_name}' criada com sucesso!", "sucesso")
     return redirect(url_for('family'))
 
 
 @app.route('/family/invite/<friend_id>')
 def family_invite(friend_id):
-    """Convida um amigo real (da lista de amizades) para a família."""
     if not session.get('family'):
         flash("Você precisa criar uma família primeiro.", "error")
         return redirect(url_for('family'))
@@ -635,7 +883,6 @@ def family_invite(friend_id):
         flash("Bloqueio: Uma Família não pode ter mais de 6 membros.", "error")
         return redirect(url_for('family'))
 
-    # Valida que é de fato um amigo do usuário logado
     uid     = session['user_id']
     friends = get_amigos_dict(uid)
     if friend_id not in friends:
@@ -644,24 +891,44 @@ def family_invite(friend_id):
 
     friend_name = friends[friend_id]
 
-    if any(m['name'] == friend_name for m in family_data['members']):
+    # Garante que member_ids existe (compatibilidade)
+    if 'member_ids' not in family_data:
+        family_data['member_ids'] = [m.get('id', '') for m in family_data['members']]
+
+    if friend_id in family_data['member_ids']:
         flash(f"{friend_name} já faz parte desta família.", "error")
         return redirect(url_for('family'))
 
-    family_data['members'].append({'name': friend_name})
+    # Adiciona membro
+    family_data['members'].append({'name': friend_name, 'id': friend_id})
+    family_data['member_ids'].append(friend_id)
 
-    # Unifica licenças dos presentes que este amigo recebeu
-    jogos_do_amigo    = session.get('gifts_sent', {}).get(friend_id, [])
+    # Adiciona jogos do amigo (biblioteca persistida) ao pool
     jogos_adicionados = []
+    biblioteca_amigo  = ler_biblioteca_usuario(friend_id)
+    for jogo_id in biblioteca_amigo:
+        qtd = 1
+        if jogo_id not in family_data['library_pool']:
+            family_data['library_pool'].append(jogo_id)
+        family_data['licenses'][jogo_id] = family_data['licenses'].get(jogo_id, 0) + qtd
+        nome_jogo = GAMES.get(jogo_id, {}).get('name', 'Jogo Desconhecido')
+        if nome_jogo not in jogos_adicionados:
+            jogos_adicionados.append(nome_jogo)
+
+    # Também considera presentes enviados nesta sessão
+    jogos_do_amigo = session.get('gifts_sent', {}).get(friend_id, [])
     for jogo_id in set(jogos_do_amigo):
         qtd = jogos_do_amigo.count(jogo_id)
         if jogo_id not in family_data['library_pool']:
             family_data['library_pool'].append(jogo_id)
         family_data['licenses'][jogo_id] = family_data['licenses'].get(jogo_id, 0) + qtd
-        jogos_adicionados.append(GAMES.get(jogo_id, {}).get('name', 'Jogo Desconhecido'))
+        nome_jogo = GAMES.get(jogo_id, {}).get('name', 'Jogo Desconhecido')
+        if nome_jogo not in jogos_adicionados:
+            jogos_adicionados.append(nome_jogo)
 
     session['family'] = family_data
-    session.modified = True
+    session.modified  = True
+    atualizar_familia(family_data)
 
     if jogos_adicionados:
         flash(f"Convite aceito! {friend_name} entrou e trouxe para o Pool: {', '.join(jogos_adicionados)}.", "sucesso")
@@ -689,7 +956,13 @@ def family_transfer_leadership(member_name):
         return redirect(url_for('family'))
 
     session['family']['founder'] = member_name
+    # Atualiza founder_id também
+    for m in session['family']['members']:
+        if m['name'] == member_name:
+            session['family']['founder_id'] = m.get('id', '')
+            break
     session.modified = True
+    atualizar_familia(session['family'])
     flash(f"Liderança transferida para {member_name}! Você continua como membro.", "sucesso")
     return redirect(url_for('family'))
 
@@ -711,12 +984,11 @@ def family_play(game_id):
         flash("Bloqueio: Este jogo possui restrições do desenvolvedor que impedem o compartilhamento.", "error")
         return redirect(url_for('family'))
 
-    # Verificação de idade por data de nascimento
     if game_data['age_rating'] > 0:
         user_dob_str = session.get('user_dob')
         if not user_dob_str:
             flash(f"Bloqueio: '{game_data['name']}' é classificado +{game_data['age_rating']} anos. "
-                  f"Registre sua data de nascimento no perfil para verificar sua elegibilidade.", "error")
+                  f"Registre sua data de nascimento no perfil.", "error")
             return redirect(url_for('family'))
         try:
             dob      = datetime.strptime(user_dob_str, '%Y-%m-%d')
@@ -791,6 +1063,7 @@ def family_buy_extra(game_id):
         session['show_pe01_for'] = None
         session.modified = True
         qtd = session['family']['licenses'][game_id]
+        atualizar_familia(session['family'])
         flash(f"[PE01] Cópia adicional comprada! Pool agora possui {qtd} licenças de '{game_data['name']}'.", "sucesso")
     else:
         flash("Saldo insuficiente na carteira.", "error")
@@ -809,7 +1082,7 @@ def reset_session():
         usuario = buscar_por_id(uid)
         if usuario:
             fazer_login_sessao(usuario)
-            flash('Estado de jogo reiniciado! Carteira, biblioteca e família foram resetadas.', 'sucesso')
+            flash('Estado de jogo reiniciado! Carteira e carrinho foram resetados. Biblioteca e família foram restauradas do banco de dados.', 'sucesso')
             return redirect(url_for('index'))
     session.clear()
     return redirect(url_for('login'))

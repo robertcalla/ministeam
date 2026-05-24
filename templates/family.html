@@ -219,13 +219,13 @@
             </div>
         </div>
 
-        {# --- Seção Transferir Liderança (só aparece se o usuário atual é fundador) --- #}
+        {# --- Seção Transferir Liderança (só aparece se o usuário atual é criador) --- #}
         {% if session['family'] and session['family']['founder'] == session['user_profile']['name'] %}
         <div style="background: rgba(0,0,0,0.25); border: 1px solid #3a688c; padding: 16px; border-radius: 3px; margin-bottom: 10px;">
             <p style="font-size: 13px; color: #c7d5e0; margin-bottom: 12px;">
                 👑 <strong>Transferir Liderança</strong><br>
                 <span style="font-size: 11px; color: #8f98a0;">
-                    Este membro se tornará o novo fundador da família. Você continuará como membro comum.
+                    Este membro se tornará o novo lider da família. Você continuará como membro comum.
                     Esta ação não pode ser desfeita sem a cooperação do novo líder.
                 </span>
             </p>
@@ -256,7 +256,7 @@
         </div>
         {% else %}
         <div style="background: rgba(0,0,0,0.15); padding: 14px; border-radius: 3px; text-align: center; color: #8f98a0; font-size: 13px;">
-            Apenas o fundador pode alterar permissões de membros.
+            Apenas o lider pode alterar permissões de membros.
         </div>
         {% endif %}
 
@@ -285,7 +285,7 @@
         var isFounder = {{ 'true' if session['family'] and session['family']['founder'] else 'false' }};
         var founderName = "{{ session['family']['founder'] if session['family'] else '' }}";
         if (nome === founderName) {
-            document.getElementById('modal_member_role_label').textContent = '👑 Fundador da família';
+            document.getElementById('modal_member_role_label').textContent = '👑 Criador da família';
         } else {
             document.getElementById('modal_member_role_label').textContent = 'Membro da família';
         }

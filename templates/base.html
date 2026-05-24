@@ -8,7 +8,9 @@
 <body>
 <header class="navbar">
     <div class="nav-left">
-        <a href="{{ url_for('reset_session') }}" title="Clique aqui para reiniciar a sessão e limpar os cookies de teste" style="text-decoration: none; cursor: pointer;">
+        <a href="{{ url_for('reset_session') }}"
+           onclick="return confirm('Isto irá limpar os cookies e APAGAR todos os dados (amizades, famílias, bibliotecas, carteiras e sessões). As contas de usuário serão mantidas. Continuar?');"
+           title="Limpar tudo: cookies e todos os arquivos de dados (exceto as contas de usuário)" style="text-decoration: none; cursor: pointer;">
             <div class="logo">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="MINISTEAM Logo" style="height: 40px; display: block;">
             </div>
@@ -16,6 +18,7 @@
         <nav>
             <a href="{{ url_for('index') }}">Loja</a>
             <a href="{{ url_for('library') }}">Biblioteca</a>
+            <a href="{{ url_for('amigos') }}">Amigos</a>
             <a href="{{ url_for('family') }}">Família</a>
         </nav>
     </div>
@@ -27,17 +30,25 @@
         <div class="wallet-display" style="font-size: 13px; color: #66c0f4; background: #2a475e; padding: 5px 10px; border-radius: 2px;">
             Carteira: <strong>R$ {{ "%.2f"|format(session['wallet']) }}</strong>
         </div>
-        <div class="user-profile" onclick="openUserProfileModal()" style="cursor: pointer;" title="Ver meus dados">
+        <div class="user-profile" onclick="openUserProfileModal()" style="cursor: pointer;" title="Ver meus dados ({{ session['user_profile']['name'] }})">
             <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Perfil">
         </div>
+        <a href="{{ url_for('logout') }}" title="Sair da conta" style="font-size: 12px; color: #8f98a0; text-decoration: none; padding: 5px 8px; background: #171a21; border: 1px solid #2a475e; border-radius: 2px; white-space: nowrap;">
+            ⏻ Sair
+        </a>
     </div>
 </header>
 
+<!-- Modal de Perfil do Usuário -->
 <div id="userProfileModal" class="modal-overlay" style="display: none;">
     <div class="modal-content" style="background: #171a21; border: 1px solid #2a475e; width: 480px; box-shadow: 0 0 15px rgba(0,0,0,0.7);">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a475e; padding-bottom: 10px; margin-bottom: 15px;">
-            <h2 style="color: #66c0f4; margin: 0; font-size: 18px;">📋 Dados da Conta Steam</h2>
+            <h2 style="color: #66c0f4; margin: 0; font-size: 18px;">📋 Dados da Conta</h2>
             <span style="cursor: pointer; color: #8f98a0; font-size: 22px; font-weight: bold;" onclick="closeUserProfileModal()">&times;</span>
+        </div>
+
+        <div style="margin-bottom: 12px; font-size: 12px; color: #8f98a0;">
+            Logado como: <strong style="color: #66c0f4;">{{ session['user_profile']['name'] }}</strong>
         </div>
 
         <form action="{{ url_for('update_profile') }}" method="POST">
@@ -52,9 +63,9 @@
             </div>
 
             <div style="margin-bottom: 20px; background: rgba(0,0,0,0.2); padding: 12px; border: 1px solid #3a688c; border-radius: 3px;">
-                <label style="font-size: 12px; color: #ff9900; font-weight: bold;">📅 Data de Nascimento Padrão:</label>
+                <label style="font-size: 12px; color: #ff9900; font-weight: bold;">📅 Data de Nascimento:</label>
                 <input type="date" name="dob" value="{{ session['user_dob'] if session['user_dob'] else '' }}" style="width: 100%; padding: 8px; margin-top: 6px; background: #171a21; color: white; border: 1px solid #2a475e; border-radius: 2px;">
-                <p style="font-size: 10px; color: #8f98a0; margin-top: 4px;">*Salvar uma data aqui fará com que o sistema valide as classificações indicativas automaticamente sem interromper sua navegação.</p>
+                <p style="font-size: 10px; color: #8f98a0; margin-top: 4px;">*Necessária para acessar jogos com classificação etária. Sem ela, títulos +10 e +18 serão bloqueados.</p>
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 10px;">
@@ -88,5 +99,6 @@
     }
 </script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
+{% block scripts %}{% endblock %}
 </body>
 </html>

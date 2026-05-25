@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}Histórico de Compras - Ministeam{% endblock %}
+
+{% block content %}
+<div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 24px;">
+    <h1 style="margin: 0;">📋 Histórico de Compras</h1>
+    <a href="{{ url_for('index') }}" class="btn-blue" style="text-decoration: none; padding: 8px 16px; font-size: 13px;">
+        ← Voltar à Loja
+    </a>
+</div>
+
+{% if transacoes %}
+<!-- Resumo geral -->
+<div style="
+    background: rgba(0,0,0,0.2); border: 1px solid #2a475e;
+    border-radius: 6px; padding: 16px 20px; margin-bottom: 28px;
+    display: flex; gap: 40px; flex-wrap: wrap;
+">
+    <div>
+        <p style="color: #8f98a0; font-size: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Total de transações</p>
+        <p style="color: #c6d4df; font-size: 22px; font-weight: bold;">{{ transacoes|length }}</p>
+    </div>
+    <div>
+        <p style="color: #8f98a0; font-size: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Total gasto</p>
+        <p style="color: #79a016; font-size: 22px; font-weight: bold;">
+            R$ {{ "%.2f"|format(transacoes | sum(attribute='total')) }}
+        </p>
+    </div>
+    <div>
+        <p style="color: #8f98a0; font-size: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Economia total (descontos)</p>
+        <p style="color: #4b9cd3; font-size: 22px; font-weight: bold;">
+            R$ {{ "%.2f"|format(transacoes | sum(attribute='desconto')) }}
+        </p>
+    </div>
+</div>
+
+<!-- Lista de transações -->
+<div style="display: flex; flex-direction: column; gap: 16px;">
+    {% for t in transacoes %}
+    <div style="
+        background: rgba(0,0,0,0.2); border: 1px solid #2a3f5f;
+        border-radius: 8px; overflow: hidden;
+    ">
+        <!-- Cabeçalho da transação -->
+        <div style="
+            background: rgba(42,71,94,0.4); border-bottom: 1px solid #2a3f5f;
+            padding: 12px 20px; display: flex; flex-wrap: wrap;
+            justify-content: space-between; align-items: center; gap: 10px;
+        ">
+            <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                <div>
+                    <p style="color: #8f98a0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Data</p>
+                    <p style="color: #c6d4df; font-size: 14px; font-weight: 600;">{{ t.data }}</p>
+                </div>
+                <div>
+                    <p style="color: #8f98a0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Forma de pagamento</p>
+                    <p style="color: #c6d4df; font-size: 13px;">{{ t.metodo_pagamento }}</p>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <p style="color: #8f98a0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Total pago</p>
+                <p style="color: #79a016; font-size: 18px; font-weight: bold;">R$ {{ "%.2f"|format(t.total) }}</p>
+                {% if t.desconto and t.desconto > 0 %}
+                <p style="color: #4b9cd3; font-size: 12px; margin-top: 2px;">
+                    🏷️ Desconto: R$ {{ "%.2f"|format(t.desconto) }}
+                </p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Itens da transação -->
+        <div style="padding: 12px 20px;">
+            <p style="color: #8f98a0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
+                Itens ({{ t.itens|length }})
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                {% for item in t.itens %}
+                <div style="
+                    display: flex; justify-content: space-between; align-items: center;
+                    background: rgba(0,0,0,0.15); border-radius: 4px;
+                    padding: 10px 14px; flex-wrap: wrap; gap: 8px;
+                ">
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        {% if item.is_gift %}
+                        <span style="
+                            background: rgba(255,153,0,0.15); color: #ff9900;
+                            border: 1px solid rgba(255,153,0,0.35); border-radius: 3px;
+                            font-size: 11px; padding: 2px 7px; font-weight: 700; white-space: nowrap;
+                        ">🎁 Presente</span>
+                        {% else %}
+                        <span style="
+                            background: rgba(121,160,22,0.12); color: #79a016;
+                            border: 1px solid rgba(121,160,22,0.3); border-radius: 3px;
+                            font-size: 11px; padding: 2px 7px; font-weight: 700; white-space: nowrap;
+                        ">✔ Para mim</span>
+                        {% endif %}
+                        <span style="color: #c6d4df; font-weight: 600; font-size: 14px;">{{ item.name }}</span>
+                        {% if item.is_gift and item.recipient_name %}
+                        <span style="color: #8f98a0; font-size: 12px;">→ para {{ item.recipient_name }}</span>
+                        {% endif %}
+                    </div>
+                    <div style="text-align: right; white-space: nowrap;">
+                        {% if item.desconto_item and item.desconto_item > 0 %}
+                        <span style="color: #8f98a0; font-size: 12px; text-decoration: line-through; margin-right: 6px;">
+                            R$ {{ "%.2f"|format(item.price + item.desconto_item) }}
+                        </span>
+                        <span style="color: #4b9cd3; font-size: 11px; margin-right: 8px;">
+                            -R$ {{ "%.2f"|format(item.desconto_item) }}
+                        </span>
+                        {% endif %}
+                        <span style="color: #c6d4df; font-size: 15px; font-weight: bold;">
+                            R$ {{ "%.2f"|format(item.price) }}
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% else %}
+<!-- Estado vazio (Fluxo Alternativo A1) -->
+<div style="
+    background: rgba(0,0,0,0.15); border: 1px dashed #2a3f5f;
+    border-radius: 8px; padding: 60px 40px; text-align: center;
+">
+    <div style="font-size: 48px; margin-bottom: 16px;">🛒</div>
+    <h2 style="color: #c6d4df; margin-bottom: 10px;">Nenhuma compra realizada ainda</h2>
+    <p style="color: #8f98a0; margin-bottom: 24px;">
+        Seu histórico ficará disponível aqui assim que você finalizar a primeira compra.
+    </p>
+    <a href="{{ url_for('index') }}" class="btn-green" style="text-decoration: none; padding: 12px 28px; font-size: 15px;">
+        Explorar a Loja
+    </a>
+</div>
+{% endif %}
+{% endblock %}

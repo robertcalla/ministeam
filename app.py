@@ -24,6 +24,7 @@ BIBLIOTECA_FILE = os.path.join(DATA_DIR, 'biblioteca.txt')
 FAMILIAS_FILE   = os.path.join(DATA_DIR, 'familias.txt')
 CARTEIRAS_FILE  = os.path.join(DATA_DIR, 'carteiras.txt')
 SESSOES_FILE    = os.path.join(DATA_DIR, 'sessoes.txt')
+HISTORICO_FILE  = os.path.join(DATA_DIR, 'historico.txt')
 
 CARTEIRA_INICIAL = 100.00
 
@@ -88,6 +89,14 @@ def _garantir_arquivos():
             f.write("# Cada linha = um usuário jogando agora um título do pool da família.\n")
             f.write("# Formato: user_id | family_id | game_id | modo  (modo: online|offline)\n")
             f.write("# Usado para contar 'Em uso por parentes' de forma persistente entre contas.\n")
+            f.write("# =============================================================================\n")
+
+    if not os.path.exists(HISTORICO_FILE):
+        with open(HISTORICO_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Histórico de Transações\n")
+            f.write("# Cada linha é um objeto JSON representando uma transação.\n")
+            f.write("# Campos: user_id, data, itens, total, desconto, metodo_pagamento\n")
             f.write("# =============================================================================\n")
 
 
@@ -348,6 +357,45 @@ def salvar_carteira_usuario(uid, saldo):
         linhas_novas.append(f"{uid} | {saldo:.2f}\n")
     with open(CARTEIRAS_FILE, 'w', encoding='utf-8') as f:
         f.writelines(linhas_novas)
+
+
+# ---- FUNÇÕES DE HISTÓRICO DE TRANSAÇÕES ----
+
+def registrar_transacao(uid, itens, total, desconto, metodo_pagamento):
+    """Persiste uma transação no histórico do usuário."""
+    _garantir_arquivos()
+    transacao = {
+        'user_id':          str(uid),
+        'data':             datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'itens':            itens,
+        'total':            round(total, 2),
+        'desconto':         round(desconto, 2),
+        'metodo_pagamento': metodo_pagamento
+    }
+    with open(HISTORICO_FILE, 'a', encoding='utf-8') as f:
+        f.write(json.dumps(transacao, ensure_ascii=False) + '\n')
+
+
+def ler_historico_usuario(uid):
+    """Retorna lista de transações do usuário, da mais recente para a mais antiga."""
+    _garantir_arquivos()
+    uid = str(uid)
+    transacoes = []
+    try:
+        with open(HISTORICO_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s or s.startswith('#'):
+                    continue
+                try:
+                    t = json.loads(s)
+                    if t.get('user_id') == uid:
+                        transacoes.append(t)
+                except json.JSONDecodeError:
+                    pass
+    except FileNotFoundError:
+        pass
+    return list(reversed(transacoes))
 
 
 # ---- FUNÇÕES DE FAMÍLIA ----
@@ -945,6 +993,13 @@ def checkout():
     return render_template('checkout.html', cart=session['cart'], total=total)
 
 
+@app.route('/historico')
+def historico():
+    """UC03 - Histórico de Transações"""
+    transacoes = ler_historico_usuario(session['user_id'])
+    return render_template('historico.html', transacoes=transacoes)
+
+
 @app.route('/process_payment', methods=['POST'])
 def process_payment():
     total          = sum(item['price'] for item in session['cart'])
@@ -952,6 +1007,10 @@ def process_payment():
     payment_method = request.form.get('payment_method')
     valor_a_pagar  = total
     detalhes       = []
+    desconto_total = 0.0
+
+    # Captura carrinho antes de modificar (para o histórico)
+    _cart_antes_de_limpar = list(session['cart'])
 
     if use_wallet:
         if session['wallet'] >= valor_a_pagar:
@@ -1004,6 +1063,25 @@ def process_payment():
     # Persiste família se foi modificada
     if familia_modificada and session.get('family'):
         atualizar_familia(session['family'])
+
+    # Registra transação no histórico (UC03)
+    itens_historico = [
+        {
+            'name':           item['name'],
+            'price':          item['price'],
+            'is_gift':        item.get('is_gift', False),
+            'recipient_name': item.get('recipient_name', ''),
+            'desconto_item':  item.get('desconto_item', 0.0)
+        }
+        for item in _cart_antes_de_limpar
+    ]
+    registrar_transacao(
+        uid=session['user_id'],
+        itens=itens_historico,
+        total=total,
+        desconto=desconto_total,
+        metodo_pagamento=', '.join(detalhes)
+    )
 
     session['cart'] = []
     session.modified = True
@@ -1275,7 +1353,7 @@ def reset_session():
     exceto usuarios.txt (as contas cadastradas são preservadas)."""
     session.clear()
     for caminho in (MAQUINA_FILE, AMIZADES_FILE, BIBLIOTECA_FILE,
-                    FAMILIAS_FILE, CARTEIRAS_FILE, SESSOES_FILE):
+                    FAMILIAS_FILE, CARTEIRAS_FILE, SESSOES_FILE, HISTORICO_FILE):
         try:
             if os.path.exists(caminho):
                 os.remove(caminho)

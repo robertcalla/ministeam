@@ -5,7 +5,7 @@
 # Dica: data_nascimento como 'none' significa que o usuário não a cadastrou.
 # =============================================================================
 1 | robert | 1234 | 2002-12-17 | rob | gosto de jogos e as vezes jogo.
-2 | edmond | 1234 | 2001-01-01 | ed | Novo usuário Ministeam.
+2 | edmond | 1234 | 2001-01-01 | ed | Talvez um novo usuário Ministeam.
 3 | ana | 1234 | 1990-01-01 | Ana | Usuário Ministeam.
 4 | bruno | 1234 | 1990-01-01 | Bruno | Usuário Ministeam.
 5 | carla | 1234 | 1990-01-01 | Carla | Usuário Ministeam.

@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ perfil_user.nome }} - Perfil Ministeam{% endblock %}
+
+{% block content %}
+
+<!-- Cabeçalho do perfil -->
+<div class="profile-header">
+    <div class="profile-avatar">
+        <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="{{ perfil_user.nome }}">
+    </div>
+    <div class="profile-id">
+        <h1 style="margin: 0;">{{ perfil_user.nome }}</h1>
+        <div class="profile-username">@{{ perfil_user.username }}</div>
+        <p class="profile-bio">{{ perfil_user.notas or 'Este usuário ainda não escreveu nada sobre si.' }}</p>
+
+        <div class="profile-actions">
+            {% if is_self %}
+            <button class="btn-blue" onclick="openUserProfileModal()">✎ Editar Perfil</button>
+            <a href="{{ url_for('carteira') }}" class="btn-blue">💳 Minha Carteira</a>
+            {% elif is_friend %}
+            <button class="btn-green" onclick="document.getElementById('giftSaldoModal').style.display='flex'">🎁 Presentear saldo</button>
+            <a href="{{ url_for('amigos_remover', friend_id=perfil_user.id) }}" class="btn-blue"
+               style="background:#7a3030; color:#ffb3b3;"
+               onclick="return confirm('Remover {{ perfil_user.nome }} dos amigos?')">Remover amigo</a>
+            {% else %}
+            <a href="{{ url_for('amigos_adicionar', friend_id=perfil_user.id) }}" class="btn-green">+ Adicionar amigo</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Estatísticas -->
+    <div class="profile-stats">
+        <div class="stat"><span class="stat-num">{{ jogos_biblioteca|length }}</span><span class="stat-lbl">Jogos</span></div>
+        <div class="stat"><span class="stat-num">{{ amigos|length }}</span><span class="stat-lbl">Amigos</span></div>
+        <div class="stat"><span class="stat-num">{{ total_horas }}</span><span class="stat-lbl">Horas</span></div>
+        <div class="stat"><span class="stat-num">{{ jogos_desejos|length }}</span><span class="stat-lbl">Desejos</span></div>
+    </div>
+</div>
+
+{% if familia %}
+<div class="profile-family">
+    👪 Membro da família <strong>{{ familia.name }}</strong>
+</div>
+{% endif %}
+
+<div class="profile-columns">
+    <!-- Coluna principal -->
+    <div class="profile-main">
+
+        <!-- Jogos obtidos + horas -->
+        <section class="profile-section">
+            <h2>Jogos ({{ jogos_biblioteca|length }})</h2>
+            {% if jogos_biblioteca %}
+            <div class="profile-games">
+                {% for item in jogos_biblioteca %}
+                <a href="{{ url_for('game', game_id=item.game.id) }}" class="profile-game">
+                    <img src="{{ url_for('static', filename='images/jogo' ~ item.game.id ~ '.jpg') }}" alt="{{ item.game.name }}">
+                    <div class="profile-game-info">
+                        <span class="profile-game-name">{{ item.game.name }}</span>
+                        <span class="profile-game-hours">{{ item.horas }} h jogadas</span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="muted">Nenhum jogo na biblioteca ainda.</p>
+            {% endif %}
+        </section>
+
+        <!-- Lista de desejos (visível apenas para o próprio usuário ou amigos) -->
+        {% if is_self or is_friend %}
+        <section class="profile-section">
+            <h2>Lista de Desejos ({{ jogos_desejos|length }})</h2>
+            {% if jogos_desejos %}
+            <div class="profile-games">
+                {% for game in jogos_desejos %}
+                <a href="{{ url_for('game', game_id=game.id) }}" class="profile-game">
+                    <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}">
+                    <div class="profile-game-info">
+                        <span class="profile-game-name">{{ game.name }}</span>
+                        {% set p = preco_info(game.id) %}
+                        <span class="profile-game-hours">
+                            {% if p.on_sale %}<span class="discount-badge" style="font-size:12px; padding:1px 5px;">-{{ p.pct }}%</span> {% endif %}
+                            R$ {{ "%.2f"|format(p.final) }}
+                        </span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="muted">Nenhum jogo na lista de desejos.</p>
+            {% endif %}
+        </section>
+        {% else %}
+        <section class="profile-section">
+            <h2>Lista de Desejos</h2>
+            <p class="muted">🔒 A lista de desejos de {{ perfil_user.nome }} é visível apenas para amigos.</p>
+        </section>
+        {% endif %}
+
+        <!-- Mural de comentários -->
+        <section class="profile-section">
+            <h2>Comentários ({{ comentarios|length }})</h2>
+
+            <form action="{{ url_for('perfil_comentar', user_id=perfil_user.id) }}" method="POST" class="comment-form">
+                <textarea name="texto" maxlength="300" placeholder="Deixe um comentário {% if is_self %}no seu próprio mural{% else %}para {{ perfil_user.nome }}{% endif %}..." required></textarea>
+                <button type="submit" class="btn-green">Publicar</button>
+            </form>
+
+            {% if comentarios %}
+            <div class="comment-list">
+                {% for c in comentarios %}
+                <div class="comment">
+                    <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="{{ c.autor_nome }}" class="comment-avatar">
+                    <div class="comment-body">
+                        <div class="comment-head">
+                            <a href="{{ url_for('perfil', user_id=c.autor_id) }}" class="comment-author">{{ c.autor_nome }}</a>
+                            <span class="comment-date">{{ c.data }}</span>
+                        </div>
+                        <div class="comment-text">{{ c.texto }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="muted">Ainda não há comentários. Seja o primeiro!</p>
+            {% endif %}
+        </section>
+    </div>
+
+    <!-- Coluna lateral: amigos -->
+    <aside class="profile-aside">
+        <section class="profile-section">
+            <h2>Amigos ({{ amigos|length }})</h2>
+            {% if amigos %}
+            <div class="friend-mini-list">
+                {% for a in amigos %}
+                <a href="{{ url_for('perfil', user_id=a.id) }}" class="friend-mini">
+                    <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="{{ a.nome }}">
+                    <div>
+                        <div class="friend-mini-name">{{ a.nome }}</div>
+                        <div class="friend-mini-user">@{{ a.username }}</div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="muted">Sem amigos ainda.</p>
+            {% endif %}
+        </section>
+    </aside>
+</div>
+
+{% if is_friend %}
+<!-- Modal: presentear saldo para o amigo -->
+<div id="giftSaldoModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <h2 style="margin:0;">🎁 Presentear saldo</h2>
+            <span style="cursor:pointer; color:#8f98a0; font-size:22px;" onclick="document.getElementById('giftSaldoModal').style.display='none'">&times;</span>
+        </div>
+        <p style="color:#8f98a0; font-size:13px; margin-bottom:16px;">
+            Comprar saldo Steam para <strong style="color:#66c0f4;">{{ perfil_user.nome }}</strong>.
+            A forma de pagamento será escolhida na próxima etapa.
+        </p>
+
+        <div class="wallet-options">
+            {% for valor in [20, 50, 100, 250] %}
+            <form action="{{ url_for('carteira_comprar') }}" method="POST" class="wallet-option">
+                <input type="hidden" name="valor" value="{{ valor }}">
+                <input type="hidden" name="para" value="{{ perfil_user.id }}">
+                <span class="wallet-option-val">R$ {{ "%.2f"|format(valor) }}</span>
+                <button type="submit" class="btn-green" style="width:100%;">Presentear</button>
+            </form>
+            {% endfor %}
+        </div>
+
+        <form action="{{ url_for('carteira_comprar') }}" method="POST" class="wallet-custom" style="margin-top:14px;">
+            <input type="hidden" name="para" value="{{ perfil_user.id }}">
+            <label style="font-size:13px; color:#66c0f4;">Outro valor (R$):</label>
+            <div style="display:flex; gap:10px; margin-top:6px;">
+                <input type="number" name="valor" min="1" step="0.01" placeholder="Ex: 30.00"
+                       style="flex:1; padding:10px; background:#1b2838; color:white; border:1px solid #2a475e; border-radius:2px;">
+                <button type="submit" class="btn-blue">Presentear</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Minha Carteira - Ministeam{% endblock %}
+
+{% block content %}
+<h1>Minha Carteira Steam</h1>
+
+<div class="wallet-card">
+    <div class="wallet-balance">
+        <span class="wallet-balance-lbl">Saldo disponível</span>
+        <span class="wallet-balance-val">R$ {{ "%.2f"|format(session['wallet']) }}</span>
+    </div>
+    <p style="color:#8f98a0; font-size: 13px;">
+        Use o saldo da sua Carteira para comprar jogos na loja sem precisar de outro meio de pagamento.
+    </p>
+</div>
+
+<div class="wallet-add">
+    <h2 style="font-size: 18px;">Adicionar fundos</h2>
+    <p style="color:#8f98a0; font-size: 13px; margin-bottom: 16px;">Escolha um valor para comprar saldo. Você escolherá a forma de pagamento na próxima etapa.</p>
+
+    <div class="wallet-options">
+        {% for valor in [20, 50, 100, 250] %}
+        <form action="{{ url_for('carteira_comprar') }}" method="POST" class="wallet-option">
+            <input type="hidden" name="valor" value="{{ valor }}">
+            <input type="hidden" name="para" value="self">
+            <span class="wallet-option-val">R$ {{ "%.2f"|format(valor) }}</span>
+            <button type="submit" class="btn-green" style="width:100%;">Comprar</button>
+        </form>
+        {% endfor %}
+    </div>
+
+    <form action="{{ url_for('carteira_comprar') }}" method="POST" class="wallet-custom">
+        <input type="hidden" name="para" value="self">
+        <label style="font-size: 13px; color:#66c0f4;">Outro valor (R$):</label>
+        <div style="display:flex; gap:10px; margin-top:6px;">
+            <input type="number" name="valor" min="1" step="0.01" placeholder="Ex: 75.00"
+                   style="flex:1; padding:10px; background:#1b2838; color:white; border:1px solid #2a475e; border-radius:2px;">
+            <button type="submit" class="btn-blue">Comprar</button>
+        </div>
+    </form>
+</div>
+
+<div style="margin-top: 20px;">
+    <a href="{{ url_for('index') }}" class="btn-blue">‹ Voltar para a Loja</a>
+</div>
+{% endblock %}

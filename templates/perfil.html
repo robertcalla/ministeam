@@ -48,6 +48,35 @@
     <!-- Coluna principal -->
     <div class="profile-main">
 
+        {% if is_self %}
+        <!-- Configurações da conta: trocar @usuário (limitado) -->
+        <section class="profile-section">
+            <h2>Configurações da conta</h2>
+            <p style="color:#c7d5e0; margin-bottom: 6px;">
+                Seu @usuário atual: <strong style="color:#66c0f4;">@{{ perfil_user.username }}</strong>
+            </p>
+            <p class="muted" style="margin-bottom: 14px;">
+                Cada conta pode trocar o @usuário no máximo {{ limite_trocas }} vezes.
+                Trocas restantes: <strong style="color:{% if trocas_restantes > 0 %}#79a016{% else %}#b52a1c{% endif %};">{{ trocas_restantes }}</strong>.
+            </p>
+
+            {% if trocas_restantes > 0 %}
+            <form action="{{ url_for('trocar_username') }}" method="POST"
+                  onsubmit="return confirm('Tem certeza? Esta troca consome 1 das suas {{ trocas_restantes }} troca(s) restantes.');"
+                  style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                <span style="color:#8f98a0;">@</span>
+                <input type="text" name="novo_username" required
+                       pattern="[A-Za-z0-9_]+" title="Apenas letras, números e underscore"
+                       placeholder="novo_usuario"
+                       style="flex:1; min-width:200px; padding:9px; background:#1b2838; color:#fff; border:1px solid #2a475e; border-radius:2px;">
+                <button type="submit" class="btn-green">Trocar @usuário</button>
+            </form>
+            {% else %}
+            <p class="muted">🔒 Você atingiu o limite de trocas de @usuário.</p>
+            {% endif %}
+        </section>
+        {% endif %}
+
         <!-- Jogos obtidos + horas -->
         <section class="profile-section">
             <h2>Jogos ({{ jogos_biblioteca|length }})</h2>

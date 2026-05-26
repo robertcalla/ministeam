@@ -4,13 +4,13 @@
 # Exemplo: 1 | joao123 | senha456 | 1990-05-15 | João Silva | Jogador casual
 # Dica: data_nascimento como 'none' significa que o usuário não a cadastrou.
 # =============================================================================
-1 | robert | 1234 | 2002-12-17 | rob | gosto de jogos e as vezes jogo.
+1 | robert | 1234 | 2002-12-17 | rob | gosto de jogos e as vezes jogo. | 2
 2 | edmond | 1234 | 2001-01-01 | ed | Talvez um novo usuário Ministeam.
 3 | ana | 1234 | 1990-01-01 | Ana | Usuário Ministeam.
 4 | bruno | 1234 | 1990-01-01 | Bruno | Usuário Ministeam.
 5 | carla | 1234 | 1990-01-01 | Carla | Usuário Ministeam.
 6 | daniel | 1234 | 1990-01-01 | Daniel | Usuário Ministeam.
-7 | eduarda | 1234 | 1990-01-01 | Eduarda | Usuário Ministeam.
+7 | eduarda | 1234 | 1990-01-01 | Eduarda | Usuário Ministeam. | 3
 8 | felipe | 1234 | 1990-01-01 | Felipe | Usuário Ministeam.
 9 | gabriela | 1234 | 1990-01-01 | Gabriela | Usuário Ministeam.
 10 | henrique | 1234 | 1990-01-01 | Henrique | Usuário Ministeam.
@@ -105,5 +105,6 @@
 99 | wagner | 1234 | 1990-01-01 | Wagner | Usuário Ministeam.
 100 | xavier | 1234 | 1990-01-01 | Xavier | Usuário Ministeam.
 101 | yara | 1234 | 1990-01-01 | Yara | Usuário Ministeam.
-102 | zelia | 1234 | 1990-01-01 | Zélia | Usuário Ministeam.103 | charmander | 1234 | none | char | Novo usuário Ministeam.
+102 | zelia | 1234 | 1990-01-01 | Zélia | Usuário Ministeam.
 103 | charmander | 1234 | none | char | Novo usuário Ministeam.
+

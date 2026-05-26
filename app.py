@@ -3,6 +3,7 @@ from datetime import datetime
 import os
 import json
 import random
+import re
 
 app = Flask(__name__)
 app.secret_key = 'chave_secreta_super_segura'
@@ -88,6 +89,7 @@ PROMOCOES_FILE   = os.path.join(DATA_DIR, 'promocoes.txt')
 COMENTARIOS_FILE = os.path.join(DATA_DIR, 'comentarios.txt')
 
 CARTEIRA_INICIAL = 100.00
+LIMITE_TROCAS_USERNAME = 3
 
 
 def _garantir_arquivos():
@@ -196,7 +198,8 @@ def ler_usuarios():
                         'senha':    partes[2],
                         'dob':      partes[3] if partes[3] != 'none' else None,
                         'nome':     partes[4],
-                        'notas':    partes[5] if len(partes) > 5 else ''
+                        'notas':    partes[5] if len(partes) > 5 else '',
+                        'trocas_username': int(partes[6]) if len(partes) > 6 and partes[6].strip().isdigit() else 0
                     })
     except FileNotFoundError:
         pass
@@ -206,9 +209,10 @@ def ler_usuarios():
 def salvar_usuario(usuario):
     _garantir_arquivos()
     with open(USUARIOS_FILE, 'a', encoding='utf-8') as f:
-        dob_val   = usuario['dob'] if usuario['dob'] else 'none'
-        notas_val = usuario.get('notas', '').replace('|', '-')
-        f.write(f"{usuario['id']} | {usuario['username']} | {usuario['senha']} | {dob_val} | {usuario['nome']} | {notas_val}\n")
+        dob_val    = usuario['dob'] if usuario['dob'] else 'none'
+        notas_val  = usuario.get('notas', '').replace('|', '-')
+        trocas_val = usuario.get('trocas_username', 0)
+        f.write(f"{usuario['id']} | {usuario['username']} | {usuario['senha']} | {dob_val} | {usuario['nome']} | {notas_val} | {trocas_val}\n")
 
 
 def buscar_por_username(username):
@@ -218,8 +222,8 @@ def buscar_por_username(username):
     return None
 
 
-def atualizar_usuario_db(uid, nome=None, notas=None, dob=None):
-    """Atualiza nome de exibição, notas e/ou data de nascimento de um usuário no arquivo."""
+def atualizar_usuario_db(uid, nome=None, notas=None, dob=None, username=None, trocas=None):
+    """Atualiza nome, notas, data de nascimento, @usuário e/ou contador de trocas no arquivo."""
     _garantir_arquivos()
     uid = str(uid)
     linhas_novas = []
@@ -231,14 +235,18 @@ def atualizar_usuario_db(uid, nome=None, notas=None, dob=None):
                 continue
             partes = [p.strip() for p in s.split('|')]
             if len(partes) >= 5 and partes[0] == uid:
-                dob_atual   = partes[3]
-                nome_atual  = partes[4]
-                notas_atual = partes[5] if len(partes) > 5 else ''
-                novo_dob   = (dob if dob else dob_atual) or 'none'
-                novo_nome  = (nome if nome is not None else nome_atual).replace('|', '-')
-                novo_notas = (notas if notas is not None else notas_atual).replace('|', '-')
+                user_atual   = partes[1]
+                dob_atual    = partes[3]
+                nome_atual   = partes[4]
+                notas_atual  = partes[5] if len(partes) > 5 else ''
+                trocas_atual = partes[6] if len(partes) > 6 and partes[6].strip().isdigit() else '0'
+                novo_user   = (username if username is not None else user_atual).replace('|', '-')
+                novo_dob    = (dob if dob else dob_atual) or 'none'
+                novo_nome   = (nome if nome is not None else nome_atual).replace('|', '-')
+                novo_notas  = (notas if notas is not None else notas_atual).replace('|', '-')
+                novo_trocas = str(trocas) if trocas is not None else trocas_atual
                 linhas_novas.append(
-                    f"{partes[0]} | {partes[1]} | {partes[2]} | {novo_dob} | {novo_nome} | {novo_notas}\n"
+                    f"{partes[0]} | {novo_user} | {partes[2]} | {novo_dob} | {novo_nome} | {novo_notas} | {novo_trocas}\n"
                 )
             else:
                 linhas_novas.append(linha)
@@ -1133,6 +1141,11 @@ def perfil(user_id):
 
     is_friend = (not is_self) and sao_amigos(session['user_id'], uid)
 
+    # Trocas de @usuário restantes (somente relevante no próprio perfil)
+    trocas_restantes = None
+    if is_self:
+        trocas_restantes = LIMITE_TROCAS_USERNAME - usuario.get('trocas_username', 0)
+
     return render_template('perfil.html',
                            perfil_user=usuario,
                            is_self=is_self,
@@ -1142,7 +1155,9 @@ def perfil(user_id):
                            jogos_desejos=jogos_desejos,
                            amigos=amigos,
                            familia=familia,
-                           comentarios=comentarios)
+                           comentarios=comentarios,
+                           trocas_restantes=trocas_restantes,
+                           limite_trocas=LIMITE_TROCAS_USERNAME)
 
 
 @app.route('/perfil/<user_id>/comentar', methods=['POST'])
@@ -1157,6 +1172,41 @@ def perfil_comentar(user_id):
     else:
         flash('Escreva algo antes de publicar.', 'error')
     return redirect(url_for('perfil', user_id=user_id))
+
+
+@app.route('/perfil/trocar_username', methods=['POST'])
+def trocar_username():
+    """Troca o @usuário do usuário logado (limite de LIMITE_TROCAS_USERNAME por conta)."""
+    uid           = session['user_id']
+    usuario_atual = buscar_por_id(uid)
+    if not usuario_atual:
+        flash('Usuário não encontrado.', 'error')
+        return redirect(url_for('index'))
+
+    usados    = usuario_atual.get('trocas_username', 0)
+    restantes = LIMITE_TROCAS_USERNAME - usados
+    novo      = request.form.get('novo_username', '').strip()
+
+    if restantes <= 0:
+        flash(f'Você já atingiu o limite de {LIMITE_TROCAS_USERNAME} trocas de @usuário.', 'error')
+        return redirect(url_for('meu_perfil'))
+    if not novo:
+        flash('Informe um novo @usuário.', 'error')
+        return redirect(url_for('meu_perfil'))
+    if not re.fullmatch(r'[A-Za-z0-9_]+', novo):
+        flash('O @usuário deve conter apenas letras, números e underscore (_).', 'error')
+        return redirect(url_for('meu_perfil'))
+    if novo.lower() == usuario_atual['username'].lower():
+        flash('O novo @usuário é igual ao atual.', 'error')
+        return redirect(url_for('meu_perfil'))
+    existente = buscar_por_username(novo)
+    if existente and str(existente['id']) != str(uid):
+        flash('Este @usuário já está em uso. Escolha outro.', 'error')
+        return redirect(url_for('meu_perfil'))
+
+    atualizar_usuario_db(uid, username=novo, trocas=usados + 1)
+    flash(f'@usuário alterado para @{novo}! Trocas restantes: {restantes - 1}.', 'sucesso')
+    return redirect(url_for('meu_perfil'))
 
 
 # ==============================================================================

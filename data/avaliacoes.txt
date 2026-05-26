@@ -1,0 +1,6 @@
+# =============================================================================
+# MINISTEAM - Avaliações de Jogos
+# Cada linha é um objeto JSON representando uma avaliação.
+# Campos: id, game_id, user_id, autor, texto, nota, idioma,
+#         votos_util, data_publicacao
+# =============================================================================

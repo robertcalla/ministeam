@@ -25,6 +25,7 @@ FAMILIAS_FILE   = os.path.join(DATA_DIR, 'familias.txt')
 CARTEIRAS_FILE  = os.path.join(DATA_DIR, 'carteiras.txt')
 SESSOES_FILE    = os.path.join(DATA_DIR, 'sessoes.txt')
 HISTORICO_FILE  = os.path.join(DATA_DIR, 'historico.txt')
+AVALIACOES_FILE = os.path.join(DATA_DIR, 'avaliacoes.txt')
 
 CARTEIRA_INICIAL = 100.00
 
@@ -97,6 +98,15 @@ def _garantir_arquivos():
             f.write("# MINISTEAM - Histórico de Transações\n")
             f.write("# Cada linha é um objeto JSON representando uma transação.\n")
             f.write("# Campos: user_id, data, itens, total, desconto, metodo_pagamento\n")
+            f.write("# =============================================================================\n")
+
+    if not os.path.exists(AVALIACOES_FILE):
+        with open(AVALIACOES_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Avaliações de Jogos\n")
+            f.write("# Cada linha é um objeto JSON representando uma avaliação.\n")
+            f.write("# Campos: id, game_id, user_id, autor, texto, nota, idioma,\n")
+            f.write("#         votos_util, data_publicacao\n")
             f.write("# =============================================================================\n")
 
 
@@ -398,6 +408,95 @@ def ler_historico_usuario(uid):
     return list(reversed(transacoes))
 
 
+# ---- ENUM DE IDIOMAS DE AVALIAÇÃO (RN01) ----
+
+ENUM_LINGUAGEM_AVALIACAO = {
+    'portuguesBrasil': 'Português (Brasil)',
+    'ingles':          'Inglês',
+    'espanhol':        'Espanhol',
+    'frances':         'Francês',
+    'alemao':          'Alemão',
+    'chinesSimplificado': 'Chinês Simplificado',
+    'japones':         'Japonês',
+    'coreano':         'Coreano',
+    'russo':           'Russo',
+    'italiano':        'Italiano',
+}
+
+# Idioma padrão detectado pela sessão (A01): mapeamos pt-BR → portuguesBrasil
+LOCALE_TO_ENUM = {
+    'pt': 'portuguesBrasil',
+    'pt-br': 'portuguesBrasil',
+    'en': 'ingles',
+    'es': 'espanhol',
+    'fr': 'frances',
+    'de': 'alemao',
+    'zh': 'chinesSimplificado',
+    'ja': 'japones',
+    'ko': 'coreano',
+    'ru': 'russo',
+    'it': 'italiano',
+}
+
+
+# ---- FUNÇÕES DE AVALIAÇÕES ----
+
+def _proximo_id_avaliacao():
+    avaliacoes = ler_avaliacoes_jogo(None, todos=True)
+    if not avaliacoes:
+        return '1'
+    return str(max(int(a['id']) for a in avaliacoes) + 1)
+
+
+def ler_avaliacoes_jogo(game_id, todos=False):
+    """Retorna avaliações de um jogo (ou todas se todos=True)."""
+    _garantir_arquivos()
+    resultado = []
+    try:
+        with open(AVALIACOES_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s or s.startswith('#'):
+                    continue
+                try:
+                    a = json.loads(s)
+                    if todos or a.get('game_id') == str(game_id):
+                        resultado.append(a)
+                except json.JSONDecodeError:
+                    pass
+    except FileNotFoundError:
+        pass
+    return resultado
+
+
+def salvar_avaliacao(avaliacao):
+    """Persiste uma nova avaliação no arquivo."""
+    _garantir_arquivos()
+    with open(AVALIACOES_FILE, 'a', encoding='utf-8') as f:
+        f.write(json.dumps(avaliacao, ensure_ascii=False) + '\n')
+
+
+def _reescrever_avaliacoes(avaliacoes):
+    _garantir_arquivos()
+    with open(AVALIACOES_FILE, 'w', encoding='utf-8') as f:
+        f.write("# =============================================================================\n")
+        f.write("# MINISTEAM - Avaliações de Jogos\n")
+        f.write("# Cada linha é um objeto JSON representando uma avaliação.\n")
+        f.write("# =============================================================================\n")
+        for a in avaliacoes:
+            f.write(json.dumps(a, ensure_ascii=False) + '\n')
+
+
+def votar_util_avaliacao(avaliacao_id):
+    """Incrementa votos_util de uma avaliação pelo id."""
+    todas = ler_avaliacoes_jogo(None, todos=True)
+    for a in todas:
+        if a['id'] == str(avaliacao_id):
+            a['votos_util'] = a.get('votos_util', 0) + 1
+            break
+    _reescrever_avaliacoes(todas)
+
+
 # ---- FUNÇÕES DE FAMÍLIA ----
 
 def ler_familias():
@@ -625,7 +724,8 @@ def garantir_valores_sessao():
         'wallet': 100.00, 'library': [], 'cart': [], 'gifts_sent': {},
         'user_dob': None, 'user_profile': {'name': 'Usuário', 'details': ''},
         'family': None, 'family_cooldown': False,
-        'offline_mode': False, 'active_game': None, 'show_pe01_for': None
+        'offline_mode': False, 'active_game': None, 'show_pe01_for': None,
+        'votos_util_dados': []
     }
     for chave, valor in padroes.items():
         if chave not in session:
@@ -816,11 +916,103 @@ def index():
 
 @app.route('/game/<game_id>')
 def game(game_id):
+    from flask import request as req
     game_data  = GAMES.get(game_id)
     if not game_data:
         return "Jogo não encontrado", 404
-    show_modal = request.args.get('added') == '1'
-    return render_template('game.html', game=game_data, show_modal=show_modal)
+    show_modal = req.args.get('added') == '1'
+
+    # Filtro de idioma (A01: auto-detect, A02: todos, FP: idioma específico)
+    idioma_filtro = req.args.get('idioma', '')  # '' = todos
+
+    todas_avaliacoes = ler_avaliacoes_jogo(game_id)
+
+    # Ordenação (PE01)
+    ordenar_util = req.args.get('ordenar') == 'util'
+    if ordenar_util:
+        todas_avaliacoes = sorted(todas_avaliacoes, key=lambda a: a.get('votos_util', 0), reverse=True)
+    else:
+        todas_avaliacoes = sorted(todas_avaliacoes, key=lambda a: a.get('data_publicacao', ''), reverse=True)
+
+    # Idiomas disponíveis neste jogo para popular o dropdown (RN01)
+    idiomas_presentes = sorted({a['idioma'] for a in todas_avaliacoes if a.get('idioma')})
+
+    # Aplica filtro
+    if idioma_filtro and idioma_filtro in ENUM_LINGUAGEM_AVALIACAO:
+        avaliacoes_exibidas = [a for a in todas_avaliacoes if a.get('idioma') == idioma_filtro]
+    else:
+        idioma_filtro = ''
+        avaliacoes_exibidas = todas_avaliacoes
+
+    # Verifica se usuário já avaliou este jogo
+    uid = session.get('user_id', '')
+    ja_avaliou = any(a.get('user_id') == uid for a in todas_avaliacoes)
+
+    return render_template('game.html',
+                           game=game_data,
+                           show_modal=show_modal,
+                           avaliacoes=avaliacoes_exibidas,
+                           todas_avaliacoes=todas_avaliacoes,
+                           idiomas_presentes=idiomas_presentes,
+                           idioma_filtro=idioma_filtro,
+                           ordenar_util=ordenar_util,
+                           enum_linguagem=ENUM_LINGUAGEM_AVALIACAO,
+                           ja_avaliou=ja_avaliou)
+
+
+@app.route('/game/<game_id>/avaliar', methods=['POST'])
+def avaliar_jogo(game_id):
+    game_data = GAMES.get(game_id)
+    if not game_data:
+        return "Jogo não encontrado", 404
+
+    uid    = session['user_id']
+    texto  = request.form.get('texto', '').strip()
+    nota   = request.form.get('nota', '5')
+    idioma = request.form.get('idioma', 'portuguesBrasil')
+
+    if not texto:
+        flash('O texto da avaliação não pode estar vazio.', 'error')
+        return redirect(url_for('game', game_id=game_id))
+
+    # Valida idioma contra o enum (RN01)
+    if idioma not in ENUM_LINGUAGEM_AVALIACAO:
+        idioma = 'portuguesBrasil'
+
+    # Impede avaliação duplicada
+    existentes = ler_avaliacoes_jogo(game_id)
+    if any(a.get('user_id') == uid for a in existentes):
+        flash('Você já publicou uma avaliação para este jogo.', 'error')
+        return redirect(url_for('game', game_id=game_id))
+
+    nova = {
+        'id':               _proximo_id_avaliacao(),
+        'game_id':          str(game_id),
+        'user_id':          str(uid),
+        'autor':            session['user_profile']['name'],
+        'texto':            texto,
+        'nota':             max(1, min(5, int(nota))),
+        'idioma':           idioma,          # RN02: imutável após publicação
+        'votos_util':       0,
+        'data_publicacao':  datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    }
+    salvar_avaliacao(nova)
+    flash('Avaliação publicada com sucesso!', 'sucesso')
+    return redirect(url_for('game', game_id=game_id))
+
+
+@app.route('/game/<game_id>/util/<avaliacao_id>')
+def votar_util(game_id, avaliacao_id):
+    """PE01 — voto de 'útil' em uma avaliação."""
+    votos_dados = session.get('votos_util_dados', [])
+    if avaliacao_id not in votos_dados:
+        votar_util_avaliacao(avaliacao_id)
+        votos_dados.append(avaliacao_id)
+        session['votos_util_dados'] = votos_dados
+        session.modified = True
+    return redirect(url_for('game', game_id=game_id,
+                            idioma=request.args.get('idioma', ''),
+                            ordenar=request.args.get('ordenar', '')))
 
 
 @app.route('/update_profile', methods=['POST'])
@@ -1353,7 +1545,7 @@ def reset_session():
     exceto usuarios.txt (as contas cadastradas são preservadas)."""
     session.clear()
     for caminho in (MAQUINA_FILE, AMIZADES_FILE, BIBLIOTECA_FILE,
-                    FAMILIAS_FILE, CARTEIRAS_FILE, SESSOES_FILE, HISTORICO_FILE):
+                    FAMILIAS_FILE, CARTEIRAS_FILE, SESSOES_FILE, HISTORICO_FILE, AVALIACOES_FILE):
         try:
             if os.path.exists(caminho):
                 os.remove(caminho)

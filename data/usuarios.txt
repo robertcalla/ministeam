@@ -107,3 +107,4 @@
 101 | yara | 1234 | 1990-01-01 | Yara | Usuário Ministeam.
 102 | zelia | 1234 | 1990-01-01 | Zélia | Usuário Ministeam.103 | charmander | 1234 | none | char | Novo usuário Ministeam.
 103 | charmander | 1234 | none | char | Novo usuário Ministeam.
+104 | hhhhhh | 1234 | 1199-12-22 | kkkkkk | Novo usuário Ministeam.

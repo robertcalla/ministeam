@@ -4,3 +4,4 @@
 # Campos: id, game_id, user_id, autor, texto, nota, idioma,
 #         votos_util, data_publicacao
 # =============================================================================
+{"id": "1", "game_id": "2", "user_id": "104", "autor": "kkkkkk", "texto": "muito bom mas muito dificil", "nota": 5, "idioma": "portuguesBrasil", "votos_util": 0, "data_publicacao": "2026-05-26 17:58:21"}

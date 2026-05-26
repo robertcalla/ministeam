@@ -947,6 +947,7 @@ def game(game_id):
     # Verifica se usuário já avaliou este jogo
     uid = session.get('user_id', '')
     ja_avaliou = any(a.get('user_id') == uid for a in todas_avaliacoes)
+    possui_jogo = game_id in session.get('library', [])
 
     return render_template('game.html',
                            game=game_data,
@@ -957,7 +958,8 @@ def game(game_id):
                            idioma_filtro=idioma_filtro,
                            ordenar_util=ordenar_util,
                            enum_linguagem=ENUM_LINGUAGEM_AVALIACAO,
-                           ja_avaliou=ja_avaliou)
+                           ja_avaliou=ja_avaliou,
+                           possui_jogo=possui_jogo)
 
 
 @app.route('/game/<game_id>/avaliar', methods=['POST'])
@@ -970,6 +972,11 @@ def avaliar_jogo(game_id):
     texto  = request.form.get('texto', '').strip()
     nota   = request.form.get('nota', '5')
     idioma = request.form.get('idioma', 'portuguesBrasil')
+
+    # Apenas quem possui o jogo pode avaliar
+    if game_id not in session.get('library', []):
+        flash('Você precisa possuir o jogo para publicar uma avaliação.', 'error')
+        return redirect(url_for('game', game_id=game_id))
 
     if not texto:
         flash('O texto da avaliação não pode estar vazio.', 'error')

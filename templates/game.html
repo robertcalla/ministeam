@@ -231,7 +231,16 @@
     <!-- ============================================================ -->
     <!-- FORMULÁRIO PARA PUBLICAR NOVA AVALIAÇÃO                      -->
     <!-- ============================================================ -->
-    {% if not ja_avaliou %}
+    {% if not possui_jogo %}
+    <div style="
+        background: rgba(0,0,0,0.2); border: 1px dashed #2a475e;
+        border-radius: 6px; padding: 20px; text-align: center; margin-top: 8px;
+    ">
+        <p style="color: #8f98a0; font-size: 14px; margin: 0;">
+            🔒 Você precisa <strong style="color:#c6d4df;">possuir este jogo</strong> na sua biblioteca para publicar uma avaliação.
+        </p>
+    </div>
+    {% elif not ja_avaliou %}
     <div style="
         background: rgba(0,0,0,0.2); border: 1px solid #2a475e;
         border-radius: 8px; padding: 24px; margin-top: 8px;

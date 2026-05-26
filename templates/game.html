@@ -26,8 +26,8 @@
             <div class="rating">
                 Classificação Indicativa:
                 <span class="age-badge {% if game.age_rating >= 18 %}mature{% endif %}">
-                        {% if game.age_rating == 0 %} Livre {% else %} {{ game.age_rating }} anos {% endif %}
-                    </span>
+                    {% if game.age_rating == 0 %} Livre {% else %} {{ game.age_rating }} anos {% endif %}
+                </span>
             </div>
 
             {% if 'library' in session and game.id in session['library'] %}
@@ -70,4 +70,237 @@
         </div>
     </div>
 </div>
+
+<!-- ================================================================ -->
+<!-- SEÇÃO DE AVALIAÇÕES DE CLIENTES                                   -->
+<!-- ================================================================ -->
+<section id="avaliacoes" style="margin-top: 48px;">
+
+    <!-- Cabeçalho da seção -->
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid #2a475e; padding-bottom: 14px;">
+        <div>
+            <h2 style="margin: 0; font-size: 20px; color: #c6d4df;">Avaliações de Clientes</h2>
+            <p style="color: #8f98a0; font-size: 13px; margin-top: 4px;">
+                {% if idioma_filtro %}
+                    Exibindo avaliações em <strong style="color:#66c0f4;">{{ enum_linguagem[idioma_filtro] }}</strong>
+                    ({{ avaliacoes|length }} de {{ todas_avaliacoes|length }})
+                {% else %}
+                    {{ todas_avaliacoes|length }} avaliação(ões) no total
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Controles: filtro de idioma + ordenação -->
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+
+            <!-- PE01 — Ordenar por Mais Úteis -->
+            {% if ordenar_util %}
+            <a href="{{ url_for('game', game_id=game.id, idioma=idioma_filtro) }}"
+               class="btn-blue"
+               style="text-decoration: none; font-size: 12px; padding: 7px 14px; background: #2a475e; color: #c6d4df;">
+                ↕ Mais Recentes
+            </a>
+            {% else %}
+            <a href="{{ url_for('game', game_id=game.id, idioma=idioma_filtro, ordenar='util') }}"
+               class="btn-blue"
+               style="text-decoration: none; font-size: 12px; padding: 7px 14px;">
+                👍 Mais Úteis
+            </a>
+            {% endif %}
+
+            <!-- Filtro de Idioma (RN01 — apenas valores do enum) -->
+            <form method="GET" action="{{ url_for('game', game_id=game.id) }}" style="display: flex; align-items: center; gap: 6px;">
+                {% if ordenar_util %}<input type="hidden" name="ordenar" value="util">{% endif %}
+                <label for="filtro-idioma" style="color: #8f98a0; font-size: 13px; white-space: nowrap;">🌐 Idioma:</label>
+                <select id="filtro-idioma" name="idioma"
+                        onchange="this.form.submit()"
+                        style="
+                            background: #1b2838; border: 1px solid #4b9cd3;
+                            color: #c6d4df; border-radius: 4px;
+                            padding: 7px 10px; font-size: 13px; cursor: pointer;
+                        ">
+                    <option value="" {% if not idioma_filtro %}selected{% endif %}>Todos os Idiomas</option>
+                    {% for chave, rotulo in enum_linguagem.items() %}
+                    <option value="{{ chave }}"
+                            {% if idioma_filtro == chave %}selected{% endif %}
+                            {% if chave not in idiomas_presentes and idioma_filtro != chave %}style="color:#556068;"{% endif %}>
+                        {{ rotulo }}
+                        {% if chave in idiomas_presentes %}✓{% endif %}
+                    </option>
+                    {% endfor %}
+                </select>
+                <!-- A02: Limpar filtro -->
+                {% if idioma_filtro %}
+                <a href="{{ url_for('game', game_id=game.id, ordenar=('util' if ordenar_util else '')) }}"
+                   style="color: #8f98a0; font-size: 12px; text-decoration: none; padding: 6px 8px; border: 1px solid #3a4a5a; border-radius: 3px; white-space: nowrap;"
+                   title="Limpar filtro de idioma">✕</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <!-- FE01 — nenhuma avaliação no idioma selecionado -->
+    {% if idioma_filtro and avaliacoes|length == 0 %}
+    <div style="
+        background: rgba(0,0,0,0.15); border: 1px dashed #2a3f5f;
+        border-radius: 6px; padding: 36px; text-align: center; margin-bottom: 28px;
+    ">
+        <p style="color: #8f98a0; font-size: 15px; margin-bottom: 8px;">
+            Ainda não há análises em <strong style="color: #66c0f4;">{{ enum_linguagem[idioma_filtro] }}</strong> para este jogo.
+        </p>
+        <p style="color: #556068; font-size: 13px;">Seja o primeiro a avaliar!</p>
+        <a href="{{ url_for('game', game_id=game.id) }}"
+           class="btn-blue" style="text-decoration: none; display: inline-block; margin-top: 14px; padding: 8px 18px; font-size: 13px;">
+            Ver todas as avaliações
+        </a>
+    </div>
+
+    <!-- Estado completamente vazio (sem nenhuma avaliação) -->
+    {% elif todas_avaliacoes|length == 0 %}
+    <div style="
+        background: rgba(0,0,0,0.15); border: 1px dashed #2a3f5f;
+        border-radius: 6px; padding: 36px; text-align: center; margin-bottom: 28px;
+    ">
+        <p style="color: #8f98a0; font-size: 15px;">Ainda não há avaliações para este jogo. Seja o primeiro!</p>
+    </div>
+
+    {% else %}
+    <!-- Lista de avaliações -->
+    <div id="lista-avaliacoes" style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px;">
+        {% for av in avaliacoes %}
+        <div style="
+            background: rgba(0,0,0,0.2); border: 1px solid #2a3f5f;
+            border-radius: 6px; padding: 16px 20px;
+        ">
+            <!-- Linha superior: autor + nota + idioma + data -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <!-- Avatar inicial -->
+                    <div style="
+                        width: 36px; height: 36px; border-radius: 50%;
+                        background: #2a475e; border: 2px solid #3a688c;
+                        display: flex; align-items: center; justify-content: center;
+                        font-size: 15px; font-weight: bold; color: #66c0f4; flex-shrink: 0;
+                    ">{{ av.autor[0].upper() }}</div>
+                    <div>
+                        <span style="color: #c6d4df; font-weight: 700; font-size: 14px;">{{ av.autor }}</span>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-top: 3px; flex-wrap: wrap;">
+                            <!-- Nota em estrelas -->
+                            <span style="color: #f6c90e; font-size: 13px; letter-spacing: 1px;">
+                                {% for i in range(5) %}{% if i < av.nota %}★{% else %}☆{% endif %}{% endfor %}
+                            </span>
+                            <!-- Idioma badge -->
+                            <span style="
+                                background: rgba(75,156,211,0.15); color: #4b9cd3;
+                                border: 1px solid rgba(75,156,211,0.3); border-radius: 3px;
+                                font-size: 11px; padding: 1px 6px;
+                            ">🌐 {{ enum_linguagem.get(av.idioma, av.idioma) }}</span>
+                        </div>
+                    </div>
+                </div>
+                <span style="color: #556068; font-size: 12px; white-space: nowrap;">{{ av.data_publicacao[:10] }}</span>
+            </div>
+
+            <!-- Texto da avaliação -->
+            <p style="color: #c6d4df; font-size: 14px; line-height: 1.6; margin: 0 0 12px 0; white-space: pre-wrap;">{{ av.texto }}</p>
+
+            <!-- Rodapé: votos útil -->
+            <div style="display: flex; align-items: center; gap: 12px; border-top: 1px solid #1e3040; padding-top: 10px; flex-wrap: wrap;">
+                <span style="color: #8f98a0; font-size: 12px;">Esta avaliação foi útil?</span>
+                {% set ja_votou = av.id in session.get('votos_util_dados', []) %}
+                <a href="{{ url_for('votar_util', game_id=game.id, avaliacao_id=av.id, idioma=idioma_filtro, ordenar=('util' if ordenar_util else '')) }}"
+                   style="
+                       display: inline-flex; align-items: center; gap: 5px;
+                       font-size: 13px; text-decoration: none; padding: 4px 10px;
+                       border-radius: 3px; border: 1px solid;
+                       {% if ja_votou %}
+                       background: rgba(121,160,22,0.15); color: #79a016; border-color: rgba(121,160,22,0.4); pointer-events: none;
+                       {% else %}
+                       background: rgba(0,0,0,0.15); color: #8f98a0; border-color: #2a3f5f;
+                       {% endif %}
+                   "
+                   {% if ja_votou %}onclick="return false;" title="Você já votou"{% endif %}>
+                    👍 Sim ({{ av.votos_util }})
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- ============================================================ -->
+    <!-- FORMULÁRIO PARA PUBLICAR NOVA AVALIAÇÃO                      -->
+    <!-- ============================================================ -->
+    {% if not ja_avaliou %}
+    <div style="
+        background: rgba(0,0,0,0.2); border: 1px solid #2a475e;
+        border-radius: 8px; padding: 24px; margin-top: 8px;
+    ">
+        <h3 style="color: #c6d4df; margin: 0 0 18px 0; font-size: 16px;">✍️ Escrever uma Avaliação</h3>
+        <form action="{{ url_for('avaliar_jogo', game_id=game.id) }}" method="POST">
+
+            <!-- Linha: nota + idioma lado a lado -->
+            <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 14px;">
+                <div style="flex: 1; min-width: 140px;">
+                    <label style="display: block; font-size: 12px; color: #8f98a0; margin-bottom: 5px;">Nota</label>
+                    <select name="nota" style="
+                        width: 100%; padding: 9px 10px;
+                        background: #1b2838; border: 1px solid #2a475e;
+                        color: #c6d4df; border-radius: 3px; font-size: 14px;
+                    ">
+                        <option value="5">★★★★★ — Excelente</option>
+                        <option value="4">★★★★☆ — Muito Bom</option>
+                        <option value="3">★★★☆☆ — Regular</option>
+                        <option value="2">★★☆☆☆ — Ruim</option>
+                        <option value="1">★☆☆☆☆ — Terrível</option>
+                    </select>
+                </div>
+
+                <!-- Idioma (RN01: apenas valores do EnumLinguagemAvaliacao) -->
+                <div style="flex: 1; min-width: 180px;">
+                    <label style="display: block; font-size: 12px; color: #8f98a0; margin-bottom: 5px;">Idioma da avaliação</label>
+                    <select name="idioma" style="
+                        width: 100%; padding: 9px 10px;
+                        background: #1b2838; border: 1px solid #2a475e;
+                        color: #c6d4df; border-radius: 3px; font-size: 14px;
+                    ">
+                        {% for chave, rotulo in enum_linguagem.items() %}
+                        <option value="{{ chave }}" {% if chave == 'portuguesBrasil' %}selected{% endif %}>{{ rotulo }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <!-- Texto -->
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 12px; color: #8f98a0; margin-bottom: 5px;">Seu comentário <span style="color:#b52a1c;">*</span></label>
+                <textarea name="texto" required rows="4"
+                          placeholder="Compartilhe sua experiência com este jogo..."
+                          style="
+                              width: 100%; box-sizing: border-box;
+                              padding: 10px; background: #1b2838;
+                              border: 1px solid #2a475e; color: #c6d4df;
+                              border-radius: 3px; font-size: 14px;
+                              resize: vertical; font-family: inherit;
+                          "></textarea>
+                <p style="font-size: 11px; color: #556068; margin-top: 4px;">
+                    ⚠️ O idioma selecionado é permanente após a publicação (RN02).
+                </p>
+            </div>
+
+            <button type="submit" class="btn-green" style="padding: 10px 28px; font-size: 14px;">
+                Publicar Avaliação
+            </button>
+        </form>
+    </div>
+    {% else %}
+    <div style="
+        background: rgba(121,160,22,0.08); border: 1px solid rgba(121,160,22,0.3);
+        border-radius: 6px; padding: 16px 20px; text-align: center; margin-top: 8px;
+    ">
+        <p style="color: #79a016; font-size: 14px; margin: 0;">✔ Você já publicou uma avaliação para este jogo.</p>
+    </div>
+    {% endif %}
+
+</section>
 {% endblock %}

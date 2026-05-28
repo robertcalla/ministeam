@@ -1587,6 +1587,13 @@ def process_payment():
     # Captura carrinho antes de modificar (para o histórico)
     _cart_antes_de_limpar = list(session['cart'])
 
+    # Calcula desconto total real (RN01) — diferença entre preço original e preço pago
+    desconto_total = sum(
+        round(item.get('original_price', item['price']) - item['price'], 2)
+        for item in _cart_antes_de_limpar
+        if item.get('discount_pct', 0) > 0
+    )
+
     if use_wallet:
         if session['wallet'] >= valor_a_pagar:
             session['wallet'] -= valor_a_pagar
@@ -1650,9 +1657,11 @@ def process_payment():
         {
             'name':           item['name'],
             'price':          item['price'],
+            'original_price': item.get('original_price', item['price']),
+            'discount_pct':   item.get('discount_pct', 0),
+            'desconto_item':  round(item.get('original_price', item['price']) - item['price'], 2),
             'is_gift':        item.get('is_gift', False),
             'recipient_name': item.get('recipient_name', ''),
-            'desconto_item':  item.get('desconto_item', 0.0)
         }
         for item in _cart_antes_de_limpar
     ]

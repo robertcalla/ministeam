@@ -101,12 +101,17 @@
                         {% endif %}
                     </div>
                     <div style="text-align: right; white-space: nowrap;">
-                        {% if item.desconto_item and item.desconto_item > 0 %}
+                        {% if item.discount_pct and item.discount_pct > 0 %}
+                        <span style="
+                            background: #4c6b22; color: #beee11;
+                            font-size: 11px; font-weight: 700;
+                            padding: 2px 6px; border-radius: 3px; margin-right: 6px;
+                        ">-{{ item.discount_pct }}%</span>
                         <span style="color: #8f98a0; font-size: 12px; text-decoration: line-through; margin-right: 6px;">
-                            R$ {{ "%.2f"|format(item.price + item.desconto_item) }}
+                            R$ {{ "%.2f"|format(item.original_price) }}
                         </span>
-                        <span style="color: #4b9cd3; font-size: 11px; margin-right: 8px;">
-                            -R$ {{ "%.2f"|format(item.desconto_item) }}
+                        <span style="color: #4b9cd3; font-size: 11px; margin-right: 6px;">
+                            -R$ {{ "%.2f"|format(item.original_price - item.price) }}
                         </span>
                         {% endif %}
                         <span style="color: #c6d4df; font-size: 15px; font-weight: bold;">

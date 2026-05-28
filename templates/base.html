@@ -37,6 +37,7 @@
             <div class="account-dropdown" id="accountDropdown">
                 <div class="account-dropdown-name">{{ session['user_profile']['name'] }}</div>
                 <a href="{{ url_for('meu_perfil') }}">👤 Meu perfil</a>
+                <a href="{{ url_for('historico') }}">📋 Histórico de compras</a>
                 <a href="{{ url_for('carteira') }}">💳 Minha carteira <span class="acc-saldo">R$ {{ "%.2f"|format(session['wallet']) }}</span></a>
                 <a href="{{ url_for('trocar_usuario') }}">🔄 Trocar usuário</a>
                 <a href="{{ url_for('logout') }}" class="acc-logout">⏻ Finalizar sessão</a>

@@ -2,6 +2,6 @@
 # MINISTEAM - Histórico de Transações
 # Cada linha é um objeto JSON representando uma transação.
 # Campos: user_id, data, itens, total, desconto, metodo_pagamento
-# =============================================================================
-{"user_id": "1", "data": "2026-05-25 18:14:39", "itens": [{"name": "Sobrevivência Sombria", "price": 90.0, "is_gift": false, "recipient_name": "", "desconto_item": 0.0}], "total": 90.0, "desconto": 0.0, "metodo_pagamento": "R$ 90.00 da Carteira"}
-{"user_id": "1", "data": "2026-05-25 18:15:23", "itens": [{"name": "Aventura Épica", "price": 150.0, "is_gift": false, "recipient_name": "", "desconto_item": 0.0}], "total": 150.0, "desconto": 0.0, "metodo_pagamento": "R$ 10.00 da Carteira, R$ 140.00 via Pix"}
+{"user_id": "104", "data": "2026-05-28 16:47:46", "itens": [{"name": "Aventura Épica", "price": 150.0, "is_gift": false, "recipient_name": "", "desconto_item": 0.0}], "total": 150.0, "desconto": 0.0, "metodo_pagamento": "R$ 100.00 da Carteira, R$ 50.00 via Cartão de Crédito"}
+{"user_id": "104", "data": "2026-05-28 16:48:09", "itens": [{"name": "Corrida Divertida", "price": 45.0, "is_gift": false, "recipient_name": "", "desconto_item": 0.0}], "total": 45.0, "desconto": 0.0, "metodo_pagamento": "R$ 45.00 via Pix"}
+{"user_id": "104", "data": "2026-05-28 17:24:29", "itens": [{"name": "Aventura Épica", "price": 150.0, "original_price": 150.0, "discount_pct": 0, "desconto_item": 0.0, "is_gift": true, "recipient_name": "Carla"}], "total": 150.0, "desconto": 0, "metodo_pagamento": "R$ 150.00 via Boleto"}

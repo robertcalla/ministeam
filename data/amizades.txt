@@ -2,3 +2,4 @@
 # MINISTEAM - Banco de Dados de Amizades
 # Formato: id_menor | id_maior  (IDs ordenados para evitar duplicatas)
 # =============================================================================
+5 | 104

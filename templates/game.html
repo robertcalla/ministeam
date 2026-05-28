@@ -8,84 +8,28 @@
 {% if show_modal %}
 <div class="modal-overlay">
     <div class="modal-content">
-        <h2>Item adicionado ao carrinho!</h2>
+        <h2>Adicionado ao carrinho!</h2>
         <p>"{{ game.name }}" está pronto no seu carrinho.</p>
         <div class="modal-actions">
-            <a href="{{ url_for('index') }}" class="btn-blue">Continuar Comprando</a>
-            <a href="{{ url_for('cart') }}" class="btn-green">Ver meu Carrinho</a>
+            <a href="{{ url_for('index') }}" class="btn-blue">Continuar comprando</a>
+            <a href="{{ url_for('cart') }}" class="btn-green">Ver o meu carrinho</a>
         </div>
     </div>
 </div>
 {% endif %}
 
 <div class="store-page">
-    <a href="{{ url_for('index') }}" style="color: #8f98a0; font-size: 13px; text-decoration: none;">‹ Todos os jogos</a>
-    <h1 style="margin-top: 8px;">{{ game.name }}</h1>
+    <div class="store-breadcrumb">
+        <a href="{{ url_for('index') }}">Todos os jogos</a>
+        {% if game.genres %}<span>›</span> <a href="{{ url_for('index') }}">{{ game.genres[0] }}</a>{% endif %}
+        <span>›</span> {{ game.name }}
+    </div>
+    <h1 class="store-title">{{ game.name }}</h1>
 
-    <div class="store-grid">
-        <!-- Coluna esquerda: mídia e descrição -->
-        <div class="store-main">
-            <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}" class="store-cover">
-
-            <div class="store-about">
-                <h3>Sobre o jogo</h3>
-                <p>{{ game.long_description }}</p>
-            </div>
-
-            <div class="store-tags">
-                <h4>Marcadores populares para este produto:</h4>
-                <div class="tag-list">
-                    {% for tag in game.tags %}
-                    <span class="tag-chip">{{ tag }}</span>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="store-requirements">
-                <h3>Requisitos de Sistema</h3>
-                <div class="req-cols">
-                    <div>
-                        <strong>Mínimos</strong>
-                        <p>{{ game.req_minimo }}</p>
-                    </div>
-                    <div>
-                        <strong>Recomendados</strong>
-                        <p>{{ game.req_recomendado }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Coluna direita: informações e compra -->
-        <div class="store-sidebar">
-            <p class="description">{{ game.description }}</p>
-
-            <div class="store-meta">
-                <div class="review-line">
-                    Avaliações: <strong class="review-pos">{{ game.reviews }}</strong>
-                    <span style="color:#8f98a0;">({{ "{:,}".format(game.review_count).replace(",", ".") }})</span>
-                </div>
-                <div><span>Lançamento:</span> {{ game.release_date }}</div>
-                <div><span>Desenvolvedor:</span> {{ game.developer }}</div>
-                <div><span>Distribuidora:</span> {{ game.publisher }}</div>
-            </div>
-
-            <div class="rating">
-                Classificação Indicativa:
-                <span class="age-badge {% if game.age_rating >= 18 %}mature{% endif %}">
-                    {% if game.age_rating == 0 %} Livre {% else %} {{ game.age_rating }} anos {% endif %}
-                </span>
-            </div>
-
-            <div class="store-features">
-                {% for f in game.features %}
-                <span class="feature-chip">✓ {{ f }}</span>
-                {% endfor %}
-            </div>
-
-            <div class="store-langs">
-                <strong>Idiomas:</strong> {{ game.languages | join(', ') }}
-            </div>
+    <div class="store-layout">
+        <!-- Coluna principal -->
+        <div class="store-content">
+            <img src="{{ img_jogo(game) }}" alt="{{ game.name }}" class="store-cover">
 
             {% if game.id in session['library'] %}
             <div class="owned-banner">
@@ -95,57 +39,140 @@
             {% endif %}
 
             <!-- Caixa de compra -->
-            <div class="purchase-box">
-                {% if p.on_sale %}
-                <div class="price-block" style="margin-bottom: 15px;">
-                    <span class="discount-badge">-{{ p.pct }}%</span>
-                    <span class="price-old">R$ {{ "%.2f"|format(p.original) }}</span>
-                    <span class="price-new" style="font-size: 22px;">R$ {{ "%.2f"|format(p.final) }}</span>
-                </div>
-                {% else %}
-                <span class="price-large">R$ {{ "%.2f"|format(p.final) }}</span>
-                {% endif %}
-
-                <form action="{{ url_for('add_to_cart', game_id=game.id) }}" method="POST">
-                    {% if game.age_rating > 0 %}
-                        {% if session.get('user_dob') %}
-                        <p style="font-size: 13px; color: #66c0f4; margin-bottom: 12px;">
-                            ✔ Idade verificada automaticamente pelo seu perfil.
-                        </p>
+            <div class="buy-box">
+                <div class="buy-box-title">Comprar {{ game.name }}</div>
+                <div class="buy-box-row">
+                    <div class="buy-price">
+                        {% if p.on_sale %}
+                        <span class="discount-badge">-{{ p.pct }}%</span>
+                        <span class="price-old">R$ {{ "%.2f"|format(p.original) }}</span>
+                        <span class="price-new">R$ {{ "%.2f"|format(p.final) }}</span>
                         {% else %}
-                        <div class="age-gate">
-                            <label for="dob">Para continuar, informe sua Data de Nascimento:</label><br>
-                            <input type="date" id="dob" name="dob" required>
-                        </div>
+                        <span class="price">R$ {{ "%.2f"|format(p.final) }}</span>
                         {% endif %}
-                    {% else %}
-                    <input type="hidden" name="dob" value="none">
-                    <p style="font-size: 12px; margin-bottom: 10px; color: #8f98a0;">
-                        Este jogo possui classificação livre.
-                    </p>
-                    {% endif %}
-
-                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
-                        {% if game.id not in session['library'] %}
-                        <button type="submit" name="purchase_type" value="self" class="btn-green">Adicionar ao Carrinho</button>
-                        {% endif %}
-                        <button type="submit" name="purchase_type" value="gift" class="btn-blue" style="color: #fff; background: #3a688c;">Comprar como presente</button>
                     </div>
-                </form>
 
-                <!-- Lista de desejos -->
+                    <form action="{{ url_for('add_to_cart', game_id=game.id) }}" method="POST" class="buy-form">
+                        {% if game.age_rating > 0 %}
+                            {% if session.get('user_dob') %}
+                            <span class="age-ok">✔ Idade verificada pelo seu perfil</span>
+                            {% else %}
+                            <div class="age-gate">
+                                <label for="dob">Confirme sua data de nascimento:</label>
+                                <input type="date" id="dob" name="dob" required
+                                       min="1900-01-01" max="{{ hoje_iso }}">
+                            </div>
+                            {% endif %}
+                        {% else %}
+                        <input type="hidden" name="dob" value="none">
+                        {% endif %}
+
+                        <div class="buy-actions">
+                            {% if game.id not in session['library'] %}
+                            <button type="submit" name="purchase_type" value="self" class="btn-green">Adicionar ao carrinho</button>
+                            {% endif %}
+                            <button type="submit" name="purchase_type" value="gift" class="btn-blue" style="color:#fff; background:#3a688c;">Presentear</button>
+                        </div>
+                    </form>
+                </div>
+
                 {% if game.id not in session['library'] %}
                 <div class="wishlist-action">
                     {% if na_wishlist %}
                     <span class="on-wishlist">❤ Na sua lista de desejos</span>
                     <a href="{{ url_for('wishlist_remove', game_id=game.id) }}" class="wishlist-link">Remover</a>
                     {% else %}
-                    <a href="{{ url_for('wishlist_add', game_id=game.id) }}" class="btn-wishlist">+ Adicionar à Lista de Desejos</a>
+                    <a href="{{ url_for('wishlist_add', game_id=game.id) }}" class="btn-wishlist">+ Adicionar à sua lista de desejos</a>
                     {% endif %}
                 </div>
                 {% endif %}
             </div>
+
+            <!-- Sobre o jogo -->
+            <div class="store-about">
+                <h2>Sobre este jogo</h2>
+                <p>{{ game.long_description }}</p>
+            </div>
+
+            <!-- Requisitos de sistema -->
+            <div class="store-requirements">
+                <h2>Requisitos de sistema</h2>
+                <div class="req-cols">
+                    <div>
+                        <strong>MÍNIMOS</strong>
+                        <pre>{{ game.req_minimo or 'Não informado.' }}</pre>
+                    </div>
+                    <div>
+                        <strong>RECOMENDADOS</strong>
+                        <pre>{{ game.req_recomendado or 'Não informado.' }}</pre>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Coluna de informações (estilo Steam) -->
+        <aside class="store-info">
+            <img src="{{ img_jogo(game) }}" alt="{{ game.name }}" class="store-info-capsule">
+            <p class="store-info-desc">{{ game.description }}</p>
+
+            <div class="info-row"><span>Análises:</span>
+                <strong class="review-pos">{{ game.reviews }}</strong>
+                {% if game.review_count %}<span class="muted">({{ "{:,}".format(game.review_count).replace(",", ".") }})</span>{% endif %}
+            </div>
+            <div class="info-row"><span>Data de lançamento:</span> {{ game.release_date }}</div>
+            <div class="info-row"><span>Desenvolvedor:</span> {{ game.developer }}</div>
+            <div class="info-row"><span>Distribuidora:</span> {{ game.publisher }}</div>
+
+            {% if game.tags %}
+            <div class="info-block">
+                <div class="info-block-title">Marcadores populares para este produto:</div>
+                <div class="tag-list">
+                    {% for tag in game.tags %}<span class="tag-chip">{{ tag }}</span>{% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if game.features %}
+            <div class="info-block">
+                <ul class="feature-list">
+                    {% for f in game.features %}<li>✔ {{ f }}</li>{% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <!-- Idiomas -->
+            {% if game.languages %}
+            <div class="info-block">
+                <div class="info-block-title">Idiomas:</div>
+                <table class="lang-table">
+                    <thead>
+                        <tr><th>Idioma</th><th>Interface</th><th>Dublagem</th><th>Legendas</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for l in game.languages %}
+                        <tr>
+                            <td>{{ l.nome }}</td>
+                            <td>{% if l.interface %}✔{% endif %}</td>
+                            <td>{% if l.audio %}✔{% endif %}</td>
+                            <td>{% if l.legendas %}✔{% endif %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
+            <!-- Classificação etária -->
+            <div class="info-block age-block">
+                <div class="age-rating-badge {% if game.age_rating >= 18 %}mature{% elif game.age_rating == 0 %}livre{% endif %}">
+                    {% if game.age_rating == 0 %}L{% else %}{{ game.age_rating }}{% endif %}
+                </div>
+                <span>
+                    {% if game.age_rating == 0 %}Classificação: Livre para todos os públicos
+                    {% else %}Classificação etária: {{ game.age_rating }} anos{% endif %}
+                </span>
+            </div>
+        </aside>
     </div>
 </div>
 {% endblock %}

@@ -1,6 +1,6 @@
 # =============================================================================
 # MINISTEAM - Promoções da Loja (Simulação Manual via /admin)
-# Linha de config:   config | <modo: nenhum|evento|unico> | <nome> | <data_fim>
+# Linha de config:   config | <modo: nenhum|evento|unico> | <nome> | <data_inicio> | <data_fim>
 # Desconto por jogo: <game_id> | <percentual 0-100>
 # =============================================================================
-config | nenhum | Promoção de Evento | none
+config | nenhum | Promoção de Evento | none | none

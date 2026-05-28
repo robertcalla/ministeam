@@ -77,7 +77,7 @@
 
             <div style="margin-bottom: 20px; background: rgba(0,0,0,0.2); padding: 12px; border: 1px solid #3a688c; border-radius: 3px;">
                 <label style="font-size: 12px; color: #ff9900; font-weight: bold;">📅 Data de Nascimento:</label>
-                <input type="date" name="dob" value="{{ session['user_dob'] if session['user_dob'] else '' }}" style="width: 100%; padding: 8px; margin-top: 6px; background: #171a21; color: white; border: 1px solid #2a475e; border-radius: 2px;">
+                <input type="date" name="dob" min="1900-01-01" max="{{ hoje_iso }}" value="{{ session['user_dob'] if session['user_dob'] else '' }}" style="width: 100%; padding: 8px; margin-top: 6px; background: #171a21; color: white; border: 1px solid #2a475e; border-radius: 2px;">
                 <p style="font-size: 10px; color: #8f98a0; margin-top: 4px;">*Necessária para acessar jogos com classificação etária. Sem ela, títulos +10 e +18 serão bloqueados.</p>
             </div>
 

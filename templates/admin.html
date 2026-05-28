@@ -1,33 +1,41 @@
 {% extends 'base.html' %}
 
-{% block title %}Admin - Promoções - Ministeam{% endblock %}
+{% block title %}Admin - Ministeam{% endblock %}
 
 {% block content %}
 <div style="display:flex; align-items:center; gap:12px; margin-bottom: 6px;">
-    <h1 style="margin:0;">🛠 Painel de Promoções</h1>
+    <h1 style="margin:0;">🛠 Painel Administrativo</h1>
     <span style="font-size:11px; background:#b52a1c; color:#fff; padding:3px 8px; border-radius:3px;">ROTA OCULTA /admin</span>
 </div>
-<p style="color:#8f98a0; margin-bottom: 20px;">
-    Simulação manual de promoções da loja. Esta página só é acessível digitando <strong>/admin</strong> na URL.
+<p style="color:#8f98a0; margin-bottom: 24px;">
+    Simulação manual de promoções e cadastro de jogos. Esta página só é acessível digitando <strong>/admin</strong> na URL.
 </p>
 
-<!-- Estado atual -->
+<!-- ====================================================== -->
+<!-- PROMOÇÕES                                              -->
+<!-- ====================================================== -->
+<h2 style="color:#fff; font-weight:400; border-bottom:1px solid #2a475e; padding-bottom:8px;">Promoções</h2>
+
 <div class="admin-status">
     <strong>Estado atual:</strong>
-    {% if promo.modo == 'nenhum' or not promo.ativo %}
-        <span style="color:#8f98a0;">Nenhuma promoção ativa — preços normais.</span>
-    {% elif promo.modo == 'evento' %}
-        <span style="color:#beee11;">Evento ativo: "{{ promo.nome }}"</span>
-        {% if promo.data_fim %}<span style="color:#8f98a0;"> (até {{ promo.data_fim }})</span>{% endif %}
-        — {{ promo.descontos|length }} jogo(s) em oferta.
+    {% if promo.modo == 'nenhum' %}
+        <span style="color:#8f98a0;">Nenhuma promoção configurada — preços normais.</span>
     {% else %}
-        <span style="color:#beee11;">Oferta de jogo único ativa.</span>
+        <span style="color:#beee11;">{{ promo.nome }}</span>
+        ({{ promo.modo }})
+        {% if promo.data_inicio or promo.data_fim %}
+        <span style="color:#8f98a0;"> · {{ promo.data_inicio or '?' }} → {{ promo.data_fim or '?' }}</span>
+        {% endif %}
+        — {{ promo.descontos|length }} jogo(s).
+        {% if promo.ativo %}
+            <span style="color:#79a016; font-weight:bold;">● VIGENTE HOJE</span>
+        {% else %}
+            <span style="color:#ff9900;">○ fora do período (não aplicada hoje)</span>
+        {% endif %}
     {% endif %}
 </div>
 
 <form action="{{ url_for('admin') }}" method="POST" class="admin-form">
-
-    <!-- Seletor de modo -->
     <div class="admin-mode">
         <label class="mode-opt">
             <input type="radio" name="modo" value="nenhum" onclick="setMode('nenhum')" {% if promo.modo == 'nenhum' %}checked{% endif %}>
@@ -43,7 +51,24 @@
         </label>
     </div>
 
-    <!-- Seção: Evento -->
+    <!-- Datas (obrigatórias para qualquer desconto) -->
+    <div id="section-datas" class="admin-section" style="display:none;">
+        <h3>Período do desconto (obrigatório)</h3>
+        <div style="display:flex; gap:16px; flex-wrap:wrap;">
+            <div class="admin-field" style="margin:0;">
+                <label>Data de início</label>
+                <input type="date" name="data_inicio" min="2000-01-01"
+                       value="{% if promo.data_inicio %}{{ promo.data_inicio }}{% else %}{{ hoje_iso }}{% endif %}">
+            </div>
+            <div class="admin-field" style="margin:0;">
+                <label>Data de fim</label>
+                <input type="date" name="data_fim" min="2000-01-01"
+                       value="{% if promo.data_fim %}{{ promo.data_fim }}{% endif %}">
+            </div>
+        </div>
+    </div>
+
+    <!-- Evento -->
     <div id="section-evento" class="admin-section" style="display:none;">
         <h3>Promoção de Evento</h3>
         <div class="admin-field">
@@ -51,11 +76,6 @@
             <input type="text" name="nome" placeholder="Ex: Promoção de Verão"
                    value="{% if promo.modo == 'evento' %}{{ promo.nome }}{% endif %}">
         </div>
-        <div class="admin-field">
-            <label>Data de término (opcional)</label>
-            <input type="date" name="data_fim" value="{% if promo.modo == 'evento' and promo.data_fim %}{{ promo.data_fim }}{% endif %}">
-        </div>
-
         <label style="display:block; margin: 14px 0 8px; color:#66c0f4;">Desconto por jogo (% — deixe 0 para não descontar):</label>
         <div class="admin-games">
             {% for id, game in games.items() %}
@@ -71,15 +91,14 @@
         </div>
     </div>
 
-    <!-- Seção: Jogo Único -->
+    <!-- Jogo único -->
     <div id="section-unico" class="admin-section" style="display:none;">
         <h3>Promoção de Jogo Único</h3>
         <div class="admin-field">
             <label>Jogo</label>
             <select name="jogo_unico">
                 {% for id, game in games.items() %}
-                <option value="{{ id }}"
-                    {% if promo.modo == 'unico' and promo.descontos.get(id) %}selected{% endif %}>
+                <option value="{{ id }}" {% if promo.modo == 'unico' and promo.descontos.get(id) %}selected{% endif %}>
                     {{ game.name }} — R$ {{ "%.2f"|format(game.price) }}
                 </option>
                 {% endfor %}
@@ -97,12 +116,118 @@
     </button>
 </form>
 
+<!-- Histórico de promoções -->
+<h2 style="color:#fff; font-weight:400; border-bottom:1px solid #2a475e; padding-bottom:8px; margin-top:34px;">
+    Histórico de Promoções ({{ historico|length }})
+</h2>
+{% if historico %}
+<div class="hist-list">
+    {% for h in historico %}
+    <div class="hist-item">
+        <div class="hist-head">
+            <span class="hist-name">{{ h.nome }}</span>
+            <span class="hist-type">{{ h.modo }}</span>
+            <span class="hist-when">criada em {{ h.criado_em }}</span>
+        </div>
+        <div class="hist-period">Período: <strong>{{ h.inicio or '?' }}</strong> até <strong>{{ h.fim or '?' }}</strong></div>
+        <div class="hist-items">
+            {% for it in h.itens %}
+            <span class="hist-chip">{{ it.nome }} <strong>-{{ it.pct }}%</strong></span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="muted">Nenhuma promoção registrada ainda.</p>
+{% endif %}
+
+<!-- ====================================================== -->
+<!-- CRIAR JOGO                                             -->
+<!-- ====================================================== -->
+<h2 style="color:#fff; font-weight:400; border-bottom:1px solid #2a475e; padding-bottom:8px; margin-top:34px;">
+    Cadastrar novo jogo
+</h2>
+<p class="muted" style="margin-bottom:14px;">Todos os campos abaixo aparecem na página do jogo, igual à Steam.</p>
+
+<form action="{{ url_for('admin_criar_jogo') }}" method="POST" class="admin-form">
+    <div class="admin-grid2">
+        <div class="admin-field"><label>Nome do jogo *</label>
+            <input type="text" name="name" required placeholder="Ex: DRAGON BALL Z: KAKAROT"></div>
+        <div class="admin-field"><label>Preço (R$) *</label>
+            <input type="number" name="price" min="0" step="0.01" required placeholder="98.90"></div>
+        <div class="admin-field"><label>Classificação etária</label>
+            <select name="age_rating">
+                {% for c in classificacoes %}
+                <option value="{{ c }}">{% if c == 0 %}Livre{% else %}{{ c }} anos{% endif %}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="admin-field"><label>Imagem (URL ou arquivo em static/images)</label>
+            <input type="text" name="image" placeholder="https://... ou jogo4.jpg"></div>
+        <div class="admin-field"><label>Desenvolvedor</label>
+            <input type="text" name="developer" placeholder="CyberConnect2 Co. Ltd."></div>
+        <div class="admin-field"><label>Distribuidora</label>
+            <input type="text" name="publisher" placeholder="Bandai Namco Entertainment"></div>
+        <div class="admin-field"><label>Data de lançamento</label>
+            <input type="text" name="release_date" placeholder="16 jan. 2020"></div>
+        <div class="admin-field"><label>Resumo das análises</label>
+            <input type="text" name="reviews" placeholder="Muito positivas"></div>
+        <div class="admin-field"><label>Nº de análises</label>
+            <input type="number" name="review_count" min="0" placeholder="43431"></div>
+    </div>
+
+    <div class="admin-field"><label>Descrição curta (capsule)</label>
+        <input type="text" name="description" placeholder="Reviva a história de Goku..."></div>
+
+    <div class="admin-field"><label>Sobre este jogo (descrição completa)</label>
+        <textarea name="long_description" rows="4" placeholder="Texto completo exibido em 'Sobre este jogo'..."></textarea></div>
+
+    <div class="admin-grid2">
+        <div class="admin-field"><label>Gêneros (separados por vírgula)</label>
+            <input type="text" name="genres" placeholder="Ação, RPG, Aventura"></div>
+        <div class="admin-field"><label>Marcadores populares (separados por vírgula)</label>
+            <input type="text" name="tags" placeholder="Anime, Mundo Aberto, Luta"></div>
+    </div>
+    <div class="admin-field"><label>Recursos (separados por vírgula)</label>
+        <input type="text" name="features" placeholder="Um jogador, Conquistas Steam, Nuvem Steam, Suporte total a controle"></div>
+
+    <!-- Idiomas -->
+    <label style="display:block; margin: 16px 0 8px; color:#66c0f4;">Idiomas — marque Interface / Dublagem / Legendas:</label>
+    <table class="lang-table admin-lang-table">
+        <thead>
+            <tr><th>Idioma</th><th>Interface</th><th>Dublagem</th><th>Legendas</th></tr>
+        </thead>
+        <tbody>
+            {% for idioma in idiomas %}
+            <tr>
+                <td>{{ idioma }}</td>
+                <td><input type="checkbox" name="lang_{{ loop.index0 }}_i"></td>
+                <td><input type="checkbox" name="lang_{{ loop.index0 }}_a"></td>
+                <td><input type="checkbox" name="lang_{{ loop.index0 }}_l"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="admin-grid2" style="margin-top:14px;">
+        <div class="admin-field"><label>Requisitos mínimos</label>
+            <textarea name="req_minimo" rows="6" placeholder="SO: Windows 10 64-bit&#10;Processador: ...&#10;Memória: ..."></textarea></div>
+        <div class="admin-field"><label>Requisitos recomendados</label>
+            <textarea name="req_recomendado" rows="6" placeholder="SO: Windows 11 64-bit&#10;Processador: ...&#10;Memória: ..."></textarea></div>
+    </div>
+
+    <button type="submit" class="btn-green" style="margin-top: 18px; padding: 12px 24px; font-size: 15px;">
+        Criar Jogo
+    </button>
+</form>
+
 <script>
     function setMode(modo) {
+        document.getElementById('section-datas').style.display  = (modo === 'evento' || modo === 'unico') ? 'block' : 'none';
         document.getElementById('section-evento').style.display = (modo === 'evento') ? 'block' : 'none';
         document.getElementById('section-unico').style.display  = (modo === 'unico')  ? 'block' : 'none';
     }
-    // Inicializa de acordo com o estado salvo
     document.addEventListener('DOMContentLoaded', function () {
         var atual = document.querySelector('input[name="modo"]:checked');
         setMode(atual ? atual.value : 'nenhum');

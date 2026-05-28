@@ -167,7 +167,7 @@
 
         <div class="dob-section">
             <label>📅 Data de Nascimento</label>
-            <input type="date" name="dob">
+            <input type="date" name="dob" min="1900-01-01" max="{{ hoje_iso }}">
             <p class="hint">
                 Opcional agora, mas necessária para jogar títulos com classificação etária.
                 Sem ela, o acesso a jogos +10 e +18 será bloqueado.

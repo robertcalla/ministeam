@@ -14,7 +14,7 @@
     {% set p = preco_info(game.id) %}
     <div class="wishlist-row">
         <a href="{{ url_for('game', game_id=game.id) }}" class="wishlist-cover">
-            <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}">
+            <img src="{{ img_jogo(game) }}" alt="{{ game.name }}">
         </a>
 
         <div class="wishlist-info">

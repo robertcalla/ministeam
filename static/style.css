@@ -414,3 +414,85 @@ button, .btn-blue, .btn-green {
 .admin-pct { display: flex; align-items: center; gap: 6px; }
 .admin-pct input { width: 80px; padding: 6px; background: #16202d; color: #fff; border: 1px solid #2a475e; border-radius: 2px; }
 .admin-pct span { color: #8f98a0; }
+.admin-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.admin-form textarea {
+    width: 100%; padding: 9px; background: #1b2838; color: #fff;
+    border: 1px solid #2a475e; border-radius: 2px; font-family: inherit; resize: vertical;
+}
+.admin-lang-table { background: rgba(0,0,0,0.2); }
+.admin-lang-table input[type="checkbox"] { transform: scale(1.2); }
+
+/* Histórico de promoções */
+.hist-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
+.hist-item { background: rgba(0,0,0,0.2); border: 1px solid #2a475e; border-radius: 4px; padding: 14px 16px; }
+.hist-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+.hist-name { color: #fff; font-weight: bold; font-size: 15px; }
+.hist-type { background: #2a475e; color: #beee11; font-size: 11px; padding: 2px 8px; border-radius: 3px; text-transform: uppercase; }
+.hist-when { color: #6d7b88; font-size: 12px; }
+.hist-period { color: #8f98a0; font-size: 13px; margin-bottom: 8px; }
+.hist-items { display: flex; flex-wrap: wrap; gap: 6px; }
+.hist-chip { background: #1b2838; border: 1px solid #2a475e; color: #c7d5e0; font-size: 12px; padding: 3px 8px; border-radius: 3px; }
+.hist-chip strong { color: #beee11; }
+
+/* ============================================================= */
+/* PÁGINA DE JOGO (FIEL À STEAM)                                 */
+/* ============================================================= */
+.store-breadcrumb { color: #8f98a0; font-size: 12px; margin-bottom: 6px; }
+.store-breadcrumb a { color: #66c0f4; text-decoration: none; }
+.store-breadcrumb span { margin: 0 4px; }
+.store-title { color: #fff; font-weight: 300; margin-bottom: 16px; }
+.store-layout { display: flex; gap: 20px; align-items: flex-start; }
+.store-content { flex: 1.7; min-width: 0; }
+.store-info {
+    flex: 1; min-width: 280px; max-width: 340px;
+    background: rgba(0,0,0,0.25); border: 1px solid #2a475e; border-radius: 4px; padding: 16px;
+}
+.store-cover { width: 100%; border-radius: 4px; margin-bottom: 16px; }
+.store-info-capsule { width: 100%; border-radius: 4px; margin-bottom: 12px; }
+.store-info-desc { color: #c7d5e0; font-size: 13px; line-height: 1.5; margin-bottom: 14px; }
+.info-row { font-size: 13px; color: #c7d5e0; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.info-row span { color: #8f98a0; }
+.info-block { margin-top: 16px; }
+.info-block-title { color: #66c0f4; font-size: 13px; margin-bottom: 8px; }
+.feature-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.feature-list li { color: #c7d5e0; font-size: 13px; }
+
+.lang-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.lang-table th { color: #8f98a0; text-align: center; font-weight: normal; padding: 6px; border-bottom: 1px solid #2a475e; }
+.lang-table th:first-child { text-align: left; }
+.lang-table td { color: #c7d5e0; text-align: center; padding: 6px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.lang-table td:first-child { text-align: left; }
+
+.age-block { display: flex; align-items: center; gap: 12px; }
+.age-rating-badge {
+    width: 42px; height: 42px; flex-shrink: 0; border-radius: 4px;
+    background: #d39a1e; color: #fff; font-weight: bold; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+}
+.age-rating-badge.mature { background: #b52a1c; }
+.age-rating-badge.livre { background: #4c8c2b; }
+.age-block span { color: #8f98a0; font-size: 13px; }
+
+.buy-box { background: linear-gradient(to right, #1a2a37, #213545); border-radius: 4px; padding: 16px; margin-bottom: 24px; }
+.buy-box-title { color: #fff; font-size: 16px; margin-bottom: 12px; }
+.buy-box-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.buy-price { display: flex; align-items: center; gap: 10px; }
+.buy-price .price { font-size: 22px; color: #fff; }
+.buy-form { display: flex; flex-direction: column; gap: 8px; }
+.buy-actions { display: flex; gap: 10px; }
+.age-ok { font-size: 13px; color: #66c0f4; }
+.age-gate label { font-size: 12px; color: #c7d5e0; display:block; margin-bottom: 4px; }
+.age-gate input { padding: 8px; border-radius: 3px; border: none; background: #1b2838; color: white; }
+
+.store-about { margin-bottom: 24px; }
+.store-about h2, .store-requirements h2 { color: #fff; font-weight: 400; font-size: 20px; border-bottom: 1px solid #2a475e; padding-bottom: 8px; margin-bottom: 14px; }
+.store-about p { line-height: 1.7; color: #c7d5e0; }
+.req-cols pre {
+    font-family: inherit; white-space: pre-wrap; color: #8f98a0; font-size: 13px; line-height: 1.7; margin-top: 6px;
+}
+
+@media (max-width: 800px) {
+    .store-layout { flex-direction: column; }
+    .store-info { max-width: none; }
+    .admin-grid2 { grid-template-columns: 1fr; }
+}

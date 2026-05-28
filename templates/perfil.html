@@ -84,7 +84,7 @@
             <div class="profile-games">
                 {% for item in jogos_biblioteca %}
                 <a href="{{ url_for('game', game_id=item.game.id) }}" class="profile-game">
-                    <img src="{{ url_for('static', filename='images/jogo' ~ item.game.id ~ '.jpg') }}" alt="{{ item.game.name }}">
+                    <img src="{{ img_jogo(item.game) }}" alt="{{ item.game.name }}">
                     <div class="profile-game-info">
                         <span class="profile-game-name">{{ item.game.name }}</span>
                         <span class="profile-game-hours">{{ item.horas }} h jogadas</span>
@@ -105,7 +105,7 @@
             <div class="profile-games">
                 {% for game in jogos_desejos %}
                 <a href="{{ url_for('game', game_id=game.id) }}" class="profile-game">
-                    <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}">
+                    <img src="{{ img_jogo(game) }}" alt="{{ game.name }}">
                     <div class="profile-game-info">
                         <span class="profile-game-name">{{ game.name }}</span>
                         {% set p = preco_info(game.id) %}

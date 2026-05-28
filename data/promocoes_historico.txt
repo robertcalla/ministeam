@@ -1,5 +1,4 @@
 # =============================================================================
-# MINISTEAM - Contas desta Máquina
-# Cada linha contém o ID de um usuário que já fez login neste computador.
+# MINISTEAM - Histórico de Promoções
+# Cada linha é um JSON: {criado_em, modo, nome, inicio, fim, descontos}
 # =============================================================================
-1

@@ -8,18 +8,34 @@ import re
 app = Flask(__name__)
 app.secret_key = 'chave_secreta_super_segura'
 
-# ---- CATÁLOGO DE JOGOS (DADOS FIXOS) ----
-# As informações abaixo são fictícias e podem ser editadas manualmente.
-GAMES = {
-    '1': {
+# ---- CATÁLOGO DE JOGOS ----
+# O catálogo é persistido em data/jogos.txt (um JSON por linha) e pode ser
+# ampliado pela rota /admin sem editar este arquivo. GAMES é recarregado do
+# disco a cada requisição (ver carregar_jogos / before_request).
+GAMES = {}
+
+# Idiomas oferecidos no formulário de criação de jogos (rota /admin).
+IDIOMAS_DISPONIVEIS = [
+    'Português (Brasil)', 'Inglês', 'Espanhol - Espanha', 'Francês', 'Alemão',
+    'Italiano', 'Japonês', 'Coreano', 'Russo', 'Chinês simplificado',
+]
+
+# Classificações etárias disponíveis (ContentRating estilo Brasil).
+CLASSIFICACOES = [0, 10, 12, 14, 16, 18]
+
+# Jogos iniciais (seed) gravados na primeira execução. Schema completo: o mesmo
+# usado pelos jogos criados via /admin.
+JOGOS_SEED = [
+    {
         'id': '1', 'name': 'Aventura Épica', 'price': 150.00, 'age_rating': 10,
+        'image': 'jogo1.jpg',
         'description': 'Explore masmorras e derrote monstros com amigos nesta jornada incrível.',
         'developer': 'Mythic Forge Studios',
         'publisher': 'Ministeam Publishing',
         'release_date': '15 de março de 2024',
         'genres': ['RPG', 'Ação', 'Aventura', 'Cooperativo'],
         'tags': ['Mundo Aberto', 'Fantasia', 'Multijogador', 'Masmorras', 'História Rica'],
-        'features': ['Um jogador', 'Cooperativo online', 'Conquistas Steam', 'Nuvem Steam', 'Suporte a controle'],
+        'features': ['Um jogador', 'Cooperativo online', 'Conquistas Steam', 'Nuvem Steam', 'Suporte total a controle'],
         'long_description': (
             'Aventura Épica leva você a um vasto mundo de fantasia repleto de masmorras sombrias, '
             'chefes colossais e tesouros lendários. Forme um grupo com até quatro amigos, personalize '
@@ -27,12 +43,20 @@ GAMES = {
             'Cada masmorra é gerada com desafios únicos, garantindo que nenhuma jornada seja igual.'
         ),
         'reviews': 'Muito positivas', 'review_count': 12480,
-        'languages': ['Português', 'Inglês', 'Espanhol', 'Francês', 'Alemão'],
-        'req_minimo': 'SO: Windows 10 64-bit · CPU: Intel i5-4460 · RAM: 8 GB · GPU: GTX 760 · 40 GB',
-        'req_recomendado': 'SO: Windows 11 64-bit · CPU: Intel i7-9700 · RAM: 16 GB · GPU: RTX 2060 · 40 GB SSD',
+        'reviews_recent': 'Muito positivas', 'review_recent_count': 845,
+        'languages': [
+            {'nome': 'Português (Brasil)', 'interface': True, 'audio': True, 'legendas': True},
+            {'nome': 'Inglês', 'interface': True, 'audio': True, 'legendas': True},
+            {'nome': 'Espanhol - Espanha', 'interface': True, 'audio': False, 'legendas': True},
+            {'nome': 'Francês', 'interface': True, 'audio': False, 'legendas': True},
+            {'nome': 'Alemão', 'interface': True, 'audio': False, 'legendas': True},
+        ],
+        'req_minimo': 'SO: Windows 10 64-bit\nProcessador: Intel Core i5-4460\nMemória: 8 GB de RAM\nPlaca de vídeo: NVIDIA GeForce GTX 760\nDirectX: Versão 11\nArmazenamento: 40 GB de espaço disponível',
+        'req_recomendado': 'SO: Windows 11 64-bit\nProcessador: Intel Core i7-9700\nMemória: 16 GB de RAM\nPlaca de vídeo: NVIDIA GeForce RTX 2060\nDirectX: Versão 12\nArmazenamento: 40 GB (SSD recomendado)',
     },
-    '2': {
+    {
         'id': '2', 'name': 'Sobrevivência Sombria', 'price': 90.00, 'age_rating': 18,
+        'image': 'jogo2.jpg',
         'description': 'Jogo de terror com zumbis. Sobreviva a noites aterrorizantes com recursos escassos.',
         'developer': 'Nightfall Interactive',
         'publisher': 'Grim Games',
@@ -47,12 +71,20 @@ GAMES = {
             'inteiras. Sozinho ou com amigos, até onde você irá para ver o amanhecer?'
         ),
         'reviews': 'Extremamente positivas', 'review_count': 28930,
-        'languages': ['Português', 'Inglês', 'Espanhol', 'Russo', 'Japonês'],
-        'req_minimo': 'SO: Windows 10 64-bit · CPU: Ryzen 3 1200 · RAM: 8 GB · GPU: GTX 1050 Ti · 50 GB',
-        'req_recomendado': 'SO: Windows 11 64-bit · CPU: Ryzen 5 5600 · RAM: 16 GB · GPU: RTX 3060 · 50 GB SSD',
+        'reviews_recent': 'Extremamente positivas', 'review_recent_count': 1960,
+        'languages': [
+            {'nome': 'Português (Brasil)', 'interface': True, 'audio': False, 'legendas': True},
+            {'nome': 'Inglês', 'interface': True, 'audio': True, 'legendas': True},
+            {'nome': 'Espanhol - Espanha', 'interface': True, 'audio': False, 'legendas': True},
+            {'nome': 'Russo', 'interface': True, 'audio': False, 'legendas': True},
+            {'nome': 'Japonês', 'interface': True, 'audio': True, 'legendas': True},
+        ],
+        'req_minimo': 'SO: Windows 10 64-bit\nProcessador: AMD Ryzen 3 1200\nMemória: 8 GB de RAM\nPlaca de vídeo: NVIDIA GeForce GTX 1050 Ti\nDirectX: Versão 11\nArmazenamento: 50 GB de espaço disponível',
+        'req_recomendado': 'SO: Windows 11 64-bit\nProcessador: AMD Ryzen 5 5600\nMemória: 16 GB de RAM\nPlaca de vídeo: NVIDIA GeForce RTX 3060\nDirectX: Versão 12\nArmazenamento: 50 GB (SSD recomendado)',
     },
-    '3': {
+    {
         'id': '3', 'name': 'Corrida Divertida', 'price': 45.00, 'age_rating': 0,
+        'image': 'jogo3.jpg',
         'description': 'Corridas para toda a família. Karts coloridos e pistas malucas!',
         'developer': 'Sunny Lab',
         'publisher': 'Ministeam Publishing',
@@ -67,11 +99,17 @@ GAMES = {
             'até quatro pessoas no mesmo sofá.'
         ),
         'reviews': 'Positivas', 'review_count': 5310,
-        'languages': ['Português', 'Inglês', 'Espanhol', 'Italiano'],
-        'req_minimo': 'SO: Windows 10 64-bit · CPU: Intel i3-6100 · RAM: 4 GB · GPU: GTX 650 · 15 GB',
-        'req_recomendado': 'SO: Windows 10 64-bit · CPU: Intel i5-7400 · RAM: 8 GB · GPU: GTX 1050 · 15 GB SSD',
-    }
-}
+        'reviews_recent': 'Positivas', 'review_recent_count': 410,
+        'languages': [
+            {'nome': 'Português (Brasil)', 'interface': True, 'audio': True, 'legendas': True},
+            {'nome': 'Inglês', 'interface': True, 'audio': True, 'legendas': True},
+            {'nome': 'Espanhol - Espanha', 'interface': True, 'audio': False, 'legendas': True},
+            {'nome': 'Italiano', 'interface': True, 'audio': False, 'legendas': True},
+        ],
+        'req_minimo': 'SO: Windows 10 64-bit\nProcessador: Intel Core i3-6100\nMemória: 4 GB de RAM\nPlaca de vídeo: NVIDIA GeForce GTX 650\nDirectX: Versão 11\nArmazenamento: 15 GB de espaço disponível',
+        'req_recomendado': 'SO: Windows 10 64-bit\nProcessador: Intel Core i5-7400\nMemória: 8 GB de RAM\nPlaca de vídeo: NVIDIA GeForce GTX 1050\nDirectX: Versão 12\nArmazenamento: 15 GB (SSD recomendado)',
+    },
+]
 
 # ==============================================================================
 # BANCO DE DADOS EM ARQUIVO DE TEXTO
@@ -87,6 +125,8 @@ SESSOES_FILE    = os.path.join(DATA_DIR, 'sessoes.txt')
 DESEJOS_FILE     = os.path.join(DATA_DIR, 'desejos.txt')
 PROMOCOES_FILE   = os.path.join(DATA_DIR, 'promocoes.txt')
 COMENTARIOS_FILE = os.path.join(DATA_DIR, 'comentarios.txt')
+JOGOS_FILE       = os.path.join(DATA_DIR, 'jogos.txt')
+PROMOCOES_HIST_FILE = os.path.join(DATA_DIR, 'promocoes_historico.txt')
 
 CARTEIRA_INICIAL = 100.00
 LIMITE_TROCAS_USERNAME = 3
@@ -166,10 +206,17 @@ def _garantir_arquivos():
         with open(PROMOCOES_FILE, 'w', encoding='utf-8') as f:
             f.write("# =============================================================================\n")
             f.write("# MINISTEAM - Promoções da Loja (Simulação Manual via /admin)\n")
-            f.write("# Linha de config:   config | <modo: nenhum|evento|unico> | <nome> | <data_fim>\n")
+            f.write("# Linha de config:   config | <modo: nenhum|evento|unico> | <nome> | <data_inicio> | <data_fim>\n")
             f.write("# Desconto por jogo: <game_id> | <percentual 0-100>\n")
             f.write("# =============================================================================\n")
-            f.write("config | nenhum | Promoção de Evento | none\n")
+            f.write("config | nenhum | Promoção de Evento | none | none\n")
+
+    if not os.path.exists(PROMOCOES_HIST_FILE):
+        with open(PROMOCOES_HIST_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Histórico de Promoções\n")
+            f.write("# Cada linha é um JSON: {criado_em, modo, nome, inicio, fim, descontos}\n")
+            f.write("# =============================================================================\n")
 
     if not os.path.exists(COMENTARIOS_FILE):
         with open(COMENTARIOS_FILE, 'w', encoding='utf-8') as f:
@@ -177,6 +224,55 @@ def _garantir_arquivos():
             f.write("# MINISTEAM - Comentários nos Perfis dos Usuários\n")
             f.write("# Formato: perfil_id | autor_id | data | texto\n")
             f.write("# =============================================================================\n")
+
+    if not os.path.exists(JOGOS_FILE):
+        with open(JOGOS_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Catálogo de Jogos\n")
+            f.write("# Cada linha (não comentada) é um objeto JSON representando um jogo.\n")
+            f.write("# =============================================================================\n")
+            for jogo in JOGOS_SEED:
+                f.write(json.dumps(jogo, ensure_ascii=False) + '\n')
+
+
+# ---- FUNÇÕES DE CATÁLOGO DE JOGOS ----
+
+def ler_jogos():
+    """Lê o catálogo de jogos do arquivo e retorna um dict {id: jogo}."""
+    _garantir_arquivos()
+    jogos = {}
+    try:
+        with open(JOGOS_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s or s.startswith('#'):
+                    continue
+                try:
+                    jogo = json.loads(s)
+                    jogos[str(jogo['id'])] = jogo
+                except (json.JSONDecodeError, KeyError):
+                    pass
+    except FileNotFoundError:
+        pass
+    return jogos
+
+
+def salvar_jogo(jogo):
+    """Adiciona um novo jogo ao final do catálogo."""
+    _garantir_arquivos()
+    with open(JOGOS_FILE, 'a', encoding='utf-8') as f:
+        f.write(json.dumps(jogo, ensure_ascii=False) + '\n')
+
+
+def proximo_jogo_id():
+    jogos = ler_jogos()
+    return str(max((int(g) for g in jogos if g.isdigit()), default=0) + 1)
+
+
+def carregar_jogos():
+    """Recarrega o catálogo em memória (GAMES) a partir do disco."""
+    global GAMES
+    GAMES = ler_jogos()
 
 
 # ---- FUNÇÕES DE USUÁRIOS ----
@@ -545,13 +641,25 @@ def salvar_desejos_usuario(uid, game_ids):
 
 # ---- FUNÇÕES DE PROMOÇÃO ----
 
+def _dentro_do_periodo(inicio, fim):
+    """True se hoje está dentro de [inicio, fim] (datas 'YYYY-MM-DD'). Sem datas → True."""
+    hoje = datetime.today().strftime('%Y-%m-%d')
+    if inicio and hoje < inicio:
+        return False
+    if fim and hoje > fim:
+        return False
+    return True
+
+
 def ler_promocao():
-    """Retorna o estado da promoção: {modo, ativo, nome, data_fim, descontos{gid: pct}}.
+    """Retorna o estado da promoção: {modo, ativo, nome, data_inicio, data_fim, descontos}.
 
     modo: 'nenhum' (sem promoção) | 'evento' (banner + vários jogos) | 'unico' (um jogo).
+    'ativo' considera o modo, a existência de descontos E a janela de datas.
     """
     _garantir_arquivos()
-    promo = {'modo': 'nenhum', 'nome': 'Promoção de Evento', 'data_fim': None, 'descontos': {}}
+    promo = {'modo': 'nenhum', 'nome': 'Promoção de Evento',
+             'data_inicio': None, 'data_fim': None, 'descontos': {}}
     try:
         with open(PROMOCOES_FILE, 'r', encoding='utf-8') as f:
             for linha in f:
@@ -565,7 +673,9 @@ def ler_promocao():
                     if len(partes) > 2 and partes[2]:
                         promo['nome'] = partes[2]
                     if len(partes) > 3 and partes[3] and partes[3] != 'none':
-                        promo['data_fim'] = partes[3]
+                        promo['data_inicio'] = partes[3]
+                    if len(partes) > 4 and partes[4] and partes[4] != 'none':
+                        promo['data_fim'] = partes[4]
                 elif len(partes) >= 2:
                     try:
                         pct = int(float(partes[1]))
@@ -575,7 +685,11 @@ def ler_promocao():
                         pass
     except FileNotFoundError:
         pass
-    promo['ativo'] = promo['modo'] != 'nenhum' and bool(promo['descontos'])
+    promo['ativo'] = (
+        promo['modo'] != 'nenhum'
+        and bool(promo['descontos'])
+        and _dentro_do_periodo(promo['data_inicio'], promo['data_fim'])
+    )
     return promo
 
 
@@ -586,14 +700,15 @@ def salvar_promocao(promo):
     modo = promo.get('modo', 'nenhum')
     if modo not in ('nenhum', 'evento', 'unico'):
         modo = 'nenhum'
-    data_fim = promo.get('data_fim') or 'none'
+    data_inicio = promo.get('data_inicio') or 'none'
+    data_fim    = promo.get('data_fim') or 'none'
     with open(PROMOCOES_FILE, 'w', encoding='utf-8') as f:
         f.write("# =============================================================================\n")
         f.write("# MINISTEAM - Promoções da Loja (Simulação Manual via /admin)\n")
-        f.write("# Linha de config:   config | <modo: nenhum|evento|unico> | <nome> | <data_fim>\n")
+        f.write("# Linha de config:   config | <modo: nenhum|evento|unico> | <nome> | <data_inicio> | <data_fim>\n")
         f.write("# Desconto por jogo: <game_id> | <percentual 0-100>\n")
         f.write("# =============================================================================\n")
-        f.write(f"config | {modo} | {nome} | {data_fim}\n")
+        f.write(f"config | {modo} | {nome} | {data_inicio} | {data_fim}\n")
         if modo != 'nenhum':
             for gid, pct in promo.get('descontos', {}).items():
                 try:
@@ -602,6 +717,45 @@ def salvar_promocao(promo):
                     continue
                 if pct > 0:
                     f.write(f"{gid} | {pct}\n")
+
+
+def registrar_historico_promocao(promo):
+    """Adiciona uma entrada ao histórico de promoções (cada vez que uma promoção é aplicada)."""
+    _garantir_arquivos()
+    entrada = {
+        'criado_em': datetime.now().strftime("%d/%m/%Y %H:%M"),
+        'modo':      promo.get('modo'),
+        'nome':      promo.get('nome'),
+        'inicio':    promo.get('data_inicio'),
+        'fim':       promo.get('data_fim'),
+        'descontos': promo.get('descontos', {}),
+    }
+    with open(PROMOCOES_HIST_FILE, 'a', encoding='utf-8') as f:
+        f.write(json.dumps(entrada, ensure_ascii=False) + '\n')
+
+
+def ler_historico_promocoes():
+    """Retorna o histórico de promoções (mais recentes primeiro), com nomes dos jogos resolvidos."""
+    _garantir_arquivos()
+    historico = []
+    try:
+        with open(PROMOCOES_HIST_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s or s.startswith('#'):
+                    continue
+                try:
+                    e = json.loads(s)
+                    e['itens'] = [
+                        {'nome': GAMES.get(str(gid), {}).get('name', f'Jogo {gid}'), 'pct': pct}
+                        for gid, pct in e.get('descontos', {}).items()
+                    ]
+                    historico.append(e)
+                except json.JSONDecodeError:
+                    pass
+    except FileNotFoundError:
+        pass
+    return list(reversed(historico))
 
 
 def calcular_preco(gid):
@@ -879,6 +1033,13 @@ def fazer_login_sessao(usuario):
 # ==============================================================================
 
 @app.before_request
+def carregar_catalogo():
+    # Mantém GAMES sincronizado com o arquivo (jogos criados via /admin aparecem
+    # imediatamente, sem reiniciar o servidor).
+    carregar_jogos()
+
+
+@app.before_request
 def verificar_autenticacao():
     rotas_publicas = {'login', 'selecionar_usuario', 'register', 'static'}
     if request.endpoint in rotas_publicas:
@@ -903,9 +1064,10 @@ def garantir_valores_sessao():
 
 
 @app.context_processor
-def injetar_promocao():
-    """Disponibiliza a promoção ativa e a função preco_info() em todos os templates."""
+def injetar_globais():
+    """Disponibiliza promoção, preços, imagem de jogo e datas em todos os templates."""
     promo = ler_promocao()
+    hoje  = datetime.today()
 
     def preco_info(gid):
         gid  = str(gid)
@@ -917,13 +1079,26 @@ def injetar_promocao():
         final    = round(original * (1 - pct / 100), 2)
         return {'original': original, 'final': final, 'pct': pct, 'on_sale': pct > 0}
 
+    def img_jogo(game):
+        """Retorna a URL da imagem do jogo (URL externa ou arquivo em static/images)."""
+        img = (game or {}).get('image') or ''
+        if img.startswith('http://') or img.startswith('https://'):
+            return img
+        if img:
+            return url_for('static', filename='images/' + img)
+        return url_for('static', filename='images/logo.png')
+
     return {
-        'promo_ativa':  promo['ativo'],
-        'promo_modo':   promo['modo'],
-        'promo_evento': promo['modo'] == 'evento' and promo['ativo'],
-        'promo_nome':   promo['nome'],
-        'promo_fim':    promo['data_fim'],
-        'preco_info':   preco_info,
+        'promo_ativa':   promo['ativo'],
+        'promo_modo':    promo['modo'],
+        'promo_evento':  promo['modo'] == 'evento' and promo['ativo'],
+        'promo_nome':    promo['nome'],
+        'promo_inicio':  promo['data_inicio'],
+        'promo_fim':     promo['data_fim'],
+        'preco_info':    preco_info,
+        'img_jogo':      img_jogo,
+        'hoje_iso':      hoje.strftime('%Y-%m-%d'),
+        'ano_atual':     hoje.year,
     }
 
 
@@ -1860,13 +2035,23 @@ def admin():
         if modo not in ('nenhum', 'evento', 'unico'):
             modo = 'nenhum'
 
-        nome      = 'Promoção de Evento'
-        data_fim  = None
-        descontos = {}
+        nome        = 'Promoção de Evento'
+        data_inicio = None
+        data_fim    = None
+        descontos   = {}
+
+        if modo in ('evento', 'unico'):
+            data_inicio = request.form.get('data_inicio', '').strip()
+            data_fim    = request.form.get('data_fim', '').strip()
+            if not data_inicio or not data_fim:
+                flash('Informe a data de início e de fim do desconto.', 'error')
+                return redirect(url_for('admin'))
+            if data_inicio > data_fim:
+                flash('A data de início não pode ser posterior à data de fim.', 'error')
+                return redirect(url_for('admin'))
 
         if modo == 'evento':
-            nome     = request.form.get('nome', '').strip() or 'Promoção de Evento'
-            data_fim = request.form.get('data_fim', '').strip() or None
+            nome = request.form.get('nome', '').strip() or 'Promoção de Evento'
             for gid in GAMES:
                 valor = request.form.get(f'desconto_{gid}', '').strip()
                 if valor:
@@ -1896,15 +2081,86 @@ def admin():
             nome = f"Oferta: {GAMES[gid_unico]['name']}"
             descontos[gid_unico] = pct
 
-        salvar_promocao({'modo': modo, 'nome': nome, 'data_fim': data_fim, 'descontos': descontos})
+        promo_nova = {'modo': modo, 'nome': nome, 'data_inicio': data_inicio,
+                      'data_fim': data_fim, 'descontos': descontos}
+        salvar_promocao(promo_nova)
         if modo == 'nenhum':
             flash('Promoções desativadas. A loja está com preços normais.', 'sucesso')
         else:
+            registrar_historico_promocao(promo_nova)
             flash('Promoção aplicada com sucesso!', 'sucesso')
         return redirect(url_for('admin'))
 
     promo = ler_promocao()
-    return render_template('admin.html', promo=promo, games=GAMES)
+    return render_template('admin.html', promo=promo, games=GAMES,
+                           historico=ler_historico_promocoes(),
+                           idiomas=IDIOMAS_DISPONIVEIS,
+                           classificacoes=CLASSIFICACOES)
+
+
+@app.route('/admin/criar_jogo', methods=['POST'])
+def admin_criar_jogo():
+    f = request.form
+
+    nome = f.get('name', '').strip()
+    if not nome:
+        flash('O nome do jogo é obrigatório.', 'error')
+        return redirect(url_for('admin'))
+    try:
+        price = round(float(f.get('price', '0')), 2)
+    except ValueError:
+        price = 0.0
+    try:
+        age_rating = int(f.get('age_rating', '0'))
+    except ValueError:
+        age_rating = 0
+    if age_rating not in CLASSIFICACOES:
+        age_rating = 0
+
+    def lista(campo):
+        return [x.strip() for x in f.get(campo, '').split(',') if x.strip()]
+
+    try:
+        review_count = int(f.get('review_count', '0') or 0)
+    except ValueError:
+        review_count = 0
+
+    # Idiomas: interface / dublagem (áudio) / legendas por idioma
+    idiomas = []
+    for i, idioma in enumerate(IDIOMAS_DISPONIVEIS):
+        inter = f.get(f'lang_{i}_i') == 'on'
+        audio = f.get(f'lang_{i}_a') == 'on'
+        leg   = f.get(f'lang_{i}_l') == 'on'
+        if inter or audio or leg:
+            idiomas.append({'nome': idioma, 'interface': inter, 'audio': audio, 'legendas': leg})
+
+    novo_id = proximo_jogo_id()
+    jogo = {
+        'id': novo_id,
+        'name': nome,
+        'price': price,
+        'age_rating': age_rating,
+        'image': f.get('image', '').strip(),
+        'description': f.get('description', '').strip() or nome,
+        'developer': f.get('developer', '').strip() or 'Desconhecido',
+        'publisher': f.get('publisher', '').strip() or 'Desconhecido',
+        'release_date': f.get('release_date', '').strip() or 'Em breve',
+        'genres': lista('genres'),
+        'tags': lista('tags'),
+        'features': lista('features'),
+        'long_description': f.get('long_description', '').strip() or f.get('description', '').strip(),
+        'reviews': f.get('reviews', '').strip() or 'Sem avaliações suficientes',
+        'review_count': review_count,
+        'reviews_recent': f.get('reviews', '').strip() or 'Sem avaliações suficientes',
+        'review_recent_count': review_count,
+        'languages': idiomas,
+        'req_minimo': f.get('req_minimo', '').strip(),
+        'req_recomendado': f.get('req_recomendado', '').strip(),
+    }
+    salvar_jogo(jogo)
+    carregar_jogos()
+    flash(f"Jogo '{nome}' criado com sucesso na loja!", 'sucesso')
+    return redirect(url_for('game', game_id=novo_id))
 
 
 # ==============================================================================
@@ -1914,11 +2170,12 @@ def admin():
 @app.route('/reset')
 def reset_session():
     """Limpa todos os cookies (sessão) e zera todos os arquivos de dados,
-    exceto usuarios.txt (as contas cadastradas são preservadas)."""
+    exceto usuarios.txt e o catálogo de jogos (jogos.txt), que são preservados."""
     session.clear()
     for caminho in (MAQUINA_FILE, AMIZADES_FILE, BIBLIOTECA_FILE,
                     FAMILIAS_FILE, CARTEIRAS_FILE, SESSOES_FILE,
-                    DESEJOS_FILE, PROMOCOES_FILE, COMENTARIOS_FILE):
+                    DESEJOS_FILE, PROMOCOES_FILE, COMENTARIOS_FILE,
+                    PROMOCOES_HIST_FILE):
         try:
             if os.path.exists(caminho):
                 os.remove(caminho)
@@ -1930,4 +2187,5 @@ def reset_session():
 
 if __name__ == '__main__':
     _garantir_arquivos()
+    carregar_jogos()
     app.run(debug=True)

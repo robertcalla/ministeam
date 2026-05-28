@@ -17,7 +17,7 @@
     {% set p = preco_info(id) %}
     <div class="game-card">
         <a href="{{ url_for('game', game_id=id) }}" style="text-decoration: none; display: block; position: relative;">
-            <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}">
+            <img src="{{ img_jogo(game) }}" alt="{{ game.name }}">
             {% if p.on_sale %}
             <span class="discount-badge card-badge">-{{ p.pct }}%</span>
             {% endif %}

@@ -50,7 +50,7 @@
         <div class="game-card"
              data-familia="{{ 'true' if id in ids_familia_pool else 'false' }}"
              style="cursor: default;">
-            <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}">
+            <img src="{{ img_jogo(game) }}" alt="{{ game.name }}">
 
             {% if id in ids_familia_pool %}
             <div style="

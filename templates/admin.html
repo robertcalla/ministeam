@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin - Promoções - Ministeam{% endblock %}
+
+{% block content %}
+<div style="display:flex; align-items:center; gap:12px; margin-bottom: 6px;">
+    <h1 style="margin:0;">🛠 Painel de Promoções</h1>
+    <span style="font-size:11px; background:#b52a1c; color:#fff; padding:3px 8px; border-radius:3px;">ROTA OCULTA /admin</span>
+</div>
+<p style="color:#8f98a0; margin-bottom: 20px;">
+    Simulação manual de promoções da loja. Esta página só é acessível digitando <strong>/admin</strong> na URL.
+</p>
+
+<!-- Estado atual -->
+<div class="admin-status">
+    <strong>Estado atual:</strong>
+    {% if promo.modo == 'nenhum' or not promo.ativo %}
+        <span style="color:#8f98a0;">Nenhuma promoção ativa — preços normais.</span>
+    {% elif promo.modo == 'evento' %}
+        <span style="color:#beee11;">Evento ativo: "{{ promo.nome }}"</span>
+        {% if promo.data_fim %}<span style="color:#8f98a0;"> (até {{ promo.data_fim }})</span>{% endif %}
+        — {{ promo.descontos|length }} jogo(s) em oferta.
+    {% else %}
+        <span style="color:#beee11;">Oferta de jogo único ativa.</span>
+    {% endif %}
+</div>
+
+<form action="{{ url_for('admin') }}" method="POST" class="admin-form">
+
+    <!-- Seletor de modo -->
+    <div class="admin-mode">
+        <label class="mode-opt">
+            <input type="radio" name="modo" value="nenhum" onclick="setMode('nenhum')" {% if promo.modo == 'nenhum' %}checked{% endif %}>
+            Nenhuma (preços normais)
+        </label>
+        <label class="mode-opt">
+            <input type="radio" name="modo" value="evento" onclick="setMode('evento')" {% if promo.modo == 'evento' %}checked{% endif %}>
+            Promoção de Evento
+        </label>
+        <label class="mode-opt">
+            <input type="radio" name="modo" value="unico" onclick="setMode('unico')" {% if promo.modo == 'unico' %}checked{% endif %}>
+            Promoção de Jogo Único
+        </label>
+    </div>
+
+    <!-- Seção: Evento -->
+    <div id="section-evento" class="admin-section" style="display:none;">
+        <h3>Promoção de Evento</h3>
+        <div class="admin-field">
+            <label>Nome do evento</label>
+            <input type="text" name="nome" placeholder="Ex: Promoção de Verão"
+                   value="{% if promo.modo == 'evento' %}{{ promo.nome }}{% endif %}">
+        </div>
+        <div class="admin-field">
+            <label>Data de término (opcional)</label>
+            <input type="date" name="data_fim" value="{% if promo.modo == 'evento' and promo.data_fim %}{{ promo.data_fim }}{% endif %}">
+        </div>
+
+        <label style="display:block; margin: 14px 0 8px; color:#66c0f4;">Desconto por jogo (% — deixe 0 para não descontar):</label>
+        <div class="admin-games">
+            {% for id, game in games.items() %}
+            <div class="admin-game-row">
+                <span class="admin-game-name">{{ game.name }} <small style="color:#8f98a0;">(R$ {{ "%.2f"|format(game.price) }})</small></span>
+                <div class="admin-pct">
+                    <input type="number" name="desconto_{{ id }}" min="0" max="100" placeholder="0"
+                           value="{% if promo.modo == 'evento' and promo.descontos.get(id) %}{{ promo.descontos.get(id) }}{% endif %}">
+                    <span>%</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Seção: Jogo Único -->
+    <div id="section-unico" class="admin-section" style="display:none;">
+        <h3>Promoção de Jogo Único</h3>
+        <div class="admin-field">
+            <label>Jogo</label>
+            <select name="jogo_unico">
+                {% for id, game in games.items() %}
+                <option value="{{ id }}"
+                    {% if promo.modo == 'unico' and promo.descontos.get(id) %}selected{% endif %}>
+                    {{ game.name }} — R$ {{ "%.2f"|format(game.price) }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="admin-field">
+            <label>Porcentagem de desconto (%)</label>
+            <input type="number" name="desconto_unico" min="1" max="100" placeholder="Ex: 50"
+                   value="{% if promo.modo == 'unico' %}{% for gid, pct in promo.descontos.items() %}{{ pct }}{% endfor %}{% endif %}">
+        </div>
+    </div>
+
+    <button type="submit" class="btn-green" style="margin-top: 18px; padding: 12px 24px; font-size: 15px;">
+        Salvar Promoção
+    </button>
+</form>
+
+<script>
+    function setMode(modo) {
+        document.getElementById('section-evento').style.display = (modo === 'evento') ? 'block' : 'none';
+        document.getElementById('section-unico').style.display  = (modo === 'unico')  ? 'block' : 'none';
+    }
+    // Inicializa de acordo com o estado salvo
+    document.addEventListener('DOMContentLoaded', function () {
+        var atual = document.querySelector('input[name="modo"]:checked');
+        setMode(atual ? atual.value : 'nenhum');
+    });
+</script>
+{% endblock %}

@@ -2,15 +2,75 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from datetime import datetime
 import os
 import json
+import random
+import re
 
 app = Flask(__name__)
 app.secret_key = 'chave_secreta_super_segura'
 
 # ---- CATÁLOGO DE JOGOS (DADOS FIXOS) ----
+# As informações abaixo são fictícias e podem ser editadas manualmente.
 GAMES = {
-    '1': {'id': '1', 'name': 'Aventura Épica',       'price': 150.00, 'age_rating': 10, 'description': 'Explore masmorras e derrote monstros com amigos nesta jornada incrível.'},
-    '2': {'id': '2', 'name': 'Sobrevivência Sombria', 'price': 90.00,  'age_rating': 18, 'description': 'Jogo de terror com zumbis. Sobreviva a noites aterrorizantes com recursos escassos.'},
-    '3': {'id': '3', 'name': 'Corrida Divertida',     'price': 45.00,  'age_rating': 0,  'description': 'Corridas para toda a família. Karts coloridos e pistas malucas!'}
+    '1': {
+        'id': '1', 'name': 'Aventura Épica', 'price': 150.00, 'age_rating': 10,
+        'description': 'Explore masmorras e derrote monstros com amigos nesta jornada incrível.',
+        'developer': 'Mythic Forge Studios',
+        'publisher': 'Ministeam Publishing',
+        'release_date': '15 de março de 2024',
+        'genres': ['RPG', 'Ação', 'Aventura', 'Cooperativo'],
+        'tags': ['Mundo Aberto', 'Fantasia', 'Multijogador', 'Masmorras', 'História Rica'],
+        'features': ['Um jogador', 'Cooperativo online', 'Conquistas Steam', 'Nuvem Steam', 'Suporte a controle'],
+        'long_description': (
+            'Aventura Épica leva você a um vasto mundo de fantasia repleto de masmorras sombrias, '
+            'chefes colossais e tesouros lendários. Forme um grupo com até quatro amigos, personalize '
+            'seu herói com centenas de habilidades e enfrente uma campanha épica de mais de 60 horas. '
+            'Cada masmorra é gerada com desafios únicos, garantindo que nenhuma jornada seja igual.'
+        ),
+        'reviews': 'Muito positivas', 'review_count': 12480,
+        'languages': ['Português', 'Inglês', 'Espanhol', 'Francês', 'Alemão'],
+        'req_minimo': 'SO: Windows 10 64-bit · CPU: Intel i5-4460 · RAM: 8 GB · GPU: GTX 760 · 40 GB',
+        'req_recomendado': 'SO: Windows 11 64-bit · CPU: Intel i7-9700 · RAM: 16 GB · GPU: RTX 2060 · 40 GB SSD',
+    },
+    '2': {
+        'id': '2', 'name': 'Sobrevivência Sombria', 'price': 90.00, 'age_rating': 18,
+        'description': 'Jogo de terror com zumbis. Sobreviva a noites aterrorizantes com recursos escassos.',
+        'developer': 'Nightfall Interactive',
+        'publisher': 'Grim Games',
+        'release_date': '31 de outubro de 2023',
+        'genres': ['Terror', 'Sobrevivência', 'Ação', 'Mundo Aberto'],
+        'tags': ['Zumbis', 'Survival Horror', 'Crafting', 'Atmosférico', 'Difícil', 'Multijogador'],
+        'features': ['Um jogador', 'Cooperativo online', 'Conquistas Steam', 'Nuvem Steam'],
+        'long_description': (
+            'Sobrevivência Sombria coloca você em uma cidade devastada por uma praga implacável. '
+            'Gerencie recursos escassos, fabrique armas improvisadas e fortifique seu esconderijo '
+            'antes que a noite chegue. Cada decisão importa: o som de um tiro pode atrair hordas '
+            'inteiras. Sozinho ou com amigos, até onde você irá para ver o amanhecer?'
+        ),
+        'reviews': 'Extremamente positivas', 'review_count': 28930,
+        'languages': ['Português', 'Inglês', 'Espanhol', 'Russo', 'Japonês'],
+        'req_minimo': 'SO: Windows 10 64-bit · CPU: Ryzen 3 1200 · RAM: 8 GB · GPU: GTX 1050 Ti · 50 GB',
+        'req_recomendado': 'SO: Windows 11 64-bit · CPU: Ryzen 5 5600 · RAM: 16 GB · GPU: RTX 3060 · 50 GB SSD',
+    },
+    '3': {
+        'id': '3', 'name': 'Corrida Divertida', 'price': 45.00, 'age_rating': 0,
+        'description': 'Corridas para toda a família. Karts coloridos e pistas malucas!',
+        'developer': 'Sunny Lab',
+        'publisher': 'Ministeam Publishing',
+        'release_date': '5 de junho de 2022',
+        'genres': ['Corrida', 'Casual', 'Família', 'Arcade'],
+        'tags': ['Karts', 'Festa', 'Colorido', 'Multijogador Local', 'Fácil de Aprender'],
+        'features': ['Um jogador', 'Multijogador local', 'Tela dividida', 'Conquistas Steam', 'Suporte total a controle'],
+        'long_description': (
+            'Corrida Divertida é o party game definitivo para toda a família! Escolha entre dezenas '
+            'de personagens carismáticos, dispute pistas malucas cheias de atalhos secretos e use '
+            'power-ups hilários para virar a corrida no último segundo. Jogue em tela dividida com '
+            'até quatro pessoas no mesmo sofá.'
+        ),
+        'reviews': 'Positivas', 'review_count': 5310,
+        'languages': ['Português', 'Inglês', 'Espanhol', 'Italiano'],
+        'req_minimo': 'SO: Windows 10 64-bit · CPU: Intel i3-6100 · RAM: 4 GB · GPU: GTX 650 · 15 GB',
+        'req_recomendado': 'SO: Windows 10 64-bit · CPU: Intel i5-7400 · RAM: 8 GB · GPU: GTX 1050 · 15 GB SSD',
+    }
 }
 
 # ==============================================================================
@@ -25,8 +85,12 @@ FAMILIAS_FILE   = os.path.join(DATA_DIR, 'familias.txt')
 CARTEIRAS_FILE  = os.path.join(DATA_DIR, 'carteiras.txt')
 SESSOES_FILE    = os.path.join(DATA_DIR, 'sessoes.txt')
 HISTORICO_FILE  = os.path.join(DATA_DIR, 'historico.txt')
+DESEJOS_FILE     = os.path.join(DATA_DIR, 'desejos.txt')
+PROMOCOES_FILE   = os.path.join(DATA_DIR, 'promocoes.txt')
+COMENTARIOS_FILE = os.path.join(DATA_DIR, 'comentarios.txt')
 
 CARTEIRA_INICIAL = 100.00
+LIMITE_TROCAS_USERNAME = 3
 
 
 def _garantir_arquivos():
@@ -97,6 +161,28 @@ def _garantir_arquivos():
             f.write("# MINISTEAM - Histórico de Transações\n")
             f.write("# Cada linha é um objeto JSON representando uma transação.\n")
             f.write("# Campos: user_id, data, itens, total, desconto, metodo_pagamento\n")
+    if not os.path.exists(DESEJOS_FILE):
+        with open(DESEJOS_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Listas de Desejos dos Usuários\n")
+            f.write("# Formato: user_id | game_id1,game_id2,...\n")
+            f.write("# Exemplo: 1 | 2,3  (usuário 1 deseja os jogos 2 e 3)\n")
+            f.write("# =============================================================================\n")
+
+    if not os.path.exists(PROMOCOES_FILE):
+        with open(PROMOCOES_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Promoções da Loja (Simulação Manual via /admin)\n")
+            f.write("# Linha de config:   config | <modo: nenhum|evento|unico> | <nome> | <data_fim>\n")
+            f.write("# Desconto por jogo: <game_id> | <percentual 0-100>\n")
+            f.write("# =============================================================================\n")
+            f.write("config | nenhum | Promoção de Evento | none\n")
+
+    if not os.path.exists(COMENTARIOS_FILE):
+        with open(COMENTARIOS_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Comentários nos Perfis dos Usuários\n")
+            f.write("# Formato: perfil_id | autor_id | data | texto\n")
             f.write("# =============================================================================\n")
 
 
@@ -119,7 +205,8 @@ def ler_usuarios():
                         'senha':    partes[2],
                         'dob':      partes[3] if partes[3] != 'none' else None,
                         'nome':     partes[4],
-                        'notas':    partes[5] if len(partes) > 5 else ''
+                        'notas':    partes[5] if len(partes) > 5 else '',
+                        'trocas_username': int(partes[6]) if len(partes) > 6 and partes[6].strip().isdigit() else 0
                     })
     except FileNotFoundError:
         pass
@@ -129,9 +216,10 @@ def ler_usuarios():
 def salvar_usuario(usuario):
     _garantir_arquivos()
     with open(USUARIOS_FILE, 'a', encoding='utf-8') as f:
-        dob_val   = usuario['dob'] if usuario['dob'] else 'none'
-        notas_val = usuario.get('notas', '').replace('|', '-')
-        f.write(f"{usuario['id']} | {usuario['username']} | {usuario['senha']} | {dob_val} | {usuario['nome']} | {notas_val}\n")
+        dob_val    = usuario['dob'] if usuario['dob'] else 'none'
+        notas_val  = usuario.get('notas', '').replace('|', '-')
+        trocas_val = usuario.get('trocas_username', 0)
+        f.write(f"{usuario['id']} | {usuario['username']} | {usuario['senha']} | {dob_val} | {usuario['nome']} | {notas_val} | {trocas_val}\n")
 
 
 def buscar_por_username(username):
@@ -139,6 +227,38 @@ def buscar_por_username(username):
         if u['username'].lower() == username.lower():
             return u
     return None
+
+
+def atualizar_usuario_db(uid, nome=None, notas=None, dob=None, username=None, trocas=None):
+    """Atualiza nome, notas, data de nascimento, @usuário e/ou contador de trocas no arquivo."""
+    _garantir_arquivos()
+    uid = str(uid)
+    linhas_novas = []
+    with open(USUARIOS_FILE, 'r', encoding='utf-8') as f:
+        for linha in f:
+            s = linha.strip()
+            if not s or s.startswith('#'):
+                linhas_novas.append(linha)
+                continue
+            partes = [p.strip() for p in s.split('|')]
+            if len(partes) >= 5 and partes[0] == uid:
+                user_atual   = partes[1]
+                dob_atual    = partes[3]
+                nome_atual   = partes[4]
+                notas_atual  = partes[5] if len(partes) > 5 else ''
+                trocas_atual = partes[6] if len(partes) > 6 and partes[6].strip().isdigit() else '0'
+                novo_user   = (username if username is not None else user_atual).replace('|', '-')
+                novo_dob    = (dob if dob else dob_atual) or 'none'
+                novo_nome   = (nome if nome is not None else nome_atual).replace('|', '-')
+                novo_notas  = (notas if notas is not None else notas_atual).replace('|', '-')
+                novo_trocas = str(trocas) if trocas is not None else trocas_atual
+                linhas_novas.append(
+                    f"{partes[0]} | {novo_user} | {partes[2]} | {novo_dob} | {novo_nome} | {novo_notas} | {novo_trocas}\n"
+                )
+            else:
+                linhas_novas.append(linha)
+    with open(USUARIOS_FILE, 'w', encoding='utf-8') as f:
+        f.writelines(linhas_novas)
 
 
 def buscar_por_id(uid):
@@ -174,6 +294,22 @@ def registrar_maquina(uid):
         _garantir_arquivos()
         with open(MAQUINA_FILE, 'a', encoding='utf-8') as f:
             f.write(f"{uid}\n")
+
+
+def remover_maquina(uid):
+    """Remove o usuário da lista de contas desta máquina (usado ao finalizar sessão)."""
+    if uid is None:
+        return
+    uid = str(uid)
+    ids = [i for i in ler_ids_maquina() if i != uid]
+    _garantir_arquivos()
+    with open(MAQUINA_FILE, 'w', encoding='utf-8') as f:
+        f.write("# =============================================================================\n")
+        f.write("# MINISTEAM - Contas desta Máquina\n")
+        f.write("# Cada linha contém o ID de um usuário que já fez login neste computador.\n")
+        f.write("# =============================================================================\n")
+        for i in ids:
+            f.write(f"{i}\n")
 
 
 # ---- FUNÇÕES DE AMIZADES ----
@@ -385,7 +521,7 @@ def ler_historico_usuario(uid):
         with open(HISTORICO_FILE, 'r', encoding='utf-8') as f:
             for linha in f:
                 s = linha.strip()
-                if not s or s.startswith('#'):
+                if not s:
                     continue
                 try:
                     t = json.loads(s)
@@ -396,6 +532,185 @@ def ler_historico_usuario(uid):
     except FileNotFoundError:
         pass
     return list(reversed(transacoes))
+
+
+# ---- FUNÇÕES DE LISTA DE DESEJOS (WISHLIST) ----
+
+def ler_desejos_usuario(uid):
+    """Retorna lista de IDs de jogos na lista de desejos do usuário."""
+    _garantir_arquivos()
+    uid = str(uid)
+    try:
+        with open(DESEJOS_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s:
+                    continue
+                partes = [p.strip() for p in s.split('|', 1)]
+                if partes[0] == uid:
+                    if len(partes) >= 2 and partes[1].strip():
+                        return [g for g in partes[1].strip().split(',') if g.strip()]
+                    return []
+    except FileNotFoundError:
+        pass
+    return []
+
+def salvar_desejos_usuario(uid, game_ids):
+    """Salva/atualiza a lista de desejos do usuário no banco de dados."""
+    _garantir_arquivos()
+    uid = str(uid)
+    game_ids = list(dict.fromkeys(str(g) for g in game_ids if g))
+    linhas_novas = []
+    encontrou = False
+    try:
+        with open(DESEJOS_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s or s.startswith('#'):
+                    linhas_novas.append(linha)
+                    continue
+                partes = [p.strip() for p in s.split('|', 1)]
+                if partes[0] == uid:
+                    linhas_novas.append(f"{uid} | {','.join(game_ids)}\n")
+                    encontrou = True
+                else:
+                    linhas_novas.append(linha)
+    except FileNotFoundError:
+        linhas_novas = [
+            "# =============================================================================\n",
+            "# MINISTEAM - Listas de Desejos dos Usuários\n",
+            "# Formato: user_id | game_id1,game_id2,...\n",
+            "# =============================================================================\n"
+        ]
+    if not encontrou:
+        linhas_novas.append(f"{uid} | {','.join(game_ids)}\n")
+    with open(DESEJOS_FILE, 'w', encoding='utf-8') as f:
+        f.writelines(linhas_novas)
+
+
+# ---- FUNÇÕES DE PROMOÇÃO ----
+
+def ler_promocao():
+    """Retorna o estado da promoção: {modo, ativo, nome, data_fim, descontos{gid: pct}}.
+
+    modo: 'nenhum' (sem promoção) | 'evento' (banner + vários jogos) | 'unico' (um jogo).
+    """
+    _garantir_arquivos()
+    promo = {'modo': 'nenhum', 'nome': 'Promoção de Evento', 'data_fim': None, 'descontos': {}}
+    try:
+        with open(PROMOCOES_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s or s.startswith('#'):
+                    continue
+                partes = [p.strip() for p in s.split('|')]
+                if partes[0] == 'config':
+                    if len(partes) > 1 and partes[1] in ('nenhum', 'evento', 'unico'):
+                        promo['modo'] = partes[1]
+                    if len(partes) > 2 and partes[2]:
+                        promo['nome'] = partes[2]
+                    if len(partes) > 3 and partes[3] and partes[3] != 'none':
+                        promo['data_fim'] = partes[3]
+                elif len(partes) >= 2:
+                    try:
+                        pct = int(float(partes[1]))
+                        if pct > 0:
+                            promo['descontos'][partes[0]] = max(0, min(100, pct))
+                    except ValueError:
+                        pass
+    except FileNotFoundError:
+        pass
+    promo['ativo'] = promo['modo'] != 'nenhum' and bool(promo['descontos'])
+    return promo
+
+
+def salvar_promocao(promo):
+    """Sobrescreve o arquivo de promoção com o estado fornecido."""
+    _garantir_arquivos()
+    nome = (promo.get('nome') or 'Promoção de Evento').replace('|', '-')
+    modo = promo.get('modo', 'nenhum')
+    if modo not in ('nenhum', 'evento', 'unico'):
+        modo = 'nenhum'
+    data_fim = promo.get('data_fim') or 'none'
+    with open(PROMOCOES_FILE, 'w', encoding='utf-8') as f:
+        f.write("# =============================================================================\n")
+        f.write("# MINISTEAM - Promoções da Loja (Simulação Manual via /admin)\n")
+        f.write("# Linha de config:   config | <modo: nenhum|evento|unico> | <nome> | <data_fim>\n")
+        f.write("# Desconto por jogo: <game_id> | <percentual 0-100>\n")
+        f.write("# =============================================================================\n")
+        f.write(f"config | {modo} | {nome} | {data_fim}\n")
+        if modo != 'nenhum':
+            for gid, pct in promo.get('descontos', {}).items():
+                try:
+                    pct = int(pct)
+                except (TypeError, ValueError):
+                    continue
+                if pct > 0:
+                    f.write(f"{gid} | {pct}\n")
+
+
+def calcular_preco(gid):
+    """Retorna {original, final, pct, on_sale} para um jogo, aplicando a promoção ativa."""
+    gid  = str(gid)
+    game = GAMES.get(gid)
+    if not game:
+        return {'original': 0.0, 'final': 0.0, 'pct': 0, 'on_sale': False}
+    promo    = ler_promocao()
+    original = game['price']
+    pct      = promo['descontos'].get(gid, 0) if promo['ativo'] else 0
+    final    = round(original * (1 - pct / 100), 2)
+    return {'original': original, 'final': final, 'pct': pct, 'on_sale': pct > 0}
+
+
+# ---- FUNÇÕES DE COMENTÁRIOS DE PERFIL ----
+
+def ler_comentarios_perfil(perfil_id):
+    """Retorna os comentários feitos no perfil (mais recentes primeiro)."""
+    _garantir_arquivos()
+    perfil_id = str(perfil_id)
+    comentarios = []
+    try:
+        with open(COMENTARIOS_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.rstrip('\n')
+                if not s.strip() or s.startswith('#'):
+                    continue
+                partes = s.split('|', 3)
+                if len(partes) == 4 and partes[0].strip() == perfil_id:
+                    autor_id = partes[1].strip()
+                    autor    = buscar_por_id(autor_id)
+                    comentarios.append({
+                        'autor_id':   autor_id,
+                        'autor_nome': autor['nome'] if autor else 'Usuário',
+                        'data':       partes[2].strip(),
+                        'texto':      partes[3].strip()
+                    })
+    except FileNotFoundError:
+        pass
+    return list(reversed(comentarios))
+
+
+def adicionar_comentario(perfil_id, autor_id, texto):
+    """Registra um novo comentário no perfil informado."""
+    _garantir_arquivos()
+    texto = ' '.join(texto.split()).replace('|', '/')[:300]
+    if not texto:
+        return
+    data = datetime.now().strftime("%d/%m/%Y %H:%M")
+    with open(COMENTARIOS_FILE, 'a', encoding='utf-8') as f:
+        f.write(f"{perfil_id} | {autor_id} | {data} | {texto}\n")
+
+
+# ---- HORAS JOGADAS (SIMULAÇÃO ESTÁVEL POR USUÁRIO+JOGO) ----
+
+def horas_jogadas(uid, gid):
+    """Horas jogadas simuladas, estáveis para o mesmo par (usuário, jogo)."""
+    rng = random.Random(f"{uid}-{gid}-ministeam")
+    # Distribuição enviesada: maioria com poucas horas, alguns com muitas.
+    if rng.random() < 0.25:
+        return round(rng.uniform(40, 320), 1)
+    return round(rng.uniform(0.5, 60), 1)
+
 
 
 # ---- FUNÇÕES DE FAMÍLIA ----
@@ -588,6 +903,7 @@ def fazer_login_sessao(usuario):
     session['user_id']       = uid
     session['wallet']        = ler_carteira_usuario(uid)
     session['library']       = biblioteca_db
+    session['wishlist']      = ler_desejos_usuario(uid)
     session['cart']          = []
     session['gifts_sent']    = {}
     session['user_dob']      = usuario['dob']
@@ -622,7 +938,7 @@ def garantir_valores_sessao():
     if not session.get('logged_in'):
         return
     padroes = {
-        'wallet': 100.00, 'library': [], 'cart': [], 'gifts_sent': {},
+        'wallet': 100.00, 'library': [], 'wishlist': [], 'cart': [], 'gifts_sent': {},
         'user_dob': None, 'user_profile': {'name': 'Usuário', 'details': ''},
         'family': None, 'family_cooldown': False,
         'offline_mode': False, 'active_game': None, 'show_pe01_for': None
@@ -630,6 +946,31 @@ def garantir_valores_sessao():
     for chave, valor in padroes.items():
         if chave not in session:
             session[chave] = valor
+
+
+@app.context_processor
+def injetar_promocao():
+    """Disponibiliza a promoção ativa e a função preco_info() em todos os templates."""
+    promo = ler_promocao()
+
+    def preco_info(gid):
+        gid  = str(gid)
+        game = GAMES.get(gid)
+        if not game:
+            return {'original': 0.0, 'final': 0.0, 'pct': 0, 'on_sale': False}
+        original = game['price']
+        pct      = promo['descontos'].get(gid, 0) if promo['ativo'] else 0
+        final    = round(original * (1 - pct / 100), 2)
+        return {'original': original, 'final': final, 'pct': pct, 'on_sale': pct > 0}
+
+    return {
+        'promo_ativa':  promo['ativo'],
+        'promo_modo':   promo['modo'],
+        'promo_evento': promo['modo'] == 'evento' and promo['ativo'],
+        'promo_nome':   promo['nome'],
+        'promo_fim':    promo['data_fim'],
+        'preco_info':   preco_info,
+    }
 
 
 # ==============================================================================
@@ -707,6 +1048,9 @@ def register():
 
 @app.route('/logout')
 def logout():
+    # Finalizar sessão: apaga as informações deste usuário nesta máquina
+    # (ele deixa de aparecer no seletor de contas).
+    remover_maquina(session.get('user_id'))
     session.clear()
     return redirect(url_for('login'))
 
@@ -806,6 +1150,186 @@ def amigos_remover(friend_id):
 
 
 # ==============================================================================
+# ROTAS DE PERFIL DO USUÁRIO
+# ==============================================================================
+
+@app.route('/perfil')
+def meu_perfil():
+    return redirect(url_for('perfil', user_id=session['user_id']))
+
+
+@app.route('/perfil/<user_id>')
+def perfil(user_id):
+    usuario = buscar_por_id(user_id)
+    if not usuario:
+        flash('Perfil não encontrado.', 'error')
+        return redirect(url_for('index'))
+
+    uid     = str(user_id)
+    is_self = (uid == str(session['user_id']))
+
+    # Biblioteca pública (vitrine de jogos) com horas jogadas simuladas
+    biblioteca_ids = ler_biblioteca_usuario(uid)
+    jogos_biblioteca = [
+        {'game': GAMES[g], 'horas': horas_jogadas(uid, g)}
+        for g in biblioteca_ids if g in GAMES
+    ]
+    total_horas = round(sum(j['horas'] for j in jogos_biblioteca), 1)
+
+    # Lista de desejos
+    desejos_ids   = ler_desejos_usuario(uid)
+    jogos_desejos = [GAMES[g] for g in desejos_ids if g in GAMES]
+
+    # Amigos, família e comentários
+    amigos      = get_amigos_usuario(uid)
+    familia     = buscar_familia_do_usuario(uid)
+    comentarios = ler_comentarios_perfil(uid)
+
+    is_friend = (not is_self) and sao_amigos(session['user_id'], uid)
+
+    # Trocas de @usuário restantes (somente relevante no próprio perfil)
+    trocas_restantes = None
+    if is_self:
+        trocas_restantes = LIMITE_TROCAS_USERNAME - usuario.get('trocas_username', 0)
+
+    return render_template('perfil.html',
+                           perfil_user=usuario,
+                           is_self=is_self,
+                           is_friend=is_friend,
+                           jogos_biblioteca=jogos_biblioteca,
+                           total_horas=total_horas,
+                           jogos_desejos=jogos_desejos,
+                           amigos=amigos,
+                           familia=familia,
+                           comentarios=comentarios,
+                           trocas_restantes=trocas_restantes,
+                           limite_trocas=LIMITE_TROCAS_USERNAME)
+
+
+@app.route('/perfil/<user_id>/comentar', methods=['POST'])
+def perfil_comentar(user_id):
+    if not buscar_por_id(user_id):
+        flash('Perfil não encontrado.', 'error')
+        return redirect(url_for('index'))
+    texto = request.form.get('texto', '').strip()
+    if texto:
+        adicionar_comentario(user_id, session['user_id'], texto)
+        flash('Comentário publicado!', 'sucesso')
+    else:
+        flash('Escreva algo antes de publicar.', 'error')
+    return redirect(url_for('perfil', user_id=user_id))
+
+
+@app.route('/perfil/trocar_username', methods=['POST'])
+def trocar_username():
+    """Troca o @usuário do usuário logado (limite de LIMITE_TROCAS_USERNAME por conta)."""
+    uid           = session['user_id']
+    usuario_atual = buscar_por_id(uid)
+    if not usuario_atual:
+        flash('Usuário não encontrado.', 'error')
+        return redirect(url_for('index'))
+
+    usados    = usuario_atual.get('trocas_username', 0)
+    restantes = LIMITE_TROCAS_USERNAME - usados
+    novo      = request.form.get('novo_username', '').strip()
+
+    if restantes <= 0:
+        flash(f'Você já atingiu o limite de {LIMITE_TROCAS_USERNAME} trocas de @usuário.', 'error')
+        return redirect(url_for('meu_perfil'))
+    if not novo:
+        flash('Informe um novo @usuário.', 'error')
+        return redirect(url_for('meu_perfil'))
+    if not re.fullmatch(r'[A-Za-z0-9_]+', novo):
+        flash('O @usuário deve conter apenas letras, números e underscore (_).', 'error')
+        return redirect(url_for('meu_perfil'))
+    if novo.lower() == usuario_atual['username'].lower():
+        flash('O novo @usuário é igual ao atual.', 'error')
+        return redirect(url_for('meu_perfil'))
+    existente = buscar_por_username(novo)
+    if existente and str(existente['id']) != str(uid):
+        flash('Este @usuário já está em uso. Escolha outro.', 'error')
+        return redirect(url_for('meu_perfil'))
+
+    atualizar_usuario_db(uid, username=novo, trocas=usados + 1)
+    flash(f'@usuário alterado para @{novo}! Trocas restantes: {restantes - 1}.', 'sucesso')
+    return redirect(url_for('meu_perfil'))
+
+
+# ==============================================================================
+# ROTAS DE CARTEIRA E CONTA
+# ==============================================================================
+
+@app.route('/carteira')
+def carteira():
+    return render_template('carteira.html')
+
+
+@app.route('/carteira/comprar', methods=['POST'])
+def carteira_comprar():
+    """Inicia a compra de saldo (para si ou presente a um amigo): leva à tela de pagamento."""
+    try:
+        valor = float(request.form.get('valor', '0'))
+    except ValueError:
+        valor = 0
+    if valor <= 0:
+        flash('Valor inválido para adicionar à carteira.', 'error')
+        return redirect(url_for('carteira'))
+
+    para        = request.form.get('para', 'self')
+    target_name = 'sua conta'
+    if para != 'self':
+        amigo = buscar_por_id(para)
+        if not amigo or not sao_amigos(session['user_id'], para):
+            flash('Você só pode presentear saldo para amigos.', 'error')
+            return redirect(url_for('index'))
+        target_name = amigo['nome']
+
+    return render_template('comprar_saldo.html', valor=valor, para=para, target_name=target_name)
+
+
+@app.route('/carteira/pagar', methods=['POST'])
+def carteira_pagar():
+    """Finaliza a compra de saldo: credita a carteira do destinatário (mesmo fluxo de pagamento de um jogo)."""
+    try:
+        valor = float(request.form.get('valor', '0'))
+    except ValueError:
+        valor = 0
+    para   = request.form.get('para', 'self')
+    metodo = request.form.get('payment_method')
+
+    if valor <= 0:
+        flash('Valor inválido.', 'error')
+        return redirect(url_for('carteira'))
+    if not metodo:
+        flash('Selecione uma forma de pagamento.', 'error')
+        return redirect(url_for('carteira'))
+
+    if para == 'self':
+        session['wallet'] = round(session.get('wallet', 0.0) + valor, 2)
+        session.modified = True
+        salvar_carteira_usuario(session['user_id'], session['wallet'])
+        flash(f'R$ {valor:.2f} adicionados à sua Carteira Steam via {metodo}!', 'sucesso')
+        return redirect(url_for('carteira'))
+
+    amigo = buscar_por_id(para)
+    if not amigo or not sao_amigos(session['user_id'], para):
+        flash('Você só pode presentear saldo para amigos.', 'error')
+        return redirect(url_for('index'))
+    novo_saldo = round(ler_carteira_usuario(para) + valor, 2)
+    salvar_carteira_usuario(para, novo_saldo)
+    flash(f'Você presenteou R$ {valor:.2f} em saldo Steam para {amigo["nome"]} via {metodo}!', 'sucesso')
+    return redirect(url_for('perfil', user_id=para))
+
+
+@app.route('/trocar_usuario')
+def trocar_usuario():
+    """Encerra a sessão e volta ao seletor de contas (estilo 'trocar de conta' da Steam)."""
+    session.clear()
+    flash('Selecione uma conta para entrar.', 'sucesso')
+    return redirect(url_for('login'))
+
+
+# ==============================================================================
 # ROTAS PRINCIPAIS DA LOJA
 # ==============================================================================
 
@@ -820,7 +1344,9 @@ def game(game_id):
     if not game_data:
         return "Jogo não encontrado", 404
     show_modal = request.args.get('added') == '1'
-    return render_template('game.html', game=game_data, show_modal=show_modal)
+    na_wishlist = game_id in session.get('wishlist', [])
+    return render_template('game.html', game=game_data, show_modal=show_modal,
+                           na_wishlist=na_wishlist)
 
 
 @app.route('/update_profile', methods=['POST'])
@@ -832,6 +1358,8 @@ def update_profile():
     if dob_str:
         session['user_dob'] = dob_str
     session.modified = True
+    # Persiste no banco para que o perfil reflita as alterações entre sessões
+    atualizar_usuario_db(session['user_id'], nome=name, notas=details, dob=dob_str or None)
     flash('Dados do perfil atualizados com sucesso!', 'sucesso')
     return redirect(request.referrer or url_for('index'))
 
@@ -868,12 +1396,15 @@ def add_to_cart(game_id):
             flash('Formato de data inválido.', 'error')
             return redirect(url_for('game', game_id=game_id))
 
+    preco = calcular_preco(game_id)
     cart_item = {
-        'cart_item_id': f"{game_id}_{purchase_type}_{datetime.now().timestamp()}",
-        'id':      game_data['id'],
-        'name':    game_data['name'],
-        'price':   game_data['price'],
-        'is_gift': purchase_type == 'gift'
+        'cart_item_id':   f"{game_id}_{purchase_type}_{datetime.now().timestamp()}",
+        'id':             game_data['id'],
+        'name':           game_data['name'],
+        'price':          preco['final'],
+        'original_price': preco['original'],
+        'discount_pct':   preco['pct'],
+        'is_gift':        purchase_type == 'gift'
     }
     session['cart'].append(cart_item)
     session.modified = True
@@ -985,6 +1516,50 @@ def library():
                            tem_familia=tem_familia)
 
 
+# ==============================================================================
+# ROTAS DE LISTA DE DESEJOS (WISHLIST)
+# ==============================================================================
+
+@app.route('/wishlist')
+def wishlist():
+    desejos_ids   = [g for g in session.get('wishlist', []) if g in GAMES]
+    jogos_desejos = [GAMES[g] for g in desejos_ids]
+    return render_template('wishlist.html', jogos=jogos_desejos)
+
+
+@app.route('/wishlist/add/<game_id>')
+def wishlist_add(game_id):
+    if game_id not in GAMES:
+        flash('Jogo não encontrado.', 'error')
+        return redirect(request.referrer or url_for('index'))
+
+    if game_id in session.get('library', []):
+        flash('Você já possui este jogo na sua biblioteca.', 'error')
+        return redirect(request.referrer or url_for('game', game_id=game_id))
+
+    desejos = session.get('wishlist', [])
+    if game_id in desejos:
+        flash('Este jogo já está na sua lista de desejos.', 'error')
+    else:
+        desejos.append(game_id)
+        session['wishlist'] = desejos
+        session.modified = True
+        salvar_desejos_usuario(session['user_id'], desejos)
+        flash(f"'{GAMES[game_id]['name']}' foi adicionado à sua lista de desejos!", 'sucesso')
+    return redirect(request.referrer or url_for('game', game_id=game_id))
+
+
+@app.route('/wishlist/remove/<game_id>')
+def wishlist_remove(game_id):
+    desejos = [g for g in session.get('wishlist', []) if g != game_id]
+    session['wishlist'] = desejos
+    session.modified = True
+    salvar_desejos_usuario(session['user_id'], desejos)
+    nome = GAMES.get(game_id, {}).get('name', 'Jogo')
+    flash(f"'{nome}' foi removido da sua lista de desejos.", 'sucesso')
+    return redirect(request.referrer or url_for('wishlist'))
+
+
 @app.route('/checkout')
 def checkout():
     if not session['cart']:
@@ -1053,9 +1628,15 @@ def process_payment():
                         session['family']['library_pool'].append(item['id'])
                     session['family']['licenses'][item['id']] = session['family']['licenses'].get(item['id'], 0) + 1
                     familia_modificada = True
+            # Comprou para si: sai da lista de desejos (comportamento da Steam)
+            if item['id'] in session.get('wishlist', []):
+                session['wishlist'] = [g for g in session['wishlist'] if g != item['id']]
 
     # Persiste biblioteca do usuário
     salvar_biblioteca_usuario(session['user_id'], session['library'])
+
+    # Persiste lista de desejos (jogos comprados saem dela)
+    salvar_desejos_usuario(session['user_id'], session.get('wishlist', []))
 
     # Persiste o saldo da carteira (não se perde ao reconectar)
     salvar_carteira_usuario(session['user_id'], session['wallet'])
@@ -1344,6 +1925,65 @@ def family_toggle_offline():
 
 
 # ==============================================================================
+# ROTA ADMINISTRATIVA OCULTA - SIMULAÇÃO DE PROMOÇÕES
+# Acessível somente digitando /admin na URL (não há botões para chegar aqui).
+# ==============================================================================
+
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    if request.method == 'POST':
+        modo = request.form.get('modo', 'nenhum')
+        if modo not in ('nenhum', 'evento', 'unico'):
+            modo = 'nenhum'
+
+        nome      = 'Promoção de Evento'
+        data_fim  = None
+        descontos = {}
+
+        if modo == 'evento':
+            nome     = request.form.get('nome', '').strip() or 'Promoção de Evento'
+            data_fim = request.form.get('data_fim', '').strip() or None
+            for gid in GAMES:
+                valor = request.form.get(f'desconto_{gid}', '').strip()
+                if valor:
+                    try:
+                        pct = max(0, min(100, int(float(valor))))
+                    except ValueError:
+                        pct = 0
+                    if pct > 0:
+                        descontos[gid] = pct
+            if not descontos:
+                flash('Selecione ao menos um jogo com desconto para ativar o evento.', 'error')
+                return redirect(url_for('admin'))
+
+        elif modo == 'unico':
+            gid_unico = request.form.get('jogo_unico', '').strip()
+            valor     = request.form.get('desconto_unico', '').strip()
+            if gid_unico not in GAMES:
+                flash('Selecione um jogo válido para a promoção única.', 'error')
+                return redirect(url_for('admin'))
+            try:
+                pct = max(0, min(100, int(float(valor))))
+            except ValueError:
+                pct = 0
+            if pct <= 0:
+                flash('Informe uma porcentagem de desconto válida (1 a 100).', 'error')
+                return redirect(url_for('admin'))
+            nome = f"Oferta: {GAMES[gid_unico]['name']}"
+            descontos[gid_unico] = pct
+
+        salvar_promocao({'modo': modo, 'nome': nome, 'data_fim': data_fim, 'descontos': descontos})
+        if modo == 'nenhum':
+            flash('Promoções desativadas. A loja está com preços normais.', 'sucesso')
+        else:
+            flash('Promoção aplicada com sucesso!', 'sucesso')
+        return redirect(url_for('admin'))
+
+    promo = ler_promocao()
+    return render_template('admin.html', promo=promo, games=GAMES)
+
+
+# ==============================================================================
 # UTILITÁRIOS
 # ==============================================================================
 
@@ -1353,7 +1993,8 @@ def reset_session():
     exceto usuarios.txt (as contas cadastradas são preservadas)."""
     session.clear()
     for caminho in (MAQUINA_FILE, AMIZADES_FILE, BIBLIOTECA_FILE,
-                    FAMILIAS_FILE, CARTEIRAS_FILE, SESSOES_FILE, HISTORICO_FILE):
+                    FAMILIAS_FILE, CARTEIRAS_FILE, SESSOES_FILE,
+                    HISTORICO_FILE, DESEJOS_FILE, PROMOCOES_FILE, COMENTARIOS_FILE):
         try:
             if os.path.exists(caminho):
                 os.remove(caminho)

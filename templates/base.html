@@ -17,6 +17,7 @@
         </a>
         <nav>
             <a href="{{ url_for('index') }}">Loja</a>
+            <a href="{{ url_for('wishlist') }}">Lista de Desejos</a>
             <a href="{{ url_for('library') }}">Biblioteca</a>
             <a href="{{ url_for('amigos') }}">Amigos</a>
             <a href="{{ url_for('family') }}">Família</a>
@@ -27,17 +28,29 @@
         <a href="{{ url_for('cart') }}" class="btn-blue" style="text-decoration: none; padding: 5px 12px; font-size: 13px; background: #213545; color: #66c0f4;">
             🛒 Carrinho ({{ session['cart']|length }})
         </a>
-        <div class="wallet-display" style="font-size: 13px; color: #66c0f4; background: #2a475e; padding: 5px 10px; border-radius: 2px;">
-            Carteira: <strong>R$ {{ "%.2f"|format(session['wallet']) }}</strong>
+
+        <!-- Menu da conta (foto de perfil) -->
+        <div class="account-menu">
+            <div class="user-profile" onclick="toggleAccountMenu(event)" title="Conta de {{ session['user_profile']['name'] }}">
+                <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Perfil">
+            </div>
+            <div class="account-dropdown" id="accountDropdown">
+                <div class="account-dropdown-name">{{ session['user_profile']['name'] }}</div>
+                <a href="{{ url_for('meu_perfil') }}">👤 Meu perfil</a>
+                <a href="{{ url_for('carteira') }}">💳 Minha carteira <span class="acc-saldo">R$ {{ "%.2f"|format(session['wallet']) }}</span></a>
+                <a href="{{ url_for('trocar_usuario') }}">🔄 Trocar usuário</a>
+                <a href="{{ url_for('logout') }}" class="acc-logout">⏻ Finalizar sessão</a>
+            </div>
         </div>
-        <div class="user-profile" onclick="openUserProfileModal()" style="cursor: pointer;" title="Ver meus dados ({{ session['user_profile']['name'] }})">
-            <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Perfil">
-        </div>
-        <a href="{{ url_for('logout') }}" title="Sair da conta" style="font-size: 12px; color: #8f98a0; text-decoration: none; padding: 5px 8px; background: #171a21; border: 1px solid #2a475e; border-radius: 2px; white-space: nowrap;">
-            ⏻ Sair
-        </a>
     </div>
 </header>
+
+{% if promo_evento %}
+<div class="sale-banner">
+    🎉 <strong>{{ promo_nome }}</strong> — Ofertas por tempo limitado!{% if promo_fim %} Termina em {{ promo_fim }}.{% endif %}
+    <a href="{{ url_for('index') }}">Ver ofertas →</a>
+</div>
+{% endif %}
 
 <!-- Modal de Perfil do Usuário -->
 <div id="userProfileModal" class="modal-overlay" style="display: none;">
@@ -101,6 +114,18 @@
     function closeUserProfileModal() {
         document.getElementById('userProfileModal').style.display = 'none';
     }
+
+    // Menu da conta (dropdown ao clicar na foto de perfil)
+    function toggleAccountMenu(e) {
+        e.stopPropagation();
+        var d = document.getElementById('accountDropdown');
+        if (d) d.classList.toggle('open');
+    }
+    document.addEventListener('click', function (e) {
+        var menu = document.querySelector('.account-menu');
+        var d = document.getElementById('accountDropdown');
+        if (d && menu && !menu.contains(e.target)) d.classList.remove('open');
+    });
 </script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 {% block scripts %}{% endblock %}

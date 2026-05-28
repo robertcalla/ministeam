@@ -187,3 +187,230 @@ button, .btn-blue, .btn-green {
 }
 .payment-methods label:hover { background: #2a475e; }
 .checkout-summary { flex: 1; background: #171a21; padding: 20px; border-top: 2px solid #66c0f4; height: fit-content;}
+
+/* ============================================================= */
+/* MENU DA CONTA (DROPDOWN DA FOTO DE PERFIL)                     */
+/* ============================================================= */
+.account-menu { position: relative; }
+.account-dropdown {
+    display: none;
+    position: absolute; right: 0; top: 52px; z-index: 1200;
+    background: #171a21; border: 1px solid #2a475e;
+    min-width: 220px; box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    border-radius: 3px; overflow: hidden;
+}
+.account-dropdown.open { display: block; }
+.account-dropdown-name {
+    padding: 12px 16px; color: #66c0f4; font-weight: bold;
+    border-bottom: 1px solid #2a475e; background: #1b2838; font-size: 14px;
+}
+.account-dropdown a {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 11px 16px; color: #c7d5e0; text-decoration: none; font-size: 13px;
+}
+.account-dropdown a:hover { background: #2a475e; color: #fff; }
+.account-dropdown .acc-saldo { color: #66c0f4; font-weight: bold; }
+.account-dropdown .acc-logout { border-top: 1px solid #2a475e; color: #8f98a0; }
+
+/* ============================================================= */
+/* PROMOÇÕES: BANNER E PREÇOS COM DESCONTO                        */
+/* ============================================================= */
+.sale-banner {
+    background: linear-gradient(to right, #06283d, #1a5276);
+    color: #fff; text-align: center; padding: 10px 20px; font-size: 14px;
+    border-bottom: 1px solid #66c0f4;
+}
+.sale-banner a { color: #beee11; text-decoration: none; font-weight: bold; margin-left: 8px; }
+
+.event-hero {
+    background: linear-gradient(120deg, #1a5276, #06283d);
+    border: 1px solid #2a475e; border-radius: 6px;
+    padding: 24px; margin-bottom: 24px;
+}
+.event-hero-tag {
+    display: inline-block; background: #beee11; color: #1b2838;
+    font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 3px;
+    text-transform: uppercase; letter-spacing: 1px;
+}
+
+.discount-badge {
+    background: #4c6b22; color: #beee11; font-weight: bold;
+    padding: 4px 8px; border-radius: 2px; font-size: 15px;
+}
+.card-badge { position: absolute; top: 8px; left: 8px; z-index: 2; }
+.price-block { display: inline-flex; align-items: center; gap: 8px; }
+.price-old { color: #738895; text-decoration: line-through; font-size: 13px; }
+.price-new { color: #beee11; font-weight: bold; font-size: 16px; }
+.price-stack { display: flex; flex-direction: column; line-height: 1.1; }
+
+/* ============================================================= */
+/* PÁGINA DE LOJA (DETALHE DO JOGO)                               */
+/* ============================================================= */
+.store-grid { display: flex; gap: 24px; margin-top: 16px; align-items: flex-start; }
+.store-main { flex: 1.4; min-width: 0; }
+.store-sidebar {
+    flex: 1; background: rgba(0,0,0,0.25); border: 1px solid #2a475e;
+    border-radius: 4px; padding: 18px; display: flex; flex-direction: column; gap: 14px;
+}
+.store-cover { width: 100%; border-radius: 4px; margin-bottom: 18px; }
+.store-about h3, .store-tags h4, .store-requirements h3 { color: #fff; margin-bottom: 10px; }
+.store-about p { line-height: 1.6; color: #c7d5e0; }
+.store-tags { margin-top: 20px; }
+.tag-list, .store-features { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag-chip {
+    background: #2a475e; color: #b3d1e6; font-size: 12px;
+    padding: 4px 10px; border-radius: 3px;
+}
+.feature-chip { background: #1b2838; color: #8f98a0; font-size: 12px; padding: 3px 8px; border-radius: 2px; }
+.store-requirements { margin-top: 24px; background: rgba(0,0,0,0.2); padding: 16px; border-radius: 4px; }
+.req-cols { display: flex; gap: 24px; flex-wrap: wrap; }
+.req-cols > div { flex: 1; min-width: 220px; }
+.req-cols strong { color: #66c0f4; display: block; margin-bottom: 6px; }
+.req-cols p { font-size: 13px; color: #8f98a0; line-height: 1.6; }
+.store-meta { font-size: 13px; color: #c7d5e0; display: flex; flex-direction: column; gap: 4px; }
+.store-meta span { color: #8f98a0; }
+.review-pos { color: #66c0f4; }
+.store-langs { font-size: 13px; color: #8f98a0; }
+
+.wishlist-action { margin-top: 14px; padding-top: 14px; border-top: 1px solid #2a475e; display: flex; align-items: center; gap: 12px; }
+.btn-wishlist {
+    display: inline-block; background: #2a475e; color: #c7d5e0; text-decoration: none;
+    padding: 10px 14px; border-radius: 2px; font-size: 14px; width: 100%; text-align: center;
+}
+.btn-wishlist:hover { background: #3a688c; color: #fff; }
+.on-wishlist { color: #66c0f4; font-weight: bold; }
+.wishlist-link { color: #b52a1c; text-decoration: none; font-size: 13px; }
+
+/* ============================================================= */
+/* LISTA DE DESEJOS                                               */
+/* ============================================================= */
+.wishlist-list { display: flex; flex-direction: column; gap: 12px; }
+.wishlist-row {
+    display: flex; gap: 16px; align-items: center;
+    background: linear-gradient(to right, #16202d, #1b2838);
+    border: 1px solid #2a475e; border-radius: 4px; padding: 12px;
+}
+.wishlist-cover img { width: 200px; height: 95px; object-fit: cover; border-radius: 3px; display: block; }
+.wishlist-info { flex: 1; min-width: 0; }
+.wishlist-name { color: #fff; font-size: 18px; font-weight: bold; text-decoration: none; }
+.wishlist-name:hover { color: #66c0f4; }
+.wishlist-sub { font-size: 13px; margin-top: 4px; }
+.wishlist-buy { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.price-box { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: 3px; }
+.wishlist-actions { display: flex; align-items: center; gap: 12px; }
+.wishlist-remove { color: #b52a1c; text-decoration: none; font-size: 13px; }
+.owned-tag { color: #79a016; font-size: 13px; font-weight: bold; }
+
+/* ============================================================= */
+/* PERFIL DO USUÁRIO                                              */
+/* ============================================================= */
+.profile-header {
+    display: flex; gap: 24px; align-items: center; flex-wrap: wrap;
+    background: linear-gradient(120deg, #16202d, #2a475e);
+    border: 1px solid #2a475e; border-radius: 6px; padding: 24px; margin-bottom: 16px;
+}
+.profile-avatar img {
+    width: 110px; height: 110px; border-radius: 6px; object-fit: cover;
+    border: 3px solid #66c0f4;
+}
+.profile-id { flex: 1; min-width: 240px; }
+.profile-username { color: #8f98a0; font-size: 14px; margin-top: 2px; }
+.profile-bio { color: #c7d5e0; margin: 12px 0; font-size: 14px; max-width: 520px; }
+.profile-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.profile-stats { display: flex; gap: 10px; }
+.profile-stats .stat {
+    background: rgba(0,0,0,0.3); border-radius: 4px; padding: 12px 16px;
+    text-align: center; min-width: 70px; display: flex; flex-direction: column;
+}
+.stat-num { color: #66c0f4; font-size: 22px; font-weight: bold; }
+.stat-lbl { color: #8f98a0; font-size: 12px; }
+.profile-family {
+    background: rgba(0,0,0,0.2); border-left: 3px solid #5c7e10;
+    padding: 10px 16px; margin-bottom: 16px; color: #d2efa9; font-size: 14px;
+}
+.profile-columns { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
+.profile-main { flex: 2; min-width: 280px; }
+.profile-aside { flex: 1; min-width: 220px; }
+.profile-section {
+    background: rgba(0,0,0,0.2); border: 1px solid #2a475e;
+    border-radius: 4px; padding: 18px; margin-bottom: 20px;
+}
+.profile-section h2 { color: #fff; font-size: 18px; font-weight: 400; margin-bottom: 14px; border-bottom: 1px solid #2a475e; padding-bottom: 8px; }
+.profile-games { display: flex; flex-direction: column; gap: 8px; }
+.profile-game {
+    display: flex; gap: 12px; align-items: center; text-decoration: none;
+    background: #1b2838; border-radius: 3px; padding: 8px; transition: background 0.15s;
+}
+.profile-game:hover { background: #2a475e; }
+.profile-game img { width: 120px; height: 56px; object-fit: cover; border-radius: 2px; }
+.profile-game-info { display: flex; flex-direction: column; }
+.profile-game-name { color: #fff; font-weight: bold; }
+.profile-game-hours { color: #8f98a0; font-size: 13px; }
+.muted { color: #8f98a0; font-size: 14px; }
+
+.comment-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+.comment-form textarea {
+    background: #1b2838; border: 1px solid #2a475e; color: #fff;
+    border-radius: 3px; padding: 10px; resize: vertical; min-height: 60px; font-family: inherit;
+}
+.comment-form button { align-self: flex-start; }
+.comment-list { display: flex; flex-direction: column; gap: 14px; }
+.comment { display: flex; gap: 12px; }
+.comment-avatar { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; border: 1px solid #2a475e; }
+.comment-body { flex: 1; background: #1b2838; border-radius: 3px; padding: 10px 12px; }
+.comment-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.comment-author { color: #66c0f4; font-weight: bold; text-decoration: none; }
+.comment-date { color: #6d7b88; font-size: 12px; }
+.comment-text { color: #c7d5e0; font-size: 14px; line-height: 1.4; word-break: break-word; }
+
+.friend-mini-list { display: flex; flex-direction: column; gap: 8px; }
+.friend-mini { display: flex; gap: 10px; align-items: center; text-decoration: none; background: #1b2838; border-radius: 3px; padding: 8px; }
+.friend-mini:hover { background: #2a475e; }
+.friend-mini img { width: 38px; height: 38px; border-radius: 4px; object-fit: cover; border: 1px solid #2a475e; }
+.friend-mini-name { color: #c6d4df; font-weight: 600; font-size: 14px; }
+.friend-mini-user { color: #8f98a0; font-size: 12px; }
+
+/* ============================================================= */
+/* CARTEIRA                                                       */
+/* ============================================================= */
+.wallet-card {
+    background: linear-gradient(120deg, #16202d, #2a475e);
+    border: 1px solid #2a475e; border-radius: 6px; padding: 24px; margin-bottom: 20px;
+}
+.wallet-balance { display: flex; flex-direction: column; margin-bottom: 10px; }
+.wallet-balance-lbl { color: #8f98a0; font-size: 13px; }
+.wallet-balance-val { color: #66c0f4; font-size: 34px; font-weight: bold; }
+.wallet-add { background: rgba(0,0,0,0.2); border: 1px solid #2a475e; border-radius: 4px; padding: 20px; }
+.wallet-options { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+.wallet-option {
+    background: #1b2838; border: 1px solid #2a475e; border-radius: 4px;
+    padding: 16px; text-align: center; min-width: 130px; flex: 1;
+    display: flex; flex-direction: column; gap: 10px; margin: 0;
+}
+.wallet-option-val { color: #fff; font-size: 18px; font-weight: bold; }
+.wallet-custom { margin-top: 6px; max-width: 420px; }
+
+/* ============================================================= */
+/* ADMIN - PROMOÇÕES                                             */
+/* ============================================================= */
+.admin-status { background: rgba(0,0,0,0.3); border: 1px solid #2a475e; border-radius: 4px; padding: 12px 16px; margin-bottom: 20px; font-size: 14px; }
+.admin-form { background: rgba(0,0,0,0.2); border: 1px solid #2a475e; border-radius: 4px; padding: 22px; }
+.admin-mode { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 20px; }
+.mode-opt { display: flex; align-items: center; gap: 6px; color: #c7d5e0; cursor: pointer; }
+.admin-section { background: rgba(0,0,0,0.25); border: 1px solid #2a475e; border-radius: 4px; padding: 18px; margin-top: 10px; }
+.admin-section h3 { color: #66c0f4; margin-bottom: 14px; }
+.admin-field { margin-bottom: 12px; max-width: 420px; }
+.admin-field label { display: block; color: #8f98a0; font-size: 13px; margin-bottom: 4px; }
+.admin-field input, .admin-field select {
+    width: 100%; padding: 9px; background: #1b2838; color: #fff;
+    border: 1px solid #2a475e; border-radius: 2px;
+}
+.admin-games { display: flex; flex-direction: column; gap: 8px; }
+.admin-game-row {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #1b2838; border: 1px solid #2a475e; border-radius: 3px; padding: 10px 14px;
+}
+.admin-game-name { color: #fff; }
+.admin-pct { display: flex; align-items: center; gap: 6px; }
+.admin-pct input { width: 80px; padding: 6px; background: #16202d; color: #fff; border: 1px solid #2a475e; border-radius: 2px; }
+.admin-pct span { color: #8f98a0; }

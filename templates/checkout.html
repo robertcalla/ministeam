@@ -45,6 +45,7 @@
                 <li style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                             <span style="flex: 1;">
                                 {{ item.name }}
+                                {% if item.discount_pct %}<span style="color:#beee11; font-size: 12px;"> (-{{ item.discount_pct }}%)</span>{% endif %}
                                 {% if item.is_gift %}
                                     <br><span style="color: #ff9900; font-size: 12px;">(🎁 para {{ item.recipient_name }})</span>
                                 {% endif %}

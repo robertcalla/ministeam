@@ -11,6 +11,11 @@ app.secret_key = 'chave_secreta_super_segura'
 # ---- CATÁLOGO DE JOGOS (DADOS FIXOS) ----
 # As informações abaixo são fictícias e podem ser editadas manualmente.
 GAMES = {
+    '1': {'id': '1', 'name': 'Aventura Épica', 'price': 150.00, 'age_rating': 10, 'description': 'Explore masmorras e derrote monstros com amigos nesta jornada incrível.'},
+    '2': {'id': '2', 'name': 'Sobrevivência Sombria', 'price': 90.00, 'age_rating': 18, 'description': 'Jogo de terror com zumbis. Sobreviva a noites aterrorizantes com recursos escassos.'},
+    '3': {'id': '3', 'name': 'Corrida Divertida', 'price': 45.00, 'age_rating': 0, 'description': 'Corridas para toda a família. Karts coloridos e pistas malucas!'},
+    '4': {'id': '4', 'name': 'Lombriguinha', 'price': 120.00, 'age_rating': 16, 'description': 'Jogo de combate de guerra com os amigos. Que vença a lombriguinha melhor!'}
+
     '1': {
         'id': '1', 'name': 'Aventura Épica', 'price': 150.00, 'age_rating': 10,
         'description': 'Explore masmorras e derrote monstros com amigos nesta jornada incrível.',
@@ -879,6 +884,22 @@ def fazer_login_sessao(usuario):
 # ==============================================================================
 
 @app.before_request
+def ensure_session_values():
+    if 'wallet' not in session:
+        session['wallet'] = 100.00
+    if 'library' not in session:
+        session['library'] = []
+    if 'cart' not in session:
+        session['cart'] = []
+    if 'gifts_sent' not in session:
+        session['gifts_sent'] = {}
+    if 'user_dob' not in session:
+        session['user_dob'] = None
+        # dados
+    if 'user_profile' not in session:
+        session['user_profile'] = {
+            'name': 'Usuário Muito Legal',
+            'details': 'Suas informações ou notas de IHC aqui...'
 def verificar_autenticacao():
     rotas_publicas = {'login', 'selecionar_usuario', 'register', 'static'}
     if request.endpoint in rotas_publicas:
@@ -1287,6 +1308,19 @@ def trocar_usuario():
 # ROTAS PRINCIPAIS DA LOJA
 # ==============================================================================
 
+    if 'reviews' not in session:
+        # Simulamos uma base de dados populada com os idiomas do EnumLinguagemAvaliacao do seu UML
+        session['reviews'] = {
+            '1': [
+                {'author': 'Isabelle Nazareth', 'recomenda': True, 'comentario': 'Jogo excelente! Muito divertido para jogar em grupo.', 'data': '20/05/2026', 'linguagem': 'portuguesBrasil', 'votos_uteis': 12},
+                {'author': 'John Doe', 'recomenda': True, 'comentario': 'Amazing gameplay and graphics. Highly recommended to play with friends!', 'data': '19/05/2026', 'linguagem': 'ingles', 'votos_uteis': 5},
+                {'author': 'Hans Müller', 'recomenda': False, 'comentario': 'Das Spiel hat zu viele Bugs. Ich kann es im Moment nicht empfehlen.', 'data': '18/05/2026', 'linguagem': 'alemao', 'votos_uteis': 2},
+                {'author': 'Alan Turing', 'recomenda': True, 'comentario': 'A lógica por trás dos puzzles deste jogo é fantástica.', 'data': '21/05/2026', 'linguagem': 'portuguesBrasil', 'votos_uteis': 8}
+            ],
+            '2': [
+                {'author': 'Grace Hopper', 'recomenda': True, 'comentario': 'Great horror atmosphere! Found a few system bugs though.', 'data': '15/05/2026', 'linguagem': 'ingles', 'votos_uteis': 14}
+            ]
+        }
 @app.route('/')
 def index():
     return render_template('index.html', games=GAMES)
@@ -1298,6 +1332,24 @@ def game(game_id):
     if not game_data:
         return "Jogo não encontrado", 404
     show_modal = request.args.get('added') == '1'
+    
+    selected_lang = request.args.get('lang', 'todos') # Padrão exibe 'todos' [FA02]
+    all_reviews = session.get('reviews', {}).get(game_id, [])
+    
+    # Aplica o filtro comparando com as strings do Enum
+    if selected_lang != 'todos':
+        filtered_reviews = [r for r in all_reviews if r['linguagem'] == selected_lang]
+    else:
+        filtered_reviews = all_reviews
+        
+    #Ordena a lista de forma decrescente pelos votos úteis
+    filtered_reviews = sorted(filtered_reviews, key=lambda x: x.get('votos_uteis', 0), reverse=True)
+        
+    return render_template('game.html', 
+                           game=game_data, 
+                           show_modal=show_modal, 
+                           reviews=filtered_reviews, 
+                           selected_lang=selected_lang)
     na_wishlist = game_id in session.get('wishlist', [])
     return render_template('game.html', game=game_data, show_modal=show_modal,
                            na_wishlist=na_wishlist)
@@ -1308,6 +1360,14 @@ def update_profile():
     name    = request.form.get('name')
     details = request.form.get('details')
     dob_str = request.form.get('dob')
+    linguagem = request.form.get('linguagem', 'portuguesBrasil') # Captura o idioma
+
+    session['user_profile'] = {
+        'name': name,
+        'institution': institution,
+        'details': details,
+        'linguagem': linguagem # Salva a preferência
+    }
     session['user_profile'] = {'name': name, 'details': details}
     if dob_str:
         session['user_dob'] = dob_str
@@ -1364,6 +1424,88 @@ def add_to_cart(game_id):
     session.modified = True
     return redirect(url_for('game', game_id=game_id, added=1))
 
+@app.route('/game/<game_id>/review', methods=['POST'])
+def submit_review(game_id):
+    owned = game_id in session.get('library', [])
+    if session.get('family') and game_id in session['family'].get('library_pool', []):
+        owned = True
+
+    if not owned:
+        flash("Bloqueio [FE01]: Você precisa possuir este jogo para publicar uma análise.", "error")
+        return redirect(url_for('game', game_id=game_id))
+
+    recomenda = request.form.get('recomenda') == 'sim'
+    comentario = request.form.get('comentario', '').strip()
+
+    if not comentario:
+        flash("Erro [FE02]: Por favor, escreva um comentário para descrever sua experiência.", "error")
+        return redirect(url_for('game', game_id=game_id))
+
+    if game_id not in session['reviews']:
+        session['reviews'][game_id] = []
+
+    user_name = session['user_profile']['name']
+    
+    #  Unicidade: Remove análise anterior do mesmo usuário
+    session['reviews'][game_id] = [r for r in session['reviews'][game_id] if r['author'] != user_name]
+
+    # Busca o idioma do perfil do usuário. Se não existir, o padrão é 'portuguesBrasil'
+    idioma_usuario = session['user_profile'].get('linguagem', 'portuguesBrasil')
+
+    nova_analise = {
+        'author': user_name,
+        'recomenda': recomenda, 
+        'comentario': comentario,
+        'data': datetime.now().strftime("%d/%m/%Y"),
+        'linguagem': idioma_usuario, 
+        'voted_users': {} # Dicionário para guardar 'sim' ou 'nao'
+    }
+    
+    session['reviews'][game_id].append(nova_analise)
+    session.modified = True
+    flash("Sua análise foi publicada com sucesso!", "sucesso")
+    return redirect(url_for('game', game_id=game_id))
+
+@app.route('/game/<game_id>/review/<author>/vote/<vote_type>')
+def vote_review(game_id, author, vote_type):
+    reviews = session.get('reviews', {}).get(game_id, [])
+    current_user = session['user_profile']['name']
+    
+    for r in reviews:
+        if r['author'] == author:
+            # Trava 1: Não permite que o usuário vote na própria avaliação
+            if author == current_user:
+                flash("Bloqueio: Você não pode classificar sua própria análise.", "error")
+                return redirect(url_for('game', game_id=game_id))
+            
+            # Garante que a estrutura de votos existe e é um dicionário (prevenção de erros antigos)
+            if 'voted_users' not in r or isinstance(r['voted_users'], list):
+                r['voted_users'] = {}
+                
+            voto_anterior = r['voted_users'].get(current_user)
+            
+            # Trava 2: Se clicar no mesmo botão que já tinha votado
+            if voto_anterior == vote_type:
+                flash("Você já classificou esta análise com esta mesma opção.", "error")
+                return redirect(url_for('game', game_id=game_id))
+            
+            # Lógica de Atualização / Troca de Voto
+            if vote_type == 'sim':
+                r['votos_uteis'] = r.get('votos_uteis', 0) + 1
+                flash("Voto atualizado! O voto útil foi registrado e ajudará a comunidade.", "sucesso")
+            elif vote_type == 'nao':
+                # Se o voto anterior era 'sim', temos que subtrair aquele voto útil que ele tinha dado!
+                if voto_anterior == 'sim':
+                    r['votos_uteis'] = max(0, r.get('votos_uteis', 0) - 1)
+                flash("Voto atualizado! Registramos que esta análise não foi útil para você.", "sucesso")
+                
+            # Salva o novo voto do usuário no dicionário
+            r['voted_users'][current_user] = vote_type
+            
+            session.modified = True
+            break
+            
+    return redirect(url_for('game', game_id=game_id))
 
 @app.route('/cart')
 def cart():
@@ -1847,6 +1989,19 @@ def family_toggle_offline():
     flash(f"Modo Offline da Steam: {status} [A01]", "sucesso")
     return redirect(url_for('family'))
 
+@app.route('/family/buy_extra/<game_id>')
+def family_buy_extra(game_id):
+    """Compra uma cópia extra para o banco da família """
+    game_data = GAMES.get(game_id)
+    if session['wallet'] >= game_data['price']:
+        session['wallet'] -= game_data['price']
+        session['family']['licenses'][game_id] = session['family']['licenses'].get(game_id, 1) + 1
+        session['show_pe01_for'] = None
+        session.modified = True
+        flash(f"Sucesso: Cópia adicional comprada! Banco da família agora possui {session['family']['licenses'][game_id]} licenças unificadas de '{game_data['name']}'.", "sucesso")
+    else:
+        flash("Saldo insuficiente na carteira para comprar uma cópia adicional.", "error")
+    return redirect(url_for('family'))
 
 # ==============================================================================
 # ROTA ADMINISTRATIVA OCULTA - SIMULAÇÃO DE PROMOÇÕES

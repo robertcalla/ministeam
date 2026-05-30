@@ -3,6 +3,8 @@
 {% block title %} {{ game.name }} - Ministeam {% endblock %}
 
 {% block content %}
+{% set p = preco_info(game.id) %}
+
 {% if show_modal %}
 <div class="modal-overlay">
     <div class="modal-content">
@@ -16,42 +18,106 @@
 </div>
 {% endif %}
 
-<div class="game-detail">
-    <h1>{{ game.name }}</h1>
-    <div class="game-content">
-        <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}" class="main-img">
+<div class="store-page">
+    <a href="{{ url_for('index') }}" style="color: #8f98a0; font-size: 13px; text-decoration: none;">‹ Todos os jogos</a>
+    <h1 style="margin-top: 8px;">{{ game.name }}</h1>
 
-        <div class="game-sidebar">
+    <div class="store-grid">
+        <!-- Coluna esquerda: mídia e descrição -->
+        <div class="store-main">
+            <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}" class="store-cover">
+
+            <div class="store-about">
+                <h3>Sobre o jogo</h3>
+                <p>{{ game.long_description }}</p>
+            </div>
+
+            <div class="store-tags">
+                <h4>Marcadores populares para este produto:</h4>
+                <div class="tag-list">
+                    {% for tag in game.tags %}
+                    <span class="tag-chip">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="store-requirements">
+                <h3>Requisitos de Sistema</h3>
+                <div class="req-cols">
+                    <div>
+                        <strong>Mínimos</strong>
+                        <p>{{ game.req_minimo }}</p>
+                    </div>
+                    <div>
+                        <strong>Recomendados</strong>
+                        <p>{{ game.req_recomendado }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna direita: informações e compra -->
+        <div class="store-sidebar">
             <p class="description">{{ game.description }}</p>
+
+            <div class="store-meta">
+                <div class="review-line">
+                    Avaliações: <strong class="review-pos">{{ game.reviews }}</strong>
+                    <span style="color:#8f98a0;">({{ "{:,}".format(game.review_count).replace(",", ".") }})</span>
+                </div>
+                <div><span>Lançamento:</span> {{ game.release_date }}</div>
+                <div><span>Desenvolvedor:</span> {{ game.developer }}</div>
+                <div><span>Distribuidora:</span> {{ game.publisher }}</div>
+            </div>
+
             <div class="rating">
                 Classificação Indicativa:
                 <span class="age-badge {% if game.age_rating >= 18 %}mature{% endif %}">
-                        {% if game.age_rating == 0 %} Livre {% else %} {{ game.age_rating }} anos {% endif %}
-                    </span>
+                    {% if game.age_rating == 0 %} Livre {% else %} {{ game.age_rating }} anos {% endif %}
+                </span>
             </div>
 
-            {% if 'library' in session and game.id in session['library'] %}
+            <div class="store-features">
+                {% for f in game.features %}
+                <span class="feature-chip">✓ {{ f }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="store-langs">
+                <strong>Idiomas:</strong> {{ game.languages | join(', ') }}
+            </div>
+
+            {% if game.id in session['library'] %}
             <div class="owned-banner">
                 <strong>Você já possui este jogo na sua biblioteca.</strong><br>
                 Você ainda pode comprá-lo como presente para um amigo abaixo.
             </div>
             {% endif %}
 
+            <!-- Caixa de compra -->
             <div class="purchase-box">
-                <span class="price-large">R$ {{ "%.2f"|format(game.price) }}</span>
+                {% if p.on_sale %}
+                <div class="price-block" style="margin-bottom: 15px;">
+                    <span class="discount-badge">-{{ p.pct }}%</span>
+                    <span class="price-old">R$ {{ "%.2f"|format(p.original) }}</span>
+                    <span class="price-new" style="font-size: 22px;">R$ {{ "%.2f"|format(p.final) }}</span>
+                </div>
+                {% else %}
+                <span class="price-large">R$ {{ "%.2f"|format(p.final) }}</span>
+                {% endif %}
 
                 <form action="{{ url_for('add_to_cart', game_id=game.id) }}" method="POST">
                     {% if game.age_rating > 0 %}
-                    {% if session.get('user_dob') %}
-                    <p style="font-size: 13px; color: #66c0f4; margin-bottom: 12px;">
-                        ✔ Idade verificada automaticamente pelo seu perfil.
-                    </p>
-                    {% else %}
-                    <div class="age-gate">
-                        <label for="dob">Data de Nascimento:</label><br>
-                        <input type="date" id="dob" name="dob" required>
-                    </div>
-                    {% endif %}
+                        {% if session.get('user_dob') %}
+                        <p style="font-size: 13px; color: #66c0f4; margin-bottom: 12px;">
+                            ✔ Idade verificada automaticamente pelo seu perfil.
+                        </p>
+                        {% else %}
+                        <div class="age-gate">
+                            <label for="dob">Para continuar, informe sua Data de Nascimento:</label><br>
+                            <input type="date" id="dob" name="dob" required>
+                        </div>
+                        {% endif %}
                     {% else %}
                     <input type="hidden" name="dob" value="none">
                     <p style="font-size: 12px; margin-bottom: 10px; color: #8f98a0;">
@@ -61,127 +127,25 @@
 
                     <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
                         {% if game.id not in session['library'] %}
-                        <button type="submit" name="purchase_type" value="self" class="btn-green">Comprar para a minha conta</button>
+                        <button type="submit" name="purchase_type" value="self" class="btn-green">Adicionar ao Carrinho</button>
                         {% endif %}
                         <button type="submit" name="purchase_type" value="gift" class="btn-blue" style="color: #fff; background: #3a688c;">Comprar como presente</button>
                     </div>
                 </form>
+
+                <!-- Lista de desejos -->
+                {% if game.id not in session['library'] %}
+                <div class="wishlist-action">
+                    {% if na_wishlist %}
+                    <span class="on-wishlist">❤ Na sua lista de desejos</span>
+                    <a href="{{ url_for('wishlist_remove', game_id=game.id) }}" class="wishlist-link">Remover</a>
+                    {% else %}
+                    <a href="{{ url_for('wishlist_add', game_id=game.id) }}" class="btn-wishlist">+ Adicionar à Lista de Desejos</a>
+                    {% endif %}
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
-
-<div style="margin-top: 40px; background: rgba(0,0,0,0.2); padding: 25px; border-top: 2px solid #2a475e;">
-        
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #2a475e; padding-bottom: 15px;">
-            <h2 style="color: #ffffff; margin: 0;">Análises de Clientes</h2>
-            
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <label style="color: #8f98a0; font-size: 13px;">Filtrar por Idioma:</label>
-                <select id="langFilter" onchange="location.href='?lang=' + this.value" style="padding: 8px 15px; background: #1b2838; color: white; border: 1px solid #2a475e; border-radius: 2px; cursor: pointer;">
-                    <option value="todos" {% if selected_lang == 'todos' %}selected{% endif %}>🌎 Todos os Idiomas (Global)</option>
-                    <option value="portuguesBrasil" {% if selected_lang == 'portuguesBrasil' %}selected{% endif %}>🇧🇷 Português (Brasil)</option>
-                    <option value="ingles" {% if selected_lang == 'ingles' %}selected{% endif %}>🇺🇸 Inglês</option>
-                    <option value="alemao" {% if selected_lang == 'alemao' %}selected{% endif %}>🇩🇪 Alemão</option>
-                    <option value="chinesSimplificado" {% if selected_lang == 'chinesSimplificado' %}selected{% endif %}>🇨🇳 Chinês Simplificado</option>
-                    <option value="polones" {% if selected_lang == 'polones' %}selected{% endif %}>🇵🇱 Polonês</option>
-                    <option value="coreano" {% if selected_lang == 'coreano' %}selected{% endif %}>🇰🇷 Coreano</option>
-                </select>
-            </div>
-        </div>
-
-        {% set user_owns_game = (game.id in session.get('library', [])) or (session.get('family') and game.id in session['family'].get('library_pool', [])) %}
-        {% if user_owns_game %}
-            {% set minha_aval = none %}
-            {% if session.get('reviews', {}).get(game.id) %}
-                {% for r in session['reviews'][game.id] %}
-                    {% if r.author == session['user_profile']['name'] %}
-                        {% set minha_aval = r %}
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-            
-            <div style="background: #171a21; padding: 20px; border: 1px solid #3a688c; margin-bottom: 30px;">
-                <h3 style="color: #66c0f4; margin-bottom: 15px; font-size: 16px;">
-                    {% if minha_aval %}✏️ Editar sua análise (Idioma Padrão: Português){% else %}✍️ Escrever uma Análise{% endif %}
-                </h3>
-                <form action="{{ url_for('submit_review', game_id=game.id) }}" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
-                    <div style="display: flex; gap: 20px; align-items: center;">
-                        <label style="color: white; font-size: 14px;">Você recomenda este jogo?</label>
-                        <label style="color: #d2efa9; cursor: pointer;">
-                            <input type="radio" name="recomenda" value="sim" {% if minha_aval and minha_aval.recomenda %}checked{% endif %} required> 👍 Sim
-                        </label>
-                        <label style="color: #ff6b6b; cursor: pointer;">
-                            <input type="radio" name="recomenda" value="nao" {% if minha_aval and not minha_aval.recomenda %}checked{% endif %} required> 👎 Não
-                        </label>
-                    </div>
-                    <textarea name="comentario" rows="3" placeholder="Escreva o que você achou do jogo..." style="width: 100%; padding: 12px; background: #1b2838; color: white; border: 1px solid #2a475e; border-radius: 2px; resize: vertical;">{% if minha_aval %}{{ minha_aval.comentario }}{% endif %}</textarea>
-                    <button type="submit" class="btn-green" style="align-self: flex-start; padding: 8px 20px;">Publicar Análise</button>
-                </form>
-            </div>
-        {% else %}
-            <div style="background: rgba(181, 42, 28, 0.1); padding: 15px; border: 1px dashed #b52a1c; margin-bottom: 30px;">
-                <p style="color: #8f98a0; font-size: 14px;">🔒 Você precisa adquirir este jogo para publicar uma análise.</p>
-            </div>
-        {% endif %}
-
-        <div style="display: flex; flex-direction: column; gap: 15px;">
-            {% if reviews %}
-                {% for aval in reviews %}
-                    <div style="background: #1b2838; padding: 20px; border-left: 4px solid {% if aval.recomenda %}#5c7e10{% else %}#b52a1c{% endif %};">
-                        
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #2a475e; padding-bottom: 10px;">
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <div style="width: 35px; height: 35px; border-radius: 50%; background: #2a475e; border: 1px solid #66c0f4; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
-                                    {{ aval.author[0] }}
-                                </div>
-                                <div>
-                                    <strong style="color: white; display: block;">{{ aval.author }}</strong>
-                                    <span style="color: #8f98a0; font-size: 11px;">Publicado em {{ aval.data }} | 🌐 Idioma: <strong>{{ aval.linguagem }}</strong></span>
-                                </div>
-                            </div>
-                            <span style="font-weight: bold; font-size: 13px; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 2px; color: {% if aval.recomenda %}#d2efa9{% else %}#ff6b6b{% endif %};">
-                                {% if aval.recomenda %}👍 Recomendado{% else %}👎 Não Recomendado{% endif %}
-                            </span>
-                        </div>
-                        
-                        <p style="color: #c7d5e0; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">{{ aval.comentario }}</p>
-                        
-                        <div style="margin-top: 20px; border-top: 1px solid #2a475e; padding-top: 15px;">
-                            <p style="color: #8f98a0; font-size: 12px; margin-bottom: 10px;">Você achou essa avaliação útil?</p>
-                            
-                            {% set meu_voto = aval.voted_users.get(session['user_profile']['name']) if aval.voted_users is mapping else none %}
-                            
-                            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
-                                <a href="{{ url_for('vote_review', game_id=game.id, author=aval.author, vote_type='sim') }}" 
-                                   class="btn-blue" 
-                                   style="padding: 5px 15px; font-size: 12px; text-decoration: none; 
-                                          background: {% if meu_voto == 'sim' %}#5c7e10{% else %}#213545{% endif %};
-                                          color: {% if meu_voto == 'sim' %}#ffffff{% else %}#66c0f4{% endif %};">
-                                    Sim
-                                </a>
-                                
-                                <a href="{{ url_for('vote_review', game_id=game.id, author=aval.author, vote_type='nao') }}" 
-                                   class="btn-blue" 
-                                   style="padding: 5px 15px; font-size: 12px; text-decoration: none; 
-                                          background: {% if meu_voto == 'nao' %}#b52a1c{% else %}#213545{% endif %};
-                                          color: {% if meu_voto == 'nao' %}#ffffff{% else %}#66c0f4{% endif %};">
-                                    Não
-                                </a>
-                            </div>
-                            <p style="color: #66c0f4; font-size: 12px; margin: 0;">
-                                {{ aval.votos_uteis }} pessoas acharam esta análise útil
-                            </p>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div style="background: rgba(0,0,0,0.1); padding: 35px; text-align: center; color: #8f98a0; border: 1px dashed #2a475e;">
-                    ⚠️ Nenhuma análise em <strong>{{ selected_lang }}</strong> foi encontrada para este jogo.<br>
-                    <span style="font-size: 12px; color: #66c0f4; cursor: pointer;" onclick="document.getElementById('langFilter').value='todos'; location.href='?lang=todos'">Clique aqui para limpar o filtro e ver todas as análises.</span>
-                </div>
-            {% endif %}
-        </div>
-
-    </div>
 {% endblock %}

@@ -8,14 +8,18 @@
 <body>
 <header class="navbar">
     <div class="nav-left">
-        <a href="{{ url_for('reset_session') }}" title="Clique aqui para reiniciar a sessão e limpar os cookies de teste" style="text-decoration: none; cursor: pointer;">
+        <a href="{{ url_for('reset_session') }}"
+           onclick="return confirm('Isto irá limpar os cookies e APAGAR todos os dados (amizades, famílias, bibliotecas, carteiras e sessões). As contas de usuário serão mantidas. Continuar?');"
+           title="Limpar tudo: cookies e todos os arquivos de dados (exceto as contas de usuário)" style="text-decoration: none; cursor: pointer;">
             <div class="logo">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="MINISTEAM Logo" style="height: 40px; display: block;">
             </div>
         </a>
         <nav>
             <a href="{{ url_for('index') }}">Loja</a>
+            <a href="{{ url_for('wishlist') }}">Lista de Desejos</a>
             <a href="{{ url_for('library') }}">Biblioteca</a>
+            <a href="{{ url_for('amigos') }}">Amigos</a>
             <a href="{{ url_for('family') }}">Família</a>
         </nav>
     </div>
@@ -24,20 +28,40 @@
         <a href="{{ url_for('cart') }}" class="btn-blue" style="text-decoration: none; padding: 5px 12px; font-size: 13px; background: #213545; color: #66c0f4;">
             🛒 Carrinho ({{ session['cart']|length }})
         </a>
-        <div class="wallet-display" style="font-size: 13px; color: #66c0f4; background: #2a475e; padding: 5px 10px; border-radius: 2px;">
-            Carteira: <strong>R$ {{ "%.2f"|format(session['wallet']) }}</strong>
-        </div>
-        <div class="user-profile" onclick="openUserProfileModal()" style="cursor: pointer;" title="Ver meus dados">
-            <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Perfil">
+
+        <!-- Menu da conta (foto de perfil) -->
+        <div class="account-menu">
+            <div class="user-profile" onclick="toggleAccountMenu(event)" title="Conta de {{ session['user_profile']['name'] }}">
+                <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Perfil">
+            </div>
+            <div class="account-dropdown" id="accountDropdown">
+                <div class="account-dropdown-name">{{ session['user_profile']['name'] }}</div>
+                <a href="{{ url_for('meu_perfil') }}">👤 Meu perfil</a>
+                <a href="{{ url_for('carteira') }}">💳 Minha carteira <span class="acc-saldo">R$ {{ "%.2f"|format(session['wallet']) }}</span></a>
+                <a href="{{ url_for('trocar_usuario') }}">🔄 Trocar usuário</a>
+                <a href="{{ url_for('logout') }}" class="acc-logout">⏻ Finalizar sessão</a>
+            </div>
         </div>
     </div>
 </header>
 
+{% if promo_evento %}
+<div class="sale-banner">
+    🎉 <strong>{{ promo_nome }}</strong> — Ofertas por tempo limitado!{% if promo_fim %} Termina em {{ promo_fim }}.{% endif %}
+    <a href="{{ url_for('index') }}">Ver ofertas →</a>
+</div>
+{% endif %}
+
+<!-- Modal de Perfil do Usuário -->
 <div id="userProfileModal" class="modal-overlay" style="display: none;">
     <div class="modal-content" style="background: #171a21; border: 1px solid #2a475e; width: 480px; box-shadow: 0 0 15px rgba(0,0,0,0.7);">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a475e; padding-bottom: 10px; margin-bottom: 15px;">
-            <h2 style="color: #66c0f4; margin: 0; font-size: 18px;">📋 Dados da Conta Steam</h2>
+            <h2 style="color: #66c0f4; margin: 0; font-size: 18px;">📋 Dados da Conta</h2>
             <span style="cursor: pointer; color: #8f98a0; font-size: 22px; font-weight: bold;" onclick="closeUserProfileModal()">&times;</span>
+        </div>
+
+        <div style="margin-bottom: 12px; font-size: 12px; color: #8f98a0;">
+            Logado como: <strong style="color: #66c0f4;">{{ session['user_profile']['name'] }}</strong>
         </div>
 
         <form action="{{ url_for('update_profile') }}" method="POST">
@@ -50,21 +74,11 @@
                 <label style="font-size: 12px; color: #8f98a0;">Detalhes do Perfil / Notas:</label>
                 <textarea name="details" style="width: 100%; padding: 8px; background: #1b2838; color: white; border: 1px solid #2a475e; border-radius: 2px; height: 60px; resize: none;">{{ session['user_profile']['details'] }}</textarea>
             </div>
-            <div style="margin-bottom: 15px;">
-                <label style="font-size: 12px; color: #8f98a0;">Idioma de Preferência (Análises):</label>
-                <select name="linguagem" style="width: 100%; padding: 8px; margin-top: 6px; background: #1b2838; color: white; border: 1px solid #2a475e; border-radius: 2px;">
-                    <option value="portuguesBrasil" {% if session['user_profile'].get('linguagem') == 'portuguesBrasil' %}selected{% endif %}>Português (Brasil)</option>
-                    <option value="ingles" {% if session['user_profile'].get('linguagem') == 'ingles' %}selected{% endif %}>Inglês</option>
-                    <option value="alemao" {% if session['user_profile'].get('linguagem') == 'alemao' %}selected{% endif %}>Alemão</option>
-                    <option value="chinesSimplificado" {% if session['user_profile'].get('linguagem') == 'chinesSimplificado' %}selected{% endif %}>Chinês Simplificado</option>
-                    <option value="polones" {% if session['user_profile'].get('linguagem') == 'polones' %}selected{% endif %}>Polonês</option>
-                    <option value="coreano" {% if session['user_profile'].get('linguagem') == 'coreano' %}selected{% endif %}>Coreano</option>
-                </select>
-            </div>
+
             <div style="margin-bottom: 20px; background: rgba(0,0,0,0.2); padding: 12px; border: 1px solid #3a688c; border-radius: 3px;">
-                <label style="font-size: 12px; color: #ff9900; font-weight: bold;">📅 Data de Nascimento Padrão:</label>
+                <label style="font-size: 12px; color: #ff9900; font-weight: bold;">📅 Data de Nascimento:</label>
                 <input type="date" name="dob" value="{{ session['user_dob'] if session['user_dob'] else '' }}" style="width: 100%; padding: 8px; margin-top: 6px; background: #171a21; color: white; border: 1px solid #2a475e; border-radius: 2px;">
-                <p style="font-size: 10px; color: #8f98a0; margin-top: 4px;">*Salvar uma data aqui fará com que o sistema valide as classificações indicativas automaticamente sem interromper sua navegação.</p>
+                <p style="font-size: 10px; color: #8f98a0; margin-top: 4px;">*Necessária para acessar jogos com classificação etária. Sem ela, títulos +10 e +18 serão bloqueados.</p>
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 10px;">
@@ -96,7 +110,20 @@
     function closeUserProfileModal() {
         document.getElementById('userProfileModal').style.display = 'none';
     }
+
+    // Menu da conta (dropdown ao clicar na foto de perfil)
+    function toggleAccountMenu(e) {
+        e.stopPropagation();
+        var d = document.getElementById('accountDropdown');
+        if (d) d.classList.toggle('open');
+    }
+    document.addEventListener('click', function (e) {
+        var menu = document.querySelector('.account-menu');
+        var d = document.getElementById('accountDropdown');
+        if (d && menu && !menu.contains(e.target)) d.classList.remove('open');
+    });
 </script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
+{% block scripts %}{% endblock %}
 </body>
 </html>

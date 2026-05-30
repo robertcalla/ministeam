@@ -3,15 +3,38 @@
 {% block title %}Destaques - Ministeam{% endblock %}
 
 {% block content %}
+{% if promo_evento %}
+<div class="event-hero">
+    <div class="event-hero-tag">PROMOÇÃO ATIVA</div>
+    <h1 style="margin: 6px 0;">{{ promo_nome }}</h1>
+    <p style="color: #b3e0ff;">Aproveite os descontos em jogos selecionados{% if promo_fim %} até {{ promo_fim }}{% endif %}!</p>
+</div>
+{% endif %}
+
 <h1>Destaques e Recomendações</h1>
 <div class="game-grid">
     {% for id, game in games.items() %}
+    {% set p = preco_info(id) %}
     <div class="game-card">
-        <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}">
+        <a href="{{ url_for('game', game_id=id) }}" style="text-decoration: none; display: block; position: relative;">
+            <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}">
+            {% if p.on_sale %}
+            <span class="discount-badge card-badge">-{{ p.pct }}%</span>
+            {% endif %}
+        </a>
         <div class="game-info">
             <h3>{{ game.name }}</h3>
+            <p style="font-size: 11px; color: #8f98a0; margin-bottom: 10px;">{{ game.genres | join(', ') }}</p>
             <div class="price-action">
-                <span class="price">R$ {{ "%.2f"|format(game.price) }}</span>
+                {% if p.on_sale %}
+                <span class="price-block">
+                    <span class="discount-badge">-{{ p.pct }}%</span>
+                    <span class="price-old">R$ {{ "%.2f"|format(p.original) }}</span>
+                    <span class="price-new">R$ {{ "%.2f"|format(p.final) }}</span>
+                </span>
+                {% else %}
+                <span class="price">R$ {{ "%.2f"|format(p.final) }}</span>
+                {% endif %}
                 <a href="{{ url_for('game', game_id=id) }}" class="btn-blue">Ver Detalhes</a>
             </div>
         </div>

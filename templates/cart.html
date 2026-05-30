@@ -40,7 +40,15 @@
                         </span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 20px;">
+                        {% if item.discount_pct %}
+                        <span class="price-block">
+                            <span class="discount-badge">-{{ item.discount_pct }}%</span>
+                            <span class="price-old">R$ {{ "%.2f"|format(item.original_price) }}</span>
+                            <span class="price-new">R$ {{ "%.2f"|format(item.price) }}</span>
+                        </span>
+                        {% else %}
                         <span class="item-price">R$ {{ "%.2f"|format(item.price) }}</span>
+                        {% endif %}
                         <a href="{{ url_for('remove_from_cart', cart_item_id=item.cart_item_id) }}" style="color: #b52a1c; text-decoration: none; font-size: 13px;">Remover</a>
                     </div>
                 </div>

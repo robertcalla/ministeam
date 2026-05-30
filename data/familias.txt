@@ -1,0 +1,6 @@
+# =============================================================================
+# MINISTEAM - Banco de Dados de Famílias
+# Cada linha é um objeto JSON representando uma família.
+# Campos: id, name, created_at, founder, founder_id, members,
+#         member_ids, library_pool, licenses
+# =============================================================================

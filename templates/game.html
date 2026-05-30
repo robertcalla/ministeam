@@ -3,6 +3,8 @@
 {% block title %} {{ game.name }} - Ministeam {% endblock %}
 
 {% block content %}
+{% set p = preco_info(game.id) %}
+
 {% if show_modal %}
 <div class="modal-overlay">
     <div class="modal-content">
@@ -16,42 +18,106 @@
 </div>
 {% endif %}
 
-<div class="game-detail">
-    <h1>{{ game.name }}</h1>
-    <div class="game-content">
-        <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}" class="main-img">
+<div class="store-page">
+    <a href="{{ url_for('index') }}" style="color: #8f98a0; font-size: 13px; text-decoration: none;">‹ Todos os jogos</a>
+    <h1 style="margin-top: 8px;">{{ game.name }}</h1>
 
-        <div class="game-sidebar">
+    <div class="store-grid">
+        <!-- Coluna esquerda: mídia e descrição -->
+        <div class="store-main">
+            <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}" class="store-cover">
+
+            <div class="store-about">
+                <h3>Sobre o jogo</h3>
+                <p>{{ game.long_description }}</p>
+            </div>
+
+            <div class="store-tags">
+                <h4>Marcadores populares para este produto:</h4>
+                <div class="tag-list">
+                    {% for tag in game.tags %}
+                    <span class="tag-chip">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="store-requirements">
+                <h3>Requisitos de Sistema</h3>
+                <div class="req-cols">
+                    <div>
+                        <strong>Mínimos</strong>
+                        <p>{{ game.req_minimo }}</p>
+                    </div>
+                    <div>
+                        <strong>Recomendados</strong>
+                        <p>{{ game.req_recomendado }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna direita: informações e compra -->
+        <div class="store-sidebar">
             <p class="description">{{ game.description }}</p>
+
+            <div class="store-meta">
+                <div class="review-line">
+                    Avaliações: <strong class="review-pos">{{ game.reviews }}</strong>
+                    <span style="color:#8f98a0;">({{ "{:,}".format(game.review_count).replace(",", ".") }})</span>
+                </div>
+                <div><span>Lançamento:</span> {{ game.release_date }}</div>
+                <div><span>Desenvolvedor:</span> {{ game.developer }}</div>
+                <div><span>Distribuidora:</span> {{ game.publisher }}</div>
+            </div>
+
             <div class="rating">
                 Classificação Indicativa:
                 <span class="age-badge {% if game.age_rating >= 18 %}mature{% endif %}">
-                        {% if game.age_rating == 0 %} Livre {% else %} {{ game.age_rating }} anos {% endif %}
-                    </span>
+                    {% if game.age_rating == 0 %} Livre {% else %} {{ game.age_rating }} anos {% endif %}
+                </span>
             </div>
 
-            {% if 'library' in session and game.id in session['library'] %}
+            <div class="store-features">
+                {% for f in game.features %}
+                <span class="feature-chip">✓ {{ f }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="store-langs">
+                <strong>Idiomas:</strong> {{ game.languages | join(', ') }}
+            </div>
+
+            {% if game.id in session['library'] %}
             <div class="owned-banner">
                 <strong>Você já possui este jogo na sua biblioteca.</strong><br>
                 Você ainda pode comprá-lo como presente para um amigo abaixo.
             </div>
             {% endif %}
 
+            <!-- Caixa de compra -->
             <div class="purchase-box">
-                <span class="price-large">R$ {{ "%.2f"|format(game.price) }}</span>
+                {% if p.on_sale %}
+                <div class="price-block" style="margin-bottom: 15px;">
+                    <span class="discount-badge">-{{ p.pct }}%</span>
+                    <span class="price-old">R$ {{ "%.2f"|format(p.original) }}</span>
+                    <span class="price-new" style="font-size: 22px;">R$ {{ "%.2f"|format(p.final) }}</span>
+                </div>
+                {% else %}
+                <span class="price-large">R$ {{ "%.2f"|format(p.final) }}</span>
+                {% endif %}
 
                 <form action="{{ url_for('add_to_cart', game_id=game.id) }}" method="POST">
                     {% if game.age_rating > 0 %}
-                    {% if session.get('user_dob') %}
-                    <p style="font-size: 13px; color: #66c0f4; margin-bottom: 12px;">
-                        ✔ Idade verificada automaticamente pelo seu perfil.
-                    </p>
-                    {% else %}
-                    <div class="age-gate">
-                        <label for="dob">Data de Nascimento:</label><br>
-                        <input type="date" id="dob" name="dob" required>
-                    </div>
-                    {% endif %}
+                        {% if session.get('user_dob') %}
+                        <p style="font-size: 13px; color: #66c0f4; margin-bottom: 12px;">
+                            ✔ Idade verificada automaticamente pelo seu perfil.
+                        </p>
+                        {% else %}
+                        <div class="age-gate">
+                            <label for="dob">Para continuar, informe sua Data de Nascimento:</label><br>
+                            <input type="date" id="dob" name="dob" required>
+                        </div>
+                        {% endif %}
                     {% else %}
                     <input type="hidden" name="dob" value="none">
                     <p style="font-size: 12px; margin-bottom: 10px; color: #8f98a0;">
@@ -61,11 +127,23 @@
 
                     <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
                         {% if game.id not in session['library'] %}
-                        <button type="submit" name="purchase_type" value="self" class="btn-green">Comprar para a minha conta</button>
+                        <button type="submit" name="purchase_type" value="self" class="btn-green">Adicionar ao Carrinho</button>
                         {% endif %}
                         <button type="submit" name="purchase_type" value="gift" class="btn-blue" style="color: #fff; background: #3a688c;">Comprar como presente</button>
                     </div>
                 </form>
+
+                <!-- Lista de desejos -->
+                {% if game.id not in session['library'] %}
+                <div class="wishlist-action">
+                    {% if na_wishlist %}
+                    <span class="on-wishlist">❤ Na sua lista de desejos</span>
+                    <a href="{{ url_for('wishlist_remove', game_id=game.id) }}" class="wishlist-link">Remover</a>
+                    {% else %}
+                    <a href="{{ url_for('wishlist_add', game_id=game.id) }}" class="btn-wishlist">+ Adicionar à Lista de Desejos</a>
+                    {% endif %}
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -184,4 +262,5 @@
         </div>
 
     </div>
+{% endblock %}
 {% endblock %}

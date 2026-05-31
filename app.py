@@ -70,6 +70,26 @@ GAMES = {
         'languages': ['Português', 'Inglês', 'Espanhol', 'Italiano'],
         'req_minimo': 'SO: Windows 10 64-bit · CPU: Intel i3-6100 · RAM: 4 GB · GPU: GTX 650 · 15 GB',
         'req_recomendado': 'SO: Windows 10 64-bit · CPU: Intel i5-7400 · RAM: 8 GB · GPU: GTX 1050 · 15 GB SSD',
+    },
+    '4': {
+        'id': '4', 'name': 'Lombriguinha', 'price': 120.00, 'age_rating': 16,
+        'description': 'Jogo de combate de guerra com os amigos. Que vença a lombriguinha melhor!',
+        'developer': 'Worm Wars Studio',
+        'publisher': 'Ministeam Publishing',
+        'release_date': '10 de janeiro de 2025',
+        'genres': ['Ação', 'Estratégia', 'Multijogador', 'Tático'],
+        'tags': ['Combate', 'Guerra', 'Multijogador', 'Estratégico', 'Competitivo', 'Engraçado'],
+        'features': ['Multijogador online', 'Cooperativo online', 'Conquistas Steam', 'Nuvem Steam', 'Suporte a controle'],
+        'long_description': (
+            'Lombriguinha é um jogo de combate de guerra hilário e estratégico onde você comanda '
+            'um exército de lombrigas armadas até os dentes. Enfrente seus amigos em batalhas '
+            'táticas por turnos em cenários destrutíveis, use um arsenal absurdo de armas '
+            'criativas e prove que a sua lombriguinha é a melhor do campo de batalha!'
+        ),
+        'reviews': 'Muito positivas', 'review_count': 3210,
+        'languages': ['Português', 'Inglês', 'Espanhol', 'Francês'],
+        'req_minimo': 'SO: Windows 10 64-bit · CPU: Intel i3-7100 · RAM: 4 GB · GPU: GTX 750 · 10 GB',
+        'req_recomendado': 'SO: Windows 11 64-bit · CPU: Intel i5-9400 · RAM: 8 GB · GPU: GTX 1060 · 10 GB SSD',
     }
 }
 
@@ -87,6 +107,7 @@ SESSOES_FILE    = os.path.join(DATA_DIR, 'sessoes.txt')
 DESEJOS_FILE     = os.path.join(DATA_DIR, 'desejos.txt')
 PROMOCOES_FILE   = os.path.join(DATA_DIR, 'promocoes.txt')
 COMENTARIOS_FILE = os.path.join(DATA_DIR, 'comentarios.txt')
+AVALIACOES_FILE  = os.path.join(DATA_DIR, 'avaliacoes.txt')
 
 CARTEIRA_INICIAL = 100.00
 LIMITE_TROCAS_USERNAME = 3
@@ -177,6 +198,23 @@ def _garantir_arquivos():
             f.write("# MINISTEAM - Comentários nos Perfis dos Usuários\n")
             f.write("# Formato: perfil_id | autor_id | data | texto\n")
             f.write("# =============================================================================\n")
+
+    if not os.path.exists(AVALIACOES_FILE):
+        with open(AVALIACOES_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Avaliações de Jogos\n")
+            f.write("# Formato: game_id | autor_id | recomenda | data | linguagem | votos_uteis | voted_users | comentario\n")
+            f.write("# - recomenda: sim | nao\n")
+            f.write("# - data: dd/mm/aaaa\n")
+            f.write("# - linguagem: portuguesBrasil | ingles | alemao | chinesSimplificado | polones | coreano\n")
+            f.write("# - voted_users: 'none' ou 'id1:sim,id2:nao,...'\n")
+            f.write("# - comentario: texto livre (pipes viram /, quebras de linha viram espaço)\n")
+            f.write("# =============================================================================\n")
+            f.write("1 | 1 | sim | 20/05/2026 | portuguesBrasil | 12 | none | Jogo excelente! Muito divertido para jogar em grupo.\n")
+            f.write("1 | 2 | sim | 19/05/2026 | ingles | 5 | none | Amazing gameplay and graphics. Highly recommended to play with friends!\n")
+            f.write("1 | 3 | nao | 18/05/2026 | alemao | 2 | none | Das Spiel hat zu viele Bugs. Ich kann es im Moment nicht empfehlen.\n")
+            f.write("1 | 4 | sim | 21/05/2026 | portuguesBrasil | 8 | none | A lógica por trás dos puzzles deste jogo é fantástica.\n")
+            f.write("2 | 5 | sim | 15/05/2026 | ingles | 14 | none | Great horror atmosphere! Found a few system bugs though.\n")
 
 
 # ---- FUNÇÕES DE USUÁRIOS ----
@@ -656,6 +694,155 @@ def adicionar_comentario(perfil_id, autor_id, texto):
         f.write(f"{perfil_id} | {autor_id} | {data} | {texto}\n")
 
 
+# ---- FUNÇÕES DE AVALIAÇÕES DE JOGOS ----
+
+def _serializar_votos(voted_users):
+    """Converte {'1': 'sim', '2': 'nao'} → '1:sim,2:nao'. Vazio vira 'none'."""
+    if not voted_users:
+        return 'none'
+    return ','.join(f"{uid}:{voto}" for uid, voto in voted_users.items())
+
+
+def _desserializar_votos(texto):
+    """Converte '1:sim,2:nao' → {'1': 'sim', '2': 'nao'}. 'none' vira {}."""
+    if not texto or texto == 'none':
+        return {}
+    votos = {}
+    for par in texto.split(','):
+        if ':' in par:
+            uid, voto = par.split(':', 1)
+            uid, voto = uid.strip(), voto.strip()
+            if uid and voto in ('sim', 'nao'):
+                votos[uid] = voto
+    return votos
+
+
+def _ler_todas_avaliacoes():
+    """Lê o arquivo bruto e retorna uma lista de dicts (com autor_id, sem nome resolvido)."""
+    _garantir_arquivos()
+    avaliacoes = []
+    try:
+        with open(AVALIACOES_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.rstrip('\n')
+                if not s.strip() or s.startswith('#'):
+                    continue
+                partes = [p.strip() for p in s.split('|', 7)]
+                if len(partes) < 8:
+                    continue
+                try:
+                    votos_uteis = int(partes[5])
+                except ValueError:
+                    votos_uteis = 0
+                avaliacoes.append({
+                    'game_id':     partes[0],
+                    'autor_id':    partes[1],
+                    'recomenda':   partes[2] == 'sim',
+                    'data':        partes[3],
+                    'linguagem':   partes[4],
+                    'votos_uteis': votos_uteis,
+                    'voted_users': _desserializar_votos(partes[6]),
+                    'comentario':  partes[7]
+                })
+    except FileNotFoundError:
+        pass
+    return avaliacoes
+
+
+def _salvar_todas_avaliacoes(avaliacoes):
+    """Reescreve o arquivo de avaliações preservando o cabeçalho."""
+    _garantir_arquivos()
+    cabecalho = []
+    try:
+        with open(AVALIACOES_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                if linha.startswith('#'):
+                    cabecalho.append(linha)
+                else:
+                    break
+    except FileNotFoundError:
+        pass
+    with open(AVALIACOES_FILE, 'w', encoding='utf-8') as f:
+        f.writelines(cabecalho)
+        for a in avaliacoes:
+            recomenda = 'sim' if a['recomenda'] else 'nao'
+            votos = _serializar_votos(a.get('voted_users', {}))
+            f.write(
+                f"{a['game_id']} | {a['autor_id']} | {recomenda} | {a['data']} | "
+                f"{a['linguagem']} | {a.get('votos_uteis', 0)} | {votos} | {a['comentario']}\n"
+            )
+
+
+def ler_avaliacoes_jogo(game_id):
+    """Retorna as avaliações do jogo enriquecidas com o nome do autor."""
+    game_id = str(game_id)
+    resultado = []
+    for a in _ler_todas_avaliacoes():
+        if a['game_id'] != game_id:
+            continue
+        autor = buscar_por_id(a['autor_id'])
+        item = dict(a)
+        item['author'] = autor['nome'] if autor else 'Usuário'
+        resultado.append(item)
+    return resultado
+
+
+def salvar_avaliacao(game_id, autor_id, recomenda, comentario, linguagem):
+    """Cria ou atualiza a avaliação do autor para o jogo."""
+    game_id   = str(game_id)
+    autor_id  = str(autor_id)
+    comentario = comentario.replace('|', '/').replace('\n', ' ').replace('\r', ' ').strip()
+    if not comentario:
+        return
+    todas = _ler_todas_avaliacoes()
+    existente = next((a for a in todas if a['game_id'] == game_id and a['autor_id'] == autor_id), None)
+    if existente:
+        existente['recomenda']  = bool(recomenda)
+        existente['comentario'] = comentario
+        existente['linguagem']  = linguagem
+        existente['data']       = datetime.now().strftime("%d/%m/%Y")
+    else:
+        todas.append({
+            'game_id':     game_id,
+            'autor_id':    autor_id,
+            'recomenda':   bool(recomenda),
+            'data':        datetime.now().strftime("%d/%m/%Y"),
+            'linguagem':   linguagem,
+            'votos_uteis': 0,
+            'voted_users': {},
+            'comentario':  comentario
+        })
+    _salvar_todas_avaliacoes(todas)
+
+
+def votar_avaliacao(game_id, autor_id_alvo, votante_id, vote_type):
+    """Registra/atualiza voto útil. Retorna (ok, mensagem, categoria_flash)."""
+    game_id       = str(game_id)
+    autor_id_alvo = str(autor_id_alvo)
+    votante_id    = str(votante_id)
+    if vote_type not in ('sim', 'nao'):
+        return False, "Voto inválido.", "error"
+    if autor_id_alvo == votante_id:
+        return False, "Bloqueio: Você não pode classificar sua própria análise.", "error"
+    todas = _ler_todas_avaliacoes()
+    alvo = next((a for a in todas if a['game_id'] == game_id and a['autor_id'] == autor_id_alvo), None)
+    if not alvo:
+        return False, "Avaliação não encontrada.", "error"
+    voto_anterior = alvo['voted_users'].get(votante_id)
+    if voto_anterior == vote_type:
+        return False, "Você já classificou esta análise com esta mesma opção.", "error"
+    if vote_type == 'sim':
+        alvo['votos_uteis'] = alvo.get('votos_uteis', 0) + 1
+        msg = "Voto atualizado! O voto útil foi registrado e ajudará a comunidade."
+    else:
+        if voto_anterior == 'sim':
+            alvo['votos_uteis'] = max(0, alvo.get('votos_uteis', 0) - 1)
+        msg = "Voto atualizado! Registramos que esta análise não foi útil para você."
+    alvo['voted_users'][votante_id] = vote_type
+    _salvar_todas_avaliacoes(todas)
+    return True, msg, "sucesso"
+
+
 # ---- HORAS JOGADAS (SIMULAÇÃO ESTÁVEL POR USUÁRIO+JOGO) ----
 
 def horas_jogadas(uid, gid):
@@ -893,7 +1080,7 @@ def garantir_valores_sessao():
         return
     padroes = {
         'wallet': 100.00, 'library': [], 'wishlist': [], 'cart': [], 'gifts_sent': {},
-        'user_dob': None, 'user_profile': {'name': 'Usuário', 'details': ''},
+        'user_dob': None, 'user_profile': {'name': 'Usuário', 'details': '', 'linguagem': 'portuguesBrasil'},
         'family': None, 'family_cooldown': False,
         'offline_mode': False, 'active_game': None, 'show_pe01_for': None
     }
@@ -1299,16 +1486,29 @@ def game(game_id):
         return "Jogo não encontrado", 404
     show_modal = request.args.get('added') == '1'
     na_wishlist = game_id in session.get('wishlist', [])
-    return render_template('game.html', game=game_data, show_modal=show_modal,
-                           na_wishlist=na_wishlist)
 
+    selected_lang = request.args.get('lang', 'todos')
+    all_reviews = ler_avaliacoes_jogo(game_id)
+
+    if selected_lang != 'todos':
+        filtered_reviews = [r for r in all_reviews if r.get('linguagem') == selected_lang]
+    else:
+        filtered_reviews = all_reviews
+
+    filtered_reviews = sorted(filtered_reviews, key=lambda x: x.get('votos_uteis', 0), reverse=True)
+
+    return render_template('game.html', game=game_data, show_modal=show_modal,
+                           na_wishlist=na_wishlist,
+                           reviews=filtered_reviews,
+                           selected_lang=selected_lang)
 
 @app.route('/update_profile', methods=['POST'])
 def update_profile():
     name    = request.form.get('name')
     details = request.form.get('details')
     dob_str = request.form.get('dob')
-    session['user_profile'] = {'name': name, 'details': details}
+    linguagem = request.form.get('linguagem', 'portuguesBrasil')
+    session['user_profile'] = {'name': name, 'details': details, 'linguagem': linguagem}
     if dob_str:
         session['user_dob'] = dob_str
     session.modified = True
@@ -1364,6 +1564,35 @@ def add_to_cart(game_id):
     session.modified = True
     return redirect(url_for('game', game_id=game_id, added=1))
 
+
+@app.route('/game/<game_id>/review', methods=['POST'])
+def submit_review(game_id):
+    owned = game_id in session.get('library', [])
+    if session.get('family') and game_id in session['family'].get('library_pool', []):
+        owned = True
+
+    if not owned:
+        flash("Bloqueio [FE01]: Você precisa possuir este jogo para publicar uma análise.", "error")
+        return redirect(url_for('game', game_id=game_id))
+
+    recomenda = request.form.get('recomenda') == 'sim'
+    comentario = request.form.get('comentario', '').strip()
+
+    if not comentario:
+        flash("Erro [FE02]: Por favor, escreva um comentário para descrever sua experiência.", "error")
+        return redirect(url_for('game', game_id=game_id))
+
+    idioma_usuario = session['user_profile'].get('linguagem', 'portuguesBrasil')
+    salvar_avaliacao(game_id, session['user_id'], recomenda, comentario, idioma_usuario)
+    flash("Sua análise foi publicada com sucesso!", "sucesso")
+    return redirect(url_for('game', game_id=game_id))
+
+
+@app.route('/game/<game_id>/review/<autor_id>/vote/<vote_type>')
+def vote_review(game_id, autor_id, vote_type):
+    ok, mensagem, categoria = votar_avaliacao(game_id, autor_id, session['user_id'], vote_type)
+    flash(mensagem, categoria)
+    return redirect(url_for('game', game_id=game_id))
 
 @app.route('/cart')
 def cart():

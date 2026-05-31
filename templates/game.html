@@ -169,14 +169,13 @@
 
         {% set user_owns_game = (game.id in session.get('library', [])) or (session.get('family') and game.id in session['family'].get('library_pool', [])) %}
         {% if user_owns_game %}
-            {% set minha_aval = none %}
-            {% if session.get('reviews', {}).get(game.id) %}
-                {% for r in session['reviews'][game.id] %}
-                    {% if r.author == session['user_profile']['name'] %}
-                        {% set minha_aval = r %}
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
+            {% set minha_aval = namespace(valor=none) %}
+            {% for r in reviews %}
+                {% if r.autor_id == session.get('user_id') %}
+                    {% set minha_aval.valor = r %}
+                {% endif %}
+            {% endfor %}
+            {% set minha_aval = minha_aval.valor %}
 
             <div style="background: #171a21; padding: 20px; border: 1px solid #3a688c; margin-bottom: 30px;">
                 <h3 style="color: #66c0f4; margin-bottom: 15px; font-size: 16px;">
@@ -227,10 +226,10 @@
                         <div style="margin-top: 20px; border-top: 1px solid #2a475e; padding-top: 15px;">
                             <p style="color: #8f98a0; font-size: 12px; margin-bottom: 10px;">Você achou essa avaliação útil?</p>
 
-                            {% set meu_voto = aval.voted_users.get(session['user_profile']['name']) if aval.voted_users is mapping else none %}
+                            {% set meu_voto = aval.voted_users.get(session.get('user_id')) if aval.voted_users is mapping else none %}
 
                             <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
-                                <a href="{{ url_for('vote_review', game_id=game.id, author=aval.author, vote_type='sim') }}"
+                                <a href="{{ url_for('vote_review', game_id=game.id, autor_id=aval.autor_id, vote_type='sim') }}"
                                    class="btn-blue"
                                    style="padding: 5px 15px; font-size: 12px; text-decoration: none;
                                           background: {% if meu_voto == 'sim' %}#5c7e10{% else %}#213545{% endif %};
@@ -238,7 +237,7 @@
                                     Sim
                                 </a>
 
-                                <a href="{{ url_for('vote_review', game_id=game.id, author=aval.author, vote_type='nao') }}"
+                                <a href="{{ url_for('vote_review', game_id=game.id, autor_id=aval.autor_id, vote_type='nao') }}"
                                    class="btn-blue"
                                    style="padding: 5px 15px; font-size: 12px; text-decoration: none;
                                           background: {% if meu_voto == 'nao' %}#b52a1c{% else %}#213545{% endif %};

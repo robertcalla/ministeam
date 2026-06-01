@@ -108,3 +108,4 @@
 102 | zelia | 1234 | 1990-01-01 | Zélia | Usuário Ministeam.
 103 | charmander | 1234 | none | char | Novo usuário Ministeam.
 
+104 | bell | bell | 2002-05-28 | bell | Novo usuário Ministeam. | 0

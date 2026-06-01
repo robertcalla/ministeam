@@ -1,6 +1,5 @@
 # =============================================================================
 # MINISTEAM - Banco de Dados de Famílias
 # Cada linha é um objeto JSON representando uma família.
-# Campos: id, name, created_at, founder, founder_id, members,
-#         member_ids, library_pool, licenses
 # =============================================================================
+{"created_at": "31/05/2026 21:11", "creator": "bell", "creator_id": "104", "founder": "bell", "founder_id": "104", "id": "fam_1780272669.201368", "library_pool": ["1"], "licenses": {"1": 2}, "member_ids": ["104", "54"], "members": [{"id": "104", "name": "bell"}, {"name": "Bárbara", "id": "54"}], "name": "nazareth"}

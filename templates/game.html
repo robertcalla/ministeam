@@ -87,10 +87,13 @@
                 <strong>Idiomas:</strong> {{ game.languages | join(', ') }}
             </div>
 
-            {% if game.id in session['library'] %}
-            <div class="owned-banner">
-                <strong>Você já possui este jogo na sua biblioteca.</strong><br>
-                Você ainda pode comprá-lo como presente para um amigo abaixo.
+            {% if game.id in session.get('library', []) or (session.get('family') and game.id in session['family'].get('library_pool', [])) %}
+            <div class="owned-banner" style="background: rgba(121, 160, 22, 0.2); border: 1px solid #79a016; padding: 15px; margin-bottom: 20px; border-radius: 3px;">
+                <strong style="color: #d2efa9; display: block; margin-bottom: 10px;">✔ Você possui este jogo (ou tem acesso via Família).</strong>
+                <a href="{{ url_for('play_game', game_id=game.id) }}?src=library" class="btn-green" style="padding: 8px 25px; font-weight: bold; text-decoration: none; display: inline-block;">
+                    ▶ Jogar Agora
+                </a>
+                <p style="font-size: 11px; color: #8f98a0; margin-top: 10px;">Você ainda pode comprá-lo como presente para um amigo abaixo.</p>
             </div>
             {% endif %}
 

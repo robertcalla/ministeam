@@ -7,7 +7,7 @@
 # - voted_users: 'none' ou 'id1:sim,id2:nao,...'
 # - comentario: texto livre (pipes viram /, quebras de linha viram espaço)
 # =============================================================================
-1 | 1 | sim | 30/05/2026 | portuguesBrasil | 12 | none | Jogo excelente! Muito divertido para jogar em grupo.
+1 | 1 | sim | 30/05/2026 | portuguesBrasil | 13 | 104:sim | Jogo excelente! Muito divertido para jogar em grupo.
 1 | 2 | sim | 19/05/2026 | ingles | 5 | none | Amazing gameplay and graphics. Highly recommended to play with friends!
 1 | 3 | nao | 18/05/2026 | alemao | 2 | none | Das Spiel hat zu viele Bugs. Ich kann es im Moment nicht empfehlen.
 1 | 4 | sim | 21/05/2026 | portuguesBrasil | 8 | none | A lógica por trás dos puzzles deste jogo é fantástica.

@@ -69,7 +69,7 @@
                     <div style="display: flex; gap: 10px; align-items: center;">
                         {% if session['active_game'] == id %}
                         <span style="color: #79a016; font-size: 12px; font-weight: bold; animation: blink 1s infinite;">● Executando...</span>
-                        <a href="{{ url_for('family_stop') }}" class="btn-blue" style="background: #b52a1c; color: white;">Fechar Jogo</a>
+                        <a href="{{ url_for('stop_game') }}" class="btn-blue" style="background: #b52a1c; color: white;">Fechar Jogo</a>
                         {% else %}
                         {% if elegivel %}
                         {% if npc_jogando %}
@@ -81,8 +81,7 @@
                             🔒 Simular Parente Jogando
                         </a>
                         {% endif %}
-                        <a href="{{ url_for('family_play', game_id=id) }}" class="btn-green" style="font-weight: bold;">Jogar</a>
-                        {% else %}
+<a href="{{ url_for('play_game', game_id=id) }}?src=family" class="btn-green" style="font-weight: bold;">Jogar</a>                        {% else %}
                         <button class="btn-blue" style="background: #333; color: #555; cursor: not-allowed;" disabled>Indisponível</button>
                         {% endif %}
                         {% endif %}
@@ -315,6 +314,16 @@
         document.getElementById('transferStep1').style.display = 'block';
         document.getElementById('transferStep2').style.display = 'none';
     }
+    // SHIFT + TAB no painel da família: Retorna para o jogo ativo se houver um rodando
+    document.addEventListener('keydown', function(event) {
+        if (event.shiftKey && event.key === 'Tab') {
+            event.preventDefault();
+            {% if session['active_game'] %}
+                window.location.href = "{{ url_for('play_game', game_id=session['active_game']) }}?src=family";
+            {% endif %}
+        }
+    });
+    
 </script>
 
 <style>

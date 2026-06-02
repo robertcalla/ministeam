@@ -606,7 +606,6 @@ en | Nenhum jogo da Família Steam disponível para você no momento. || No Stea
 en | Idioma de Preferência (interface e avaliações): || Preferred Language (interface and reviews):
 en | *Necessária para acessar jogos com classificação etária. Sem ela, títulos +10 e +18 serão bloqueados. || *Required to access age-rated games. Without it, +10 and +18 titles will be blocked.
 de | Nenhum jogo da Família Steam disponível para você no momento. || Derzeit stehen Ihnen keine Steam Family-Spiele zur Verfügung.
-en | Fechar || Fechar
 zh-cn | Nenhum jogo da Família Steam disponível para você no momento. || 目前没有可供您玩的 Steam 家庭游戏。
 en | Português (Brasil) || Portuguese (Brazil)
 en | Alemão || German
@@ -719,7 +718,6 @@ ko | Simular Parente Jogando || 상대 재생 시뮬레이션
 de | *Necessária para acessar jogos com classificação etária. Sem ela, títulos +10 e +18 serão bloqueados. || *Erforderlich für den Zugriff auf Spiele mit Altersfreigabe. Ohne sie werden die Titel +10 und +18 gesperrt.
 en | Digite o início do @ para buscar (ex: ro → @robert, @rodrigo) || Type the beginning of @ to search (e.g. ro → @robert, @rodrigo)
 de | Digite o início do @ para buscar (ex: ro → @robert, @rodrigo) || Geben Sie den Anfang von @ ein, um zu suchen (z. B. ro → @robert, @rodrigo).
-de | Fechar || Fechar
 zh-cn | Digite o início do @ para buscar (ex: ro → @robert, @rodrigo) || 输入 @ 开头进行搜索（例如 ro → @robert、@rodrigo）
 pl | Digite o início do @ para buscar (ex: ro → @robert, @rodrigo) || Wpisz początek @, aby wyszukać (np. ro → @robert, @rodrigo)
 ko | Digite o início do @ para buscar (ex: ro → @robert, @rodrigo) || 검색하려면 @의 시작 부분을 입력하세요(예: ro → @robert, @rodrigo).
@@ -1149,11 +1147,6 @@ de | Confirmar Transferência || Bestätigen Sie die Übertragung
 zh-cn | Confirmar Transferência || 确认转账
 pl | Confirmar Transferência || Potwierdź transfer
 ko | Confirmar Transferência || 전송 확인
-en | Fechar || Fechar
-de | Fechar || Fechar
-zh-cn | Fechar || 铁char
-pl | Fechar || Fechar
-ko | Fechar || Fechar
 en | Você ainda pode comprá-lo como presente para um amigo abaixo. || You can even buy it as a gift for a friend below.
 de | Você ainda pode comprá-lo como presente para um amigo abaixo. || Sie können es unten sogar als Geschenk für einen Freund kaufen.
 zh-cn | Você ainda pode comprá-lo como presente para um amigo abaixo. || 您甚至可以在下面购买它作为礼物送给朋友。
@@ -1483,11 +1476,6 @@ de | Adicionar à Lista de Desejos || Zur Wunschliste hinzufügen
 zh-cn | Adicionar à Lista de Desejos || 添加到愿望清单
 pl | Adicionar à Lista de Desejos || Dodaj do listy życzeń
 ko | Adicionar à Lista de Desejos || 위시리스트에 추가
-en | Fechar Jogo || Fechar Game
-de | Fechar Jogo || Fechar Spiel
-zh-cn | Fechar Jogo || Fechar 游戏
-pl | Fechar Jogo || Fechar Gra
-ko | Fechar Jogo || Fechar 게임
 en | Traduzido de || Translated from
 en | Ver original || View original
 en | Traduzir || Translate
@@ -1762,3 +1750,437 @@ de | Dados do perfil atualizados com sucesso! || Profildaten erfolgreich aktuali
 de | Traduzir || Übersetzen
 pl | Dados do perfil atualizados com sucesso! || Dane profilu zostały pomyślnie zaktualizowane!
 pl | Traduzir || Tłumaczyć
+en | Jogando || Playing
+en | Motor de Execução || Execution Engine
+en | Pressione SHIFT+TAB para abrir o painel da Steam || Press SHIFT+TAB to open the Steam dashboard
+en | SESSÃO EM ANDAMENTO || SESSION IN PROGRESS
+en | Sua licença pessoal foi validada. O rastreamento de conquistas e tempo de jogo foram iniciados no banco de dados. || Your personal license has been validated. Achievement and game time tracking has started in the database.
+en | Encerrar Jogo e Sair || End Game and Exit
+de | Jogando || Spielen
+de | Motor de Execução || Ausführungs-Engine
+de | Pressione SHIFT+TAB para abrir o painel da Steam || Drücken Sie UMSCHALT+TAB, um das Steam-Dashboard zu öffnen
+de | SESSÃO EM ANDAMENTO || SITZUNG LÄUFT
+de | Sua licença pessoal foi validada. O rastreamento de conquistas e tempo de jogo foram iniciados no banco de dados. || Ihre persönliche Lizenz wurde validiert. Die Erfolgs- und Spielzeiterfassung in der Datenbank hat begonnen.
+de | Encerrar Jogo e Sair || Spiel beenden und verlassen
+en | Selecione uma conta para entrar. || Select an account to sign in.
+en | Porcentagem de desconto (%) || Discount percentage (%)
+en | Estado atual: || Current status:
+en | Sua data de nascimento não está configurada corretamente. || Your date of birth is not set correctly.
+en | Ex: Promoção de Verão || Ex: Summer Promotion
+en | Usuário ou senha incorretos. || Incorrect username or password.
+en | Destinatário inválido. Selecione um amigo da sua lista. || Invalid recipient. Select a friend from your list.
+en | Informe um novo @usuário. || Enter a new @user.
+en | Bloqueio: Feche o jogo em execução antes de alterar o Modo Offline. || Lock: Close the running game before changing Offline Mode.
+en | Desconto por jogo (% — deixe 0 para não descontar): || Discount per game (% — leave 0 to not discount):
+en | Perfil não encontrado. || Profile not found.
+en | Membro não encontrado na família. || Member not found in the family.
+en | Modo Offline [A01]: Licença validada no último login online. Acesso permitido (não ocupa licença do pool). || Offline Mode [A01]: License validated at last online login. Access permitted (does not occupy pool license).
+en | Comentário publicado! || Comment published!
+en | Erro [FE02]: Por favor, escreva um comentário para descrever sua experiência. || Error [FE02]: Please write a comment to describe your experience.
+en | Jogo encerrado. A licença foi liberada e os saves sincronizados. || Game over. The license has been released and the saves have been synchronized.
+en | Jogo || Game
+en | Você não pode adicionar a si mesmo. || You cannot add yourself.
+en | jogo(s) em oferta. || game(s) on offer.
+en | Erro ao verificar data de nascimento. Atualize seu perfil. || Error checking date of birth. Update your profile.
+en | Escreva algo antes de publicar. || Write something before publishing.
+en | Usuário não encontrado. || User not found.
+en | Preencha todos os campos obrigatórios. || Fill in all mandatory fields.
+en | Modo Offline: Jogo iniciado via cache local (não ocupa licença da nuvem). || Offline Mode: Game launched via local cache (does not take up a cloud license).
+en | Jogo encerrado. A licença foi devolvida ao banco da família. || Game over. The license was returned to the family bank.
+en | Painel de Promoções || Promotions Panel
+en | Simulação manual de promoções da loja. Esta página só é acessível digitando /admin na URL. || Manual simulation of store promotions. This page is only accessible by typing /admin in the URL.
+en | Promoção de Jogo Único || Single Game Promotion
+en | Bloqueio [FE01]: Você precisa possuir este jogo para publicar uma análise. || Lock [FE01]: You must own this game to post a review.
+en | Este @usuário já está em uso. Escolha outro. || This @user is already in use. Choose another.
+en | Oferta de jogo único ativa. || Single game offer active.
+en | Bloqueio: Período de carência de 1 ano ativo para esta conta. || Lock: 1 year grace period active for this account.
+en | Valor inválido. || Invalid value.
+en | Você só pode presentear saldo para amigos. || You can only gift balance to friends.
+en | Promoção aplicada com sucesso! || Promotion applied successfully!
+en | Sua análise foi publicada com sucesso! || Your review has been published successfully!
+en | A senha deve ter pelo menos 4 caracteres. || The password must be at least 4 characters long.
+en | Selecione um jogo válido para a promoção única. || Select a game valid for the one-time promotion.
+en | Você possui este jogo (ou tem acesso via Família). || You own this game (or have access via Family).
+en | Salvar Promoção || Save Promotion
+en | Nenhuma (preços normais) || None (normal prices)
+en | Bloqueio: Ninguém da sua família comprou este jogo ainda. || Lock: No one in your family has purchased this game yet.
+en | Promoções desativadas. A loja está com preços normais. || Promotions disabled. The store has normal prices.
+en | Por favor, selecione o destinatário para todos os presentes. || Please select the recipient for all gifts.
+en | Formato de data inválido. || Invalid date format.
+en | Nenhuma promoção ativa — preços normais. || No active promotions — normal prices.
+en | Bloqueio: Ninguém da sua família possui a licença deste jogo. || Lock: No one in your family owns the license for this game.
+en | Este jogo já está na sua lista de desejos. || This game is already on your wish list.
+en | Nome do evento || Event name
+en | Jogo não encontrado. || Game not found.
+en | ROTA OCULTA /admin || HIDDEN ROUTE /admin
+en | Você precisa criar uma família primeiro. || You need to create a family first.
+en | O @usuário deve conter apenas letras, números e underscore (_). || @user must contain only letters, numbers and underscore (_).
+en | Você já possui este jogo ou ele já está no carrinho. || You already own this game or it is already in your cart.
+en | Jogar Agora || Play Now
+en | O novo @usuário é igual ao atual. || The new @user is the same as the current one.
+en | Apenas o fundador pode transferir a liderança. || Only the founder can transfer leadership.
+en | Você só pode convidar amigos da sua lista. || You can only invite friends from your list.
+en | Admin - Promoções || Admin - Promotions
+en | Você não pertence a uma família. || You don't belong to a family.
+en | Você já é o líder da família. || You are already the leader of the family.
+en | Selecione uma forma de pagamento. || Select a payment method.
+en | Bloqueio: Você não possui a licença deste jogo. || Lock: You do not own the license for this game.
+en | Bloqueio: Uma Família não pode ter mais de 6 membros. || Blocking: A Family cannot have more than 6 members.
+en | Data de término (opcional) || End date (optional)
+en | Conta não encontrada. || Account not found.
+en | Valor inválido para adicionar à carteira. || Invalid amount to add to wallet.
+en | Este nome de usuário já está em uso. Escolha outro. || This username is already in use. Choose another.
+en | Informe uma porcentagem de desconto válida (1 a 100). || Enter a valid discount percentage (1 to 100).
+en | Ex: 50 || Ex: 50
+en | Modo Offline: Jogo iniciado via cache local. || Offline Mode: Game launched via local cache.
+en | Promoção de Evento || Event Promotion
+en | Selecione ao menos um jogo com desconto para ativar o evento. || Select at least one discounted game to activate the event.
+en | Por favor, configure ou confirme sua data de nascimento. || Please set or confirm your date of birth.
+en | Bloqueio: Este jogo possui restrições do desenvolvedor que impedem o compartilhamento. || Blocking: This game has developmental restrictionsedor that imposeedon sharing.
+en | Evento ativo: || Active event:
+en | Saia da sua família atual antes de criar uma nova. || Leave your current family before creating a new one.
+de | Selecione uma conta para entrar. || Wählen Sie ein Konto aus, um sich anzumelden.
+de | Porcentagem de desconto (%) || Rabattprozentsatz (%)
+de | Estado atual: || Aktueller Stand:
+de | Sua data de nascimento não está configurada corretamente. || Ihr Geburtsdatum ist nicht korrekt eingestellt.
+de | Ex: Promoção de Verão || Beispiel: Sommeraktion
+de | Usuário ou senha incorretos. || Falscher Benutzername oder Passwort.
+de | Destinatário inválido. Selecione um amigo da sua lista. || Ungültiger Empfänger. Wählen Sie einen Freund aus Ihrer Liste aus.
+de | Informe um novo @usuário. || Geben Sie einen neuen @Benutzer ein.
+de | Bloqueio: Feche o jogo em execução antes de alterar o Modo Offline. || Sperren: Schließen Sie das laufende Spiel, bevor Sie in den Offline-Modus wechseln.
+de | Desconto por jogo (% — deixe 0 para não descontar): || Rabatt pro Spiel (% – 0 lassen, um keinen Rabatt zu erhalten):
+de | Perfil não encontrado. || Profil nicht gefunden.
+de | Membro não encontrado na família. || Mitglied in der Familie nicht gefunden.
+de | Modo Offline [A01]: Licença validada no último login online. Acesso permitido (não ocupa licença do pool). || Offline-Modus [A01]: Die Lizenz wurde bei der letzten Online-Anmeldung validiert. Zutritt gestattet (belegt keine Poollizenz).
+de | Comentário publicado! || Kommentar veröffentlicht!
+de | Erro [FE02]: Por favor, escreva um comentário para descrever sua experiência. || Fehler [FE02]: Bitte schreiben Sie einen Kommentar, um Ihre Erfahrung zu beschreiben.
+de | Jogo encerrado. A licença foi liberada e os saves sincronizados. || Spiel vorbei. Die Lizenz wurde freigegeben und die Speicherungen wurden synchronisiert.
+de | Jogo || Spiel
+de | Você não pode adicionar a si mesmo. || Sie können sich nicht selbst hinzufügen.
+de | Este usuário ainda não escreveu nada sobre si. || Dieser Benutzer hat noch nichts über sich selbst geschrieben.
+de | jogo(s) em oferta. || Spiel(e) im Angebot.
+de | Erro ao verificar data de nascimento. Atualize seu perfil. || Fehler beim Überprüfen des Geburtsdatums. Aktualisieren Sie Ihr Profil.
+de | Escreva algo antes de publicar. || Schreiben Sie etwas, bevor Sie es veröffentlichen.
+de | Usuário não encontrado. || Benutzer nicht gefunden.
+de | Preencha todos os campos obrigatórios. || Füllen Sie alle Pflichtfelder aus.
+de | Modo Offline: Jogo iniciado via cache local (não ocupa licença da nuvem). || Offline-Modus: Spiel wird über den lokalen Cache gestartet (benötigt keine Cloud-Lizenz).
+de | Jogo encerrado. A licença foi devolvida ao banco da família. || Spiel vorbei. Die Lizenz wurde an die Familienbank zurückgegeben.
+de | Painel de Promoções || Promotions-Panel
+de | Simulação manual de promoções da loja. Esta página só é acessível digitando /admin na URL. || Manuelle Simulation von Filialaktionen. Auf diese Seite kann nur zugegriffen werden, indem Sie /admin in die URL eingeben.
+de | Promoção de Jogo Único || Einzelspiel-Werbung
+de | Bloqueio [FE01]: Você precisa possuir este jogo para publicar uma análise. || Sperre [FE01]: Sie müssen dieses Spiel besitzen, um eine Rezension abzugeben.
+de | Este @usuário já está em uso. Escolha outro. || Dieser @user wird bereits verwendet. Wählen Sie ein anderes.
+de | Oferta de jogo único ativa. || Einzelspielangebot aktiv.
+de | Bloqueio: Período de carência de 1 ano ativo para esta conta. || Sperre: 1 Jahr aktive Kulanzfrist für dieses Konto.
+de | Valor inválido. || Ungültiger Wert.
+de | Você só pode presentear saldo para amigos. || Sie können das Guthaben nur an Freunde verschenken.
+de | Promoção aplicada com sucesso! || Aktion erfolgreich angewendet!
+de | Sua análise foi publicada com sucesso! || Ihre Bewertung wurde erfolgreich veröffentlicht!
+de | A senha deve ter pelo menos 4 caracteres. || Das Passwort muss mindestens 4 Zeichen lang sein.
+de | Selecione um jogo válido para a promoção única. || Wählen Sie ein Spiel aus, das für die einmalige Aktion gültig ist.
+de | Você possui este jogo (ou tem acesso via Família). || Sie besitzen dieses Spiel (oder haben Zugriff über die Familie).
+de | Salvar Promoção || Aktion speichern
+de | Nenhuma (preços normais) || Keine (normale Preise)
+de | Bloqueio: Ninguém da sua família comprou este jogo ainda. || Sperre: Noch hat niemand in Ihrer Familie dieses Spiel gekauft.
+de | Promoções desativadas. A loja está com preços normais. || Werbeaktionen deaktiviert. Der Laden hat normale Preise.
+de | Por favor, selecione o destinatário para todos os presentes. || Bitte wählen Sie bei allen Geschenken den Empfänger aus.
+de | Formato de data inválido. || Ungültiges Datumsformat.
+de | Nenhuma promoção ativa — preços normais. || Keine aktiven Werbeaktionen – normale Preise.
+de | Bloqueio: Ninguém da sua família possui a licença deste jogo. || Sperre: Niemand in Ihrer Familie besitzt die Lizenz für dieses Spiel.
+de | Este jogo já está na sua lista de desejos. || Dieses Spiel steht bereits auf Ihrer Wunschliste.
+de | Nome do evento || Veranstaltungsname
+de | Jogo não encontrado. || Spiel nicht gefunden.
+de | ROTA OCULTA /admin || VERSTECKTE ROUTE /admin
+de | Você precisa criar uma família primeiro. || Sie müssen zuerst eine Familie gründen.
+de | O @usuário deve conter apenas letras, números e underscore (_). || @user darf nur Buchstaben, Zahlen und Unterstrich (_) enthalten.
+de | Você já possui este jogo ou ele já está no carrinho. || Sie besitzen dieses Spiel bereits oder es befindet sich bereits in Ihrem Warenkorb.
+de | Jogar Agora || jetzt spielen
+de | O novo @usuário é igual ao atual. || Der neue @user ist derselbe wie der aktuelle.
+de | Apenas o fundador pode transferir a liderança. || Nur der Gründer kann die Führung übertragen.
+de | Você só pode convidar amigos da sua lista. || Sie können nur Freunde aus Ihrer Liste einladen.
+de | Ver original || Original ansehen
+de | Admin - Promoções || Admin – Werbeaktionen
+de | Você não pertence a uma família. || Du gehörst keiner Familie an.
+de | Você já é o líder da família. || Sie sind bereits das Oberhaupt der Familie.
+de | Selecione uma forma de pagamento. || Wählen Sie eine Zahlungsmethode aus.
+de | Bloqueio: Você não possui a licença deste jogo. || Sperre: Sie besitzen nicht die Lizenz für dieses Spiel.
+de | Traduzido de || Übersetzt aus
+de | Bloqueio: Uma Família não pode ter mais de 6 membros. || Blockierung: Eine Familie kann nicht mehr als 6 Mitglieder haben.
+de | Data de término (opcional) || Enddatum (optional)
+de | Conta não encontrada. || Konto nicht gefunden.
+de | Valor inválido para adicionar à carteira. || Ungültiger Betrag zum Hinzufügen zur Brieftasche.
+de | Este nome de usuário já está em uso. Escolha outro. || Dieser Benutzername wird bereits verwendet. Wählen Sie ein anderes.
+de | Informe uma porcentagem de desconto válida (1 a 100). || Geben Sie einen gültigen Rabattprozentsatz ein (1 bis 100).
+de | Ex: 50 || Beispiel: 50
+de | Modo Offline: Jogo iniciado via cache local. || Offline-Modus: Spiel über lokalen Cache gestartet.
+de | Promoção de Evento || Event-Promotion
+de | Selecione ao menos um jogo com desconto para ativar o evento. || Wählen Sie mindestens ein vergünstigtes Spiel aus, um das Event zu aktivieren.
+de | Por favor, configure ou confirme sua data de nascimento. || Bitte legen Sie Ihr Geburtsdatum fest oder bestätigen Sie es.
+de | Bloqueio: Este jogo possui restrições do desenvolvedor que impedem o compartilhamento. || Blockierung: Für dieses Spiel gelten Entwicklungsbeschränkungenedoder die das Teilen betreffened.
+de | Evento ativo: || Aktives Ereignis:
+de | Saia da sua família atual antes de criar uma nova. || Verlassen Sie Ihre aktuelle Familie, bevor Sie eine neue gründen.
+zh-cn | Selecione uma conta para entrar. || 选择一个帐户进行登录。
+zh-cn | Porcentagem de desconto (%) || 折扣率(%)
+zh-cn | Estado atual: || 目前状态：
+zh-cn | Sua data de nascimento não está configurada corretamente. || 您的出生日期设置不正确。
+zh-cn | Ex: Promoção de Verão || 例如：夏季促销
+zh-cn | Usuário ou senha incorretos. || 用户名或密码不正确。
+zh-cn | Destinatário inválido. Selecione um amigo da sua lista. || 收件人无效。从您的列表中选择一个朋友。
+zh-cn | Informe um novo @usuário. || 输入新的@user。
+zh-cn | Fácil de Aprender || 易于学习
+zh-cn | Jogando || 演奏
+zh-cn | Bloqueio: Feche o jogo em execução antes de alterar o Modo Offline. || 锁定：在更改离线模式之前关闭正在运行的游戏。
+zh-cn | Desconto por jogo (% — deixe 0 para não descontar): || 每场比赛折扣（% — 保留 0 表示不折扣）：
+zh-cn | Perfil não encontrado. || 未找到个人资料。
+zh-cn | Membro não encontrado na família. || 在家庭中找不到成员。
+zh-cn | Você ainda não tem amigos adicionados. || 您还没有添加好友。
+zh-cn | Modo Offline [A01]: Licença validada no último login online. Acesso permitido (não ocupa licença do pool). || 离线模式[A01]：上次在线登录时验证许可证。允许访问（不占用池许可证）。
+zh-cn | Comentário publicado! || 评论已发表！
+zh-cn | Erro [FE02]: Por favor, escreva um comentário para descrever sua experiência. || 错误 [FE02]：请撰写评论来描述您的体验。
+zh-cn | Jogo encerrado. A licença foi liberada e os saves sincronizados. || 游戏结束。许可证已发布并且保存已同步。
+zh-cn | Jogo || 游戏
+zh-cn | Você não pode adicionar a si mesmo. || 您无法添加自己。
+zh-cn | jogo(s) em oferta. || 提供的游戏。
+zh-cn | Motor de Execução || 执行引擎
+zh-cn | Erro ao verificar data de nascimento. Atualize seu perfil. || 检查出生日期时出错。更新您的个人资料。
+zh-cn | Encerrar Jogo e Sair || 结束游戏并退出
+zh-cn | Sua licença pessoal foi validada. O rastreamento de conquistas e tempo de jogo foram iniciados no banco de dados. || 您的个人许可证已经过验证。数据库中已开始跟踪成就和游戏时间。
+zh-cn | Escreva algo antes de publicar. || 发表之前先写点东西。
+zh-cn | Pressione SHIFT+TAB para abrir o painel da Steam || 按 SHIFT+TAB 打开 Steam 仪表板
+zh-cn | Usuário não encontrado. || 未找到用户。
+zh-cn | Opcional agora, mas necessária para jogar títulos com classificação etária. Sem ela, o acesso a jogos +10 e +18 será bloqueado. || 现在可选，但需要玩按年龄分级的游戏。如果没有它，+10 和 +18 游戏的访问将被阻止。
+zh-cn | Preencha todos os campos obrigatórios. || 填写所有必填字段。
+zh-cn | Modo Offline: Jogo iniciado via cache local (não ocupa licença da nuvem). || 离线模式：通过本地缓存启动游戏（不占用云许可证）。
+zh-cn | Jogo encerrado. A licença foi devolvida ao banco da família. || 游戏结束。许可证已返还给家庭银行。
+zh-cn | Painel de Promoções || 促销面板
+zh-cn | Simulação manual de promoções da loja. Esta página só é acessível digitando /admin na URL. || 手动模拟商店促销活动。仅可通过在 URL 中键入 /admin 来访问此页面。
+zh-cn | Promoção de Jogo Único || 单机游戏促销
+zh-cn | Bloqueio [FE01]: Você precisa possuir este jogo para publicar uma análise. || 锁定[FE01]：您必须拥有该游戏才能发表评论。
+zh-cn | Este @usuário já está em uso. Escolha outro. || 该@user 已被使用。选择另一个。
+zh-cn | Oferta de jogo único ativa. || 单游戏报价活跃。
+zh-cn | Bloqueio: Período de carência de 1 ano ativo para esta conta. || 锁定：此帐户有 1 年有效宽限期。
+zh-cn | Valor inválido. || 无效值。
+zh-cn | Você só pode presentear saldo para amigos. || 您只能将余额赠送给朋友。
+zh-cn | Promoção aplicada com sucesso! || 优惠申请成功！
+zh-cn | Sua análise foi publicada com sucesso! || 您的评论已成功发布！
+zh-cn | A senha deve ter pelo menos 4 caracteres. || 密码长度必须至少为 4 个字符。
+zh-cn | Selecione um jogo válido para a promoção única. || 选择一款适用于一次性促销的游戏。
+zh-cn | Você possui este jogo (ou tem acesso via Família). || 您拥有此游戏（或可以通过家庭访问）。
+zh-cn | Salvar Promoção || 保存促销
+zh-cn | Nenhuma (preços normais) || 无（正常价格）
+zh-cn | Bloqueio: Ninguém da sua família comprou este jogo ainda. || Lock：您家里还没有人购买过这款游戏。
+zh-cn | Promoções desativadas. A loja está com preços normais. || 促销已禁用。商店有正常价格。
+zh-cn | Por favor, selecione o destinatário para todos os presentes. || 请选择所有礼物的收件人。
+zh-cn | Formato de data inválido. || 日期格式无效。
+zh-cn | Nenhuma promoção ativa — preços normais. || 没有积极的促销活动——正常价格。
+zh-cn | Bloqueio: Ninguém da sua família possui a licença deste jogo. || 锁定：您家里没有人拥有该游戏的许可证。
+zh-cn | Este jogo já está na sua lista de desejos. || 该游戏已在您的愿望清单中。
+zh-cn | amigos de amigos || 朋友的朋友
+zh-cn | Nome do evento || 活动名称
+zh-cn | Jogo não encontrado. || 找不到游戏。
+zh-cn | SESSÃO EM ANDAMENTO || 会议正在进行中
+zh-cn | ROTA OCULTA /admin || 隐藏路线 /admin
+zh-cn | Você precisa criar uma família primeiro. || 你需要先建立一个家庭。
+zh-cn | O @usuário deve conter apenas letras, números e underscore (_). || @user 只能包含字母、数字和下划线 (_)。
+zh-cn | Você já possui este jogo ou ele já está no carrinho. || 您已经拥有该游戏或者它已在您的购物车中。
+zh-cn | Jogar Agora || 立即播放
+zh-cn | O novo @usuário é igual ao atual. || 新的@user 与当前的@user 相同。
+zh-cn | Apenas o fundador pode transferir a liderança. || 只有创始人可以转移领导权。
+zh-cn | Você só pode convidar amigos da sua lista. || 您只能邀请列表中的朋友。
+zh-cn | Admin - Promoções || 管理员 - 促销
+zh-cn | Você não pertence a uma família. || 你不属于一个家庭。
+zh-cn | Você já é o líder da família. || 你已经是家庭的领袖了。
+zh-cn | Selecione uma forma de pagamento. || 选择付款方式。
+zh-cn | Bloqueio: Você não possui a licença deste jogo. || 锁定：您不拥有该游戏的许可证。
+zh-cn | Bloqueio: Uma Família não pode ter mais de 6 membros. || 封锁：一个家庭的成员不能超过 6 人。
+zh-cn | Data de término (opcional) || 结束日期（可选）
+zh-cn | Conta não encontrada. || 未找到帐户。
+zh-cn | Valor inválido para adicionar à carteira. || 添加到钱包的金额无效。
+zh-cn | Este nome de usuário já está em uso. Escolha outro. || 该用户名已被使用。选择另一个。
+zh-cn | Informe uma porcentagem de desconto válida (1 a 100). || 输入有效的折扣百分比（1 到 100）。
+zh-cn | Ex: 50 || 例如：50
+zh-cn | Modo Offline: Jogo iniciado via cache local. || 离线模式：通过本地缓存启动游戏。
+zh-cn | Promoção de Evento || 活动推广
+zh-cn | Selecione ao menos um jogo com desconto para ativar o evento. || 选择至少一款打折游戏来激活活动。
+zh-cn | Por favor, configure ou confirme sua data de nascimento. || 请设置或确认您的出生日期。
+zh-cn | Bloqueio: Este jogo possui restrições do desenvolvedor que impedem o compartilhamento. || 阻止：该游戏存在开发限制ed或对共享施加ed。
+zh-cn | Evento ativo: || 活跃事件：
+zh-cn | Saia da sua família atual antes de criar uma nova. || 在创建新家庭之前先离开当前的家庭。
+pl | Selecione uma conta para entrar. || Wybierz konto, aby się zalogować.
+pl | Porcentagem de desconto (%) || Procent rabatu (%)
+pl | Estado atual: || Aktualny stan:
+pl | Sua data de nascimento não está configurada corretamente. || Twoja data urodzenia nie jest ustawiona prawidłowo.
+pl | Ex: Promoção de Verão || Np.: Letnia promocja
+pl | Usuário ou senha incorretos. || Nieprawidłowa nazwa użytkownika lub hasło.
+pl | Destinatário inválido. Selecione um amigo da sua lista. || Nieprawidłowy odbiorca. Wybierz znajomego ze swojej listy.
+pl | Informe um novo @usuário. || Wprowadź nowego @użytkownika.
+pl | Jogando || Gra
+pl | Bloqueio: Feche o jogo em execução antes de alterar o Modo Offline. || Zablokuj: zamknij uruchomioną grę przed zmianą trybu offline.
+pl | Desconto por jogo (% — deixe 0 para não descontar): || Zniżka na grę (% — pozostaw 0, aby nie rabatować):
+pl | Perfil não encontrado. || Nie znaleziono profilu.
+pl | Membro não encontrado na família. || Nie znaleziono członka rodziny.
+pl | Modo Offline [A01]: Licença validada no último login online. Acesso permitido (não ocupa licença do pool). || Tryb offline [A01]: Licencja zatwierdzona przy ostatnim logowaniu online. Dostęp dozwolony (nie wymaga licencji na basen).
+pl | Comentário publicado! || Komentarz opublikowany!
+pl | Erro [FE02]: Por favor, escreva um comentário para descrever sua experiência. || Błąd [FE02]: Napisz komentarz, aby opisać swoje wrażenia.
+pl | Jogo encerrado. A licença foi liberada e os saves sincronizados. || Koniec gry. Licencja została zwolniona, a zapisy zostały zsynchronizowane.
+pl | Jogo || Gra
+pl | Você não pode adicionar a si mesmo. || Nie możesz dodać siebie.
+pl | Este usuário ainda não escreveu nada sobre si. || Ten użytkownik nie napisał jeszcze nic o sobie.
+pl | jogo(s) em oferta. || gra(y) w ofercie.
+pl | Motor de Execução || Silnik wykonawczy
+pl | Erro ao verificar data de nascimento. Atualize seu perfil. || Błąd podczas sprawdzania daty urodzenia. Zaktualizuj swój profil.
+pl | Encerrar Jogo e Sair || Zakończ grę i wyjdź
+pl | Sua licença pessoal foi validada. O rastreamento de conquistas e tempo de jogo foram iniciados no banco de dados. || Twoja licencja osobista została sprawdzona. W bazie danych rozpoczęło się śledzenie osiągnięć i czasu gry.
+pl | Escreva algo antes de publicar. || Napisz coś przed publikacją.
+pl | Pressione SHIFT+TAB para abrir o painel da Steam || Naciśnij SHIFT+TAB, aby otworzyć panel Steam
+pl | Usuário não encontrado. || Nie znaleziono użytkownika.
+pl | Preencha todos os campos obrigatórios. || Wypełnij wszystkie pola obowiązkowe.
+pl | Modo Offline: Jogo iniciado via cache local (não ocupa licença da nuvem). || Tryb offline: Gra uruchamiana poprzez lokalną pamięć podręczną (nie wymaga licencji na chmurę).
+pl | Jogo encerrado. A licença foi devolvida ao banco da família. || Koniec gry. Licencja została zwrócona do rodzinnego banku.
+pl | Painel de Promoções || Panel Promocji
+pl | Simulação manual de promoções da loja. Esta página só é acessível digitando /admin na URL. || Ręczna symulacja promocji sklepowych. Dostęp do tej strony można uzyskać wyłącznie po wpisaniu /admin w adresie URL.
+pl | Promoção de Jogo Único || Promocja pojedynczej gry
+pl | Bloqueio [FE01]: Você precisa possuir este jogo para publicar uma análise. || Blokada [FE01]: Musisz posiadać tę grę, aby móc opublikować recenzję.
+pl | Este @usuário já está em uso. Escolha outro. || Ten @użytkownik jest już używany. Wybierz inny.
+pl | Oferta de jogo único ativa. || Oferta pojedynczej gry jest aktywna.
+pl | Bloqueio: Período de carência de 1 ano ativo para esta conta. || Blokada: dla tego konta aktywny jest 1-letni okres karencji.
+pl | Valor inválido. || Nieprawidłowa wartość.
+pl | Criar conta grátis || Utwórz darmowe konto
+pl | Você só pode presentear saldo para amigos. || Saldo środków możesz podarować jedynie znajomym.
+pl | Promoção aplicada com sucesso! || Promocja została zastosowana pomyślnie!
+pl | Sua análise foi publicada com sucesso! || Twoja recenzja została pomyślnie opublikowana!
+pl | A senha deve ter pelo menos 4 caracteres. || Hasło musi mieć co najmniej 4 znaki.
+pl | Selecione um jogo válido para a promoção única. || Wybierz grę objętą jednorazową promocją.
+pl | Você possui este jogo (ou tem acesso via Família). || Jesteś właścicielem tej gry (lub masz do niej dostęp poprzez rodzinę).
+pl | Salvar Promoção || Zapisz promocję
+pl | Nenhuma (preços normais) || Brak (normalne ceny)
+pl | Bloqueio: Ninguém da sua família comprou este jogo ainda. || Blokada: Nikt w Twojej rodzinie nie kupił jeszcze tej gry.
+pl | Promoções desativadas. A loja está com preços normais. || Promocje wyłączone. W sklepie obowiązują normalne ceny.
+pl | Por favor, selecione o destinatário para todos os presentes. || Wybierz odbiorcę wszystkich prezentów.
+pl | Formato de data inválido. || Nieprawidłowy format daty.
+pl | Nenhuma promoção ativa — preços normais. || Brak aktywnych promocji — normalne ceny.
+pl | Bloqueio: Ninguém da sua família possui a licença deste jogo. || Blokada: Nikt w Twojej rodzinie nie posiada licencji na tę grę.
+pl | Este jogo já está na sua lista de desejos. || Ta gra jest już na Twojej liście życzeń.
+pl | Nome do evento || Nazwa wydarzenia
+pl | Jogo não encontrado. || Nie znaleziono gry.
+pl | SESSÃO EM ANDAMENTO || SESJA W TRAKCIE
+pl | ROTA OCULTA /admin || UKRYTA TRASA /admin
+pl | Você precisa criar uma família primeiro. || Najpierw musisz stworzyć rodzinę.
+pl | O @usuário deve conter apenas letras, números e underscore (_). || @user może zawierać tylko litery, cyfry i podkreślenie (_).
+pl | Você já possui este jogo ou ele já está no carrinho. || Masz już tę grę lub znajduje się ona już w Twoim koszyku.
+pl | Jogar Agora || Zagraj teraz
+pl | O novo @usuário é igual ao atual. || Nowy @user jest taki sam jak bieżący.
+pl | Apenas o fundador pode transferir a liderança. || Tylko założyciel może przenieść przywództwo.
+pl | Você só pode convidar amigos da sua lista. || Możesz zapraszać tylko znajomych ze swojej listy.
+pl | Ver original || Zobacz oryginał
+pl | Admin - Promoções || Administrator - Promocje
+pl | Você não pertence a uma família. || Nie należysz do rodziny.
+pl | Você já é o líder da família. || Jesteś już liderem rodziny.
+pl | Selecione uma forma de pagamento. || Wybierz metodę płatności.
+pl | Bloqueio: Você não possui a licença deste jogo. || Blokada: Nie posiadasz licencji na tę grę.
+pl | Traduzido de || Przetłumaczone z
+pl | Bloqueio: Uma Família não pode ter mais de 6 membros. || Blokowanie: Rodzina nie może mieć więcej niż 6 członków.
+pl | Data de término (opcional) || Data zakończenia (opcjonalnie)
+pl | Conta não encontrada. || Nie znaleziono konta.
+pl | Valor inválido para adicionar à carteira. || Nieprawidłowa kwota do dodania do portfela.
+pl | Este nome de usuário já está em uso. Escolha outro. || Ta nazwa użytkownika jest już używana. Wybierz inny.
+pl | Informe uma porcentagem de desconto válida (1 a 100). || Wprowadź prawidłowy procent rabatu (od 1 do 100).
+pl | Ex: 50 || Np.: 50
+pl | Modo Offline: Jogo iniciado via cache local. || Tryb offline: Gra uruchamiana poprzez lokalną pamięć podręczną.
+pl | Promoção de Evento || Promocja wydarzenia
+pl | Selecione ao menos um jogo com desconto para ativar o evento. || Wybierz co najmniej jedną grę ze zniżką, aby aktywować wydarzenie.
+pl | Por favor, configure ou confirme sua data de nascimento. || Proszę ustawić lub potwierdzić swoją datę urodzenia.
+pl | Bloqueio: Este jogo possui restrições do desenvolvedor que impedem o compartilhamento. || Blokowanie: Ta gra ma ograniczenia rozwojoweedlub nakładająceedna udostępnianie.
+pl | Evento ativo: || Aktywne wydarzenie:
+pl | Saia da sua família atual antes de criar uma nova. || Opuść obecną rodzinę, zanim utworzysz nową.
+ko | Selecione uma conta para entrar. || 로그인할 계정을 선택하세요.
+ko | Porcentagem de desconto (%) || 할인율(%)
+ko | Estado atual: || 현재 상태:
+ko | Sua data de nascimento não está configurada corretamente. || 생년월일이 올바르게 설정되지 않았습니다.
+ko | Ex: Promoção de Verão || 예: 여름 프로모션
+ko | Usuário ou senha incorretos. || 사용자 이름이나 비밀번호가 잘못되었습니다.
+ko | Destinatário inválido. Selecione um amigo da sua lista. || 수신자가 잘못되었습니다. 목록에서 친구를 선택하세요.
+ko | Informe um novo @usuário. || 새로운 @user를 입력하세요.
+ko | Jogando || 재생
+ko | Bloqueio: Feche o jogo em execução antes de alterar o Modo Offline. || 잠금: 오프라인 모드를 변경하기 전에 실행 중인 게임을 닫습니다.
+ko | Desconto por jogo (% — deixe 0 para não descontar): || 게임당 할인(% — 할인하지 않으려면 0을 남겨두세요):
+ko | Perfil não encontrado. || 프로필을 찾을 수 없습니다.
+ko | Membro não encontrado na família. || 가족에서 구성원을 찾을 수 없습니다.
+ko | Modo Offline [A01]: Licença validada no último login online. Acesso permitido (não ocupa licença do pool). || 오프라인 모드 [A01]: 마지막 온라인 로그인 시 라이센스가 검증되었습니다. 액세스가 허용됩니다(풀 라이센스를 차지하지 않음).
+ko | Comentário publicado! || 댓글이 게시되었습니다.
+ko | Erro [FE02]: Por favor, escreva um comentário para descrever sua experiência. || 오류 [FE02]: 귀하의 경험을 설명하는 댓글을 작성해 주세요.
+ko | Jogo encerrado. A licença foi liberada e os saves sincronizados. || 게임이 끝났습니다. 라이선스가 해제되었으며 저장 내용이 동기화되었습니다.
+ko | Jogo || 게임
+ko | Você não pode adicionar a si mesmo. || 자신을 추가할 수 없습니다.
+ko | Este usuário ainda não escreveu nada sobre si. || 이 사용자는 아직 자신에 대해 아무것도 작성하지 않았습니다.
+ko | jogo(s) em oferta. || 제공되는 게임.
+ko | Motor de Execução || 실행 엔진
+ko | Erro ao verificar data de nascimento. Atualize seu perfil. || 생년월일을 확인하는 중에 오류가 발생했습니다. 프로필을 업데이트하세요.
+ko | Encerrar Jogo e Sair || 게임 종료 및 종료
+ko | Sua licença pessoal foi validada. O rastreamento de conquistas e tempo de jogo foram iniciados no banco de dados. || 귀하의 개인 라이센스가 확인되었습니다. 데이터베이스에서 성과 및 게임 시간 추적이 시작되었습니다.
+ko | Escreva algo antes de publicar. || 출판하기 전에 뭔가를 써보세요.
+ko | Pressione SHIFT+TAB para abrir o painel da Steam || Shift+Tab을 눌러 Steam 대시보드를 엽니다.
+ko | Usuário não encontrado. || 사용자를 찾을 수 없습니다.
+ko | Preencha todos os campos obrigatórios. || 필수 입력란을 모두 작성하세요.
+ko | Modo Offline: Jogo iniciado via cache local (não ocupa licença da nuvem). || 오프라인 모드: 로컬 캐시를 통해 게임이 시작됩니다(클라우드 라이선스를 차지하지 않음).
+ko | Jogo encerrado. A licença foi devolvida ao banco da família. || 게임이 끝났습니다. 면허증은 가족은행으로 반납되었습니다.
+ko | Painel de Promoções || 프로모션 패널
+ko | Simulação manual de promoções da loja. Esta página só é acessível digitando /admin na URL. || 매장 프로모션 수동 시뮬레이션. 이 페이지는 URL에 /admin을 입력해야만 액세스할 수 있습니다.
+ko | Promoção de Jogo Único || 싱글 게임 프로모션
+ko | Bloqueio [FE01]: Você precisa possuir este jogo para publicar uma análise. || 잠금 [FE01]: 리뷰를 게시하려면 이 게임을 소유해야 합니다.
+ko | Este @usuário já está em uso. Escolha outro. || 이 @user는 이미 사용 중입니다. 다른 것을 선택하세요.
+ko | Oferta de jogo único ativa. || 단일 게임 제공이 활성화되었습니다.
+ko | Bloqueio: Período de carência de 1 ano ativo para esta conta. || 잠금: 이 계정에 대해 1년의 유예 기간이 활성화되어 있습니다.
+ko | Valor inválido. || 값이 잘못되었습니다.
+ko | Você só pode presentear saldo para amigos. || 친구에게만 잔액을 선물할 수 있습니다.
+ko | Promoção aplicada com sucesso! || 프로모션이 성공적으로 적용되었습니다!
+ko | Sua análise foi publicada com sucesso! || 귀하의 리뷰가 성공적으로 게시되었습니다!
+ko | A senha deve ter pelo menos 4 caracteres. || 비밀번호는 4자 이상이어야 합니다.
+ko | Selecione um jogo válido para a promoção única. || 일회성 프로모션에 유효한 게임을 선택하세요.
+ko | Você possui este jogo (ou tem acesso via Família). || 귀하는 이 게임을 소유하고 있습니다(또는 가족을 통해 액세스할 수 있습니다).
+ko | Salvar Promoção || 프로모션 저장
+ko | Nenhuma (preços normais) || 없음 (정상 가격)
+ko | Bloqueio: Ninguém da sua família comprou este jogo ainda. || 잠금: 가족 중 아직 이 게임을 구매한 사람이 없습니다.
+ko | Promoções desativadas. A loja está com preços normais. || 프로모션이 비활성화되었습니다. 가게에는 정상 가격이 있습니다.
+ko | Por favor, selecione o destinatário para todos os presentes. || 모든 선물을 받으실 분을 선택해주세요.
+ko | Formato de data inválido. || 날짜 형식이 잘못되었습니다.
+ko | Nenhuma promoção ativa — preços normais. || 활성 프로모션이 없습니다. 정상 가격입니다.
+ko | Bloqueio: Ninguém da sua família possui a licença deste jogo. || 잠금: 가족 중 누구도 이 게임의 라이선스를 소유하고 있지 않습니다.
+ko | Este jogo já está na sua lista de desejos. || 이 게임은 이미 위시리스트에 있습니다.
+ko | Nome do evento || 이벤트 이름
+ko | Jogo não encontrado. || 게임을 찾을 수 없습니다.
+ko | SESSÃO EM ANDAMENTO || 세션 진행 중
+ko | ROTA OCULTA /admin || 숨겨진 경로 /관리자
+ko | Você precisa criar uma família primeiro. || 먼저 가족을 만들어야 합니다.
+ko | O @usuário deve conter apenas letras, números e underscore (_). || @user에는 문자, 숫자, 밑줄(_)만 포함해야 합니다.
+ko | Você já possui este jogo ou ele já está no carrinho. || 귀하는 이미 이 게임을 소유하고 있거나 이미 장바구니에 있습니다.
+ko | Jogar Agora || 지금 플레이
+ko | O novo @usuário é igual ao atual. || 새로운 @user는 현재의 @user와 동일합니다.
+ko | Apenas o fundador pode transferir a liderança. || 창업자만이 리더십을 이전할 수 있습니다.
+ko | Você só pode convidar amigos da sua lista. || 목록에 있는 친구만 초대할 수 있습니다.
+ko | Ver original || 원본 보기
+ko | Admin - Promoções || 관리자 - 프로모션
+ko | Você não pertence a uma família. || 당신은 가족에 속하지 않습니다.
+ko | Você já é o líder da família. || 당신은 이미 가족의 지도자입니다.
+ko | Selecione uma forma de pagamento. || 결제수단을 선택하세요.
+ko | Bloqueio: Você não possui a licença deste jogo. || 잠금: 귀하는 이 게임에 대한 라이센스를 소유하고 있지 않습니다.
+ko | Traduzido de || 에서 번역됨
+ko | Bloqueio: Uma Família não pode ter mais de 6 membros. || 차단: 가족은 6명 이상의 구성원을 가질 수 없습니다.
+ko | Data de término (opcional) || 종료일(선택사항)
+ko | Conta não encontrada. || 계정을 찾을 수 없습니다.
+ko | Valor inválido para adicionar à carteira. || 지갑에 추가할 금액이 잘못되었습니다.
+ko | Este nome de usuário já está em uso. Escolha outro. || 이 사용자 이름은 이미 사용 중입니다. 다른 것을 선택하세요.
+ko | Informe uma porcentagem de desconto válida (1 a 100). || 유효한 할인율(1~100)을 입력하세요.
+ko | Ex: 50 || 예: 50
+ko | Modo Offline: Jogo iniciado via cache local. || 오프라인 모드: 로컬 캐시를 통해 게임이 시작됩니다.
+ko | Promoção de Evento || 이벤트 프로모션
+ko | Selecione ao menos um jogo com desconto para ativar o evento. || 이벤트를 활성화하려면 할인된 게임을 하나 이상 선택하세요.
+ko | Por favor, configure ou confirme sua data de nascimento. || 생년월일을 설정하거나 확인해 주세요.
+ko | Bloqueio: Este jogo possui restrições do desenvolvedor que impedem o compartilhamento. || 차단: 이 게임에는 개발 제한ed또는 공유에 대한ed부과가 있습니다.
+ko | Evento ativo: || 활성 이벤트:
+ko | Saia da sua família atual antes de criar uma nova. || 새 가족을 만들기 전에 현재 가족을 떠나세요.
+en | Encerrar Jogo || End Game
+de | Encerrar Jogo || Spiel beenden
+zh-cn | Encerrar Jogo || 游戏结束
+pl | Encerrar Jogo || Koniec gry
+ko | Encerrar Jogo || 게임 종료

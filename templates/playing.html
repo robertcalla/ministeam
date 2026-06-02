@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ "Jogando"|t }}: {{ game.name }}</title>
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            color: white;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .game-window {
+            background: #171a21;
+            border: 2px solid #66c0f4;
+            width: 85%;
+            height: 85%;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 40px rgba(102, 192, 244, 0.4);
+            animation: bootUp 0.8s ease-out;
+        }
+        .header {
+            background: #2a475e;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 6px 6px 0 0;
+        }
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: url("{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}") center/cover;
+            position: relative;
+        }
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn-close {
+            background: #b52a1c;
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-top: 30px;
+            transition: 0.2s;
+            font-size: 16px;
+        }
+        .btn-close:hover { background: #d32f2f; transform: scale(1.05); }
+
+        @keyframes bootUp {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-window">
+        <div class="header">
+            <span style="font-weight: bold;">Ministeam - {{ "Motor de Execução"|t }}</span>
+            <span style="color: #8f98a0; font-size: 12px;">{{ "Pressione SHIFT+TAB para abrir o painel da Steam"|t }}</span>
+        </div>
+        <div class="content">
+            <div class="overlay">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                        <div style="background: rgba(92, 126, 16, 0.8); padding: 10px 20px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #79a016;">
+                            {{ message|t }}
+                        </div>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+
+                <h1 style="color: #66c0f4; margin-bottom: 5px; font-size: 24px;">🎮 {{ "SESSÃO EM ANDAMENTO"|t }}</h1>
+                <h2 style="margin: 0; font-size: 42px;">{{ game.name }}</h2>
+                <p style="color: #8f98a0; margin-top: 15px; text-align: center; max-width: 600px; line-height: 1.5;">
+                    {{ "Sua licença pessoal foi validada. O rastreamento de conquistas e tempo de jogo foram iniciados no banco de dados."|t }}
+                </p>
+                <a href="{{ url_for('stop_game') }}" class="btn-close">{{ "Encerrar Jogo e Sair"|t }}</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('keydown', function(event) {
+            // SHIFT + TAB dentro do jogo: Minimiza e volta para a página de origem original
+            if (event.shiftKey && event.key === 'Tab') {
+                event.preventDefault();
+                window.location.href = "{{ url_for(src) }}";
+            }
+        });
+    </script>
+</body>
+</html>

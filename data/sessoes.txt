@@ -1,5 +1,6 @@
 # =============================================================================
 # MINISTEAM - Sessões de Jogo Ativas (Compartilhamento Familiar)
+# Cada linha = um usuário jogando agora um título do pool da família.
 # Formato: user_id | family_id | game_id | modo  (modo: online|offline)
+# Usado para contar 'Em uso por parentes' de forma persistente entre contas.
 # =============================================================================
-104 | fam_1780272669.201368 | 1 | online

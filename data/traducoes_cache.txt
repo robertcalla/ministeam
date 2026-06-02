@@ -2184,3 +2184,4 @@ de | Encerrar Jogo || Spiel beenden
 zh-cn | Encerrar Jogo || 游戏结束
 pl | Encerrar Jogo || Koniec gry
 ko | Encerrar Jogo || 게임 종료
+en | Encerrar Jogo || End Game

@@ -5,3 +5,4 @@ venv/
 .env
 .idea/
 sprites/
+.claude/

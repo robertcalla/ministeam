@@ -1,12 +1,101 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, g
+from jinja2 import pass_context
 from datetime import datetime
 import os
 import json
 import random
 import re
 
+import i18n
+
 app = Flask(__name__)
 app.secret_key = 'chave_secreta_super_segura'
+
+
+# ---- INTERNACIONALIZAÇÃO ----
+
+def _idioma_usuario():
+    """Idioma atual de quem está vendo a tela.
+
+    Prioridade:
+      1) sessão (usuário logado escolheu)
+      2) configuração da máquina (maquina.txt) — usada antes do login também
+      3) padrão (pt-br)
+
+    Lê fresco a cada chamada porque `g` em alguns contextos (test/repl) é
+    compartilhado entre requests, e cachear ali manteria um valor antigo
+    quando o usuário trocou de idioma. A lookup é barata: dict + uma leitura
+    de arquivo curta no caminho do "não logado".
+    """
+    profile = session.get('user_profile') or {}
+    idioma = profile.get('linguagem')
+    if idioma:
+        return idioma
+    try:
+        return ler_linguagem_maquina() or i18n.IDIOMA_PADRAO
+    except Exception:
+        return i18n.IDIOMA_PADRAO
+
+
+@app.template_filter('t')
+@pass_context
+def _filter_t(ctx, texto):
+    """Filtro Jinja: traduz `texto` (PT-BR) para o idioma do usuário atual.
+
+    `@pass_context` é essencial: sem ele, o Jinja faz constant folding em
+    expressões como `{{ "literal"|t }}` no momento da compilação do
+    template, congelando a tradução no idioma da primeira renderização.
+    """
+    if texto is None:
+        return texto
+    destino = _idioma_usuario()
+    if destino == i18n.IDIOMA_PADRAO:
+        return texto
+    return i18n.traduzir(str(texto), destino, idioma_origem=i18n.IDIOMA_PADRAO)
+
+
+@app.template_filter('traduzir_aval')
+@pass_context
+def _filter_traduzir_aval(ctx, texto, idioma_origem):
+    """Filtro Jinja: traduz uma avaliação do `idioma_origem` para o idioma do usuário."""
+    if texto is None:
+        return texto
+    destino = _idioma_usuario()
+    if destino == idioma_origem:
+        return texto
+    return i18n.traduzir(str(texto), destino, idioma_origem=idioma_origem)
+
+
+@app.template_filter('bandeira')
+@pass_context
+def _filter_bandeira(ctx, idioma_enum):
+    return i18n.bandeira(idioma_enum)
+
+
+@app.after_request
+def _impedir_cache_html(response):
+    """Impede o navegador de servir uma versão antiga de HTML após troca de idioma.
+
+    Sem isso, ao mudar de idioma e voltar via histórico, o browser pode
+    exibir uma renderização antiga ou misturar partes em outro idioma.
+    Só afeta text/html — assets estáticos seguem cacheáveis.
+    """
+    ctype = response.content_type or ''
+    if ctype.startswith('text/html'):
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+    return response
+
+
+@app.context_processor
+def _injetar_i18n():
+    return {
+        'lang_user':         _idioma_usuario(),
+        'idiomas_suportados': i18n.IDIOMAS_SUPORTADOS,
+        'nome_idioma':       i18n.nome_idioma,
+        'bandeira_idioma':   i18n.bandeira,
+    }
 
 # ---- CATÁLOGO DE JOGOS (DADOS FIXOS) ----
 # As informações abaixo são fictícias e podem ser editadas manualmente.
@@ -122,17 +211,20 @@ def _garantir_arquivos():
         with open(USUARIOS_FILE, 'w', encoding='utf-8') as f:
             f.write("# =============================================================================\n")
             f.write("# MINISTEAM - Banco de Dados de Usuários\n")
-            f.write("# Formato: id | usuario | senha | data_nascimento | nome_exibicao | notas\n")
-            f.write("# Exemplo: 1 | joao123 | senha456 | 1990-05-15 | João Silva | Jogador casual\n")
+            f.write("# Formato: id | usuario | senha | data_nascimento | nome_exibicao | notas | trocas\n")
+            f.write("# Exemplo: 1 | joao123 | senha456 | 1990-05-15 | João Silva | Jogador casual | 0\n")
             f.write("# Dica: data_nascimento como 'none' significa que o usuário não a cadastrou.\n")
             f.write("# =============================================================================\n")
 
     if not os.path.exists(MAQUINA_FILE):
         with open(MAQUINA_FILE, 'w', encoding='utf-8') as f:
             f.write("# =============================================================================\n")
-            f.write("# MINISTEAM - Contas desta Máquina\n")
-            f.write("# Cada linha contém o ID de um usuário que já fez login neste computador.\n")
+            f.write("# MINISTEAM - Configurações e Contas desta Máquina\n")
+            f.write("# - Linhas de config: chave | valor   (ex: linguagem | pt-br)\n")
+            f.write("# - Linhas de conta:  apenas o ID do usuário que já fez login aqui\n")
+            f.write("# Idiomas: pt-br | en | de | zh-cn | pl | ko\n")
             f.write("# =============================================================================\n")
+            f.write(f"linguagem | {i18n.IDIOMA_PADRAO}\n")
 
     if not os.path.exists(AMIZADES_FILE):
         with open(AMIZADES_FILE, 'w', encoding='utf-8') as f:
@@ -206,15 +298,15 @@ def _garantir_arquivos():
             f.write("# Formato: game_id | autor_id | recomenda | data | linguagem | votos_uteis | voted_users | comentario\n")
             f.write("# - recomenda: sim | nao\n")
             f.write("# - data: dd/mm/aaaa\n")
-            f.write("# - linguagem: portuguesBrasil | ingles | alemao | chinesSimplificado | polones | coreano\n")
+            f.write("# - linguagem: pt-br | en | de | zh-cn | pl | ko\n")
             f.write("# - voted_users: 'none' ou 'id1:sim,id2:nao,...'\n")
             f.write("# - comentario: texto livre (pipes viram /, quebras de linha viram espaço)\n")
             f.write("# =============================================================================\n")
-            f.write("1 | 1 | sim | 20/05/2026 | portuguesBrasil | 12 | none | Jogo excelente! Muito divertido para jogar em grupo.\n")
-            f.write("1 | 2 | sim | 19/05/2026 | ingles | 5 | none | Amazing gameplay and graphics. Highly recommended to play with friends!\n")
-            f.write("1 | 3 | nao | 18/05/2026 | alemao | 2 | none | Das Spiel hat zu viele Bugs. Ich kann es im Moment nicht empfehlen.\n")
-            f.write("1 | 4 | sim | 21/05/2026 | portuguesBrasil | 8 | none | A lógica por trás dos puzzles deste jogo é fantástica.\n")
-            f.write("2 | 5 | sim | 15/05/2026 | ingles | 14 | none | Great horror atmosphere! Found a few system bugs though.\n")
+            f.write("1 | 1 | sim | 20/05/2026 | pt-br | 12 | none | Jogo excelente! Muito divertido para jogar em grupo.\n")
+            f.write("1 | 2 | sim | 19/05/2026 | en | 5 | none | Amazing gameplay and graphics. Highly recommended to play with friends!\n")
+            f.write("1 | 3 | nao | 18/05/2026 | de | 2 | none | Das Spiel hat zu viele Bugs. Ich kann es im Moment nicht empfehlen.\n")
+            f.write("1 | 4 | sim | 21/05/2026 | pt-br | 8 | none | A lógica por trás dos puzzles deste jogo é fantástica.\n")
+            f.write("2 | 5 | sim | 15/05/2026 | en | 14 | none | Great horror atmosphere! Found a few system bugs though.\n")
 
 
 # ---- FUNÇÕES DE USUÁRIOS ----
@@ -313,8 +405,12 @@ def ler_ids_maquina():
         with open(MAQUINA_FILE, 'r', encoding='utf-8') as f:
             for linha in f:
                 linha = linha.strip()
-                if linha and not linha.startswith('#'):
-                    ids.append(linha)
+                if not linha or linha.startswith('#'):
+                    continue
+                # Linhas de config têm '|'; linhas de conta são apenas o ID.
+                if '|' in linha:
+                    continue
+                ids.append(linha)
     except FileNotFoundError:
         pass
     return ids
@@ -325,6 +421,61 @@ def registrar_maquina(uid):
         _garantir_arquivos()
         with open(MAQUINA_FILE, 'a', encoding='utf-8') as f:
             f.write(f"{uid}\n")
+
+
+def ler_linguagem_maquina():
+    """Retorna o idioma padrão configurado para esta máquina."""
+    _garantir_arquivos()
+    try:
+        with open(MAQUINA_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s or s.startswith('#') or '|' not in s:
+                    continue
+                chave, _, valor = s.partition('|')
+                if chave.strip() == 'linguagem':
+                    valor = valor.strip()
+                    if valor in i18n.IDIOMAS_SUPORTADOS:
+                        return valor
+    except FileNotFoundError:
+        pass
+    return i18n.IDIOMA_PADRAO
+
+
+def salvar_linguagem_maquina(linguagem):
+    """Persiste o idioma desta máquina, criando ou atualizando a linha de config."""
+    if linguagem not in i18n.IDIOMAS_SUPORTADOS:
+        return
+    _garantir_arquivos()
+    linhas_novas = []
+    encontrou = False
+    with open(MAQUINA_FILE, 'r', encoding='utf-8') as f:
+        for linha in f:
+            s = linha.strip()
+            if not s or s.startswith('#') or '|' not in s:
+                linhas_novas.append(linha)
+                continue
+            chave, _, _ = s.partition('|')
+            if chave.strip() == 'linguagem':
+                linhas_novas.append(f"linguagem | {linguagem}\n")
+                encontrou = True
+            else:
+                linhas_novas.append(linha)
+    if not encontrou:
+        # Insere a linha de config logo após o cabeçalho (antes da primeira linha de ID).
+        linhas_final = []
+        inserido = False
+        for linha in linhas_novas:
+            s = linha.strip()
+            if not inserido and s and not s.startswith('#') and '|' not in s:
+                linhas_final.append(f"linguagem | {linguagem}\n")
+                inserido = True
+            linhas_final.append(linha)
+        if not inserido:
+            linhas_final.append(f"linguagem | {linguagem}\n")
+        linhas_novas = linhas_final
+    with open(MAQUINA_FILE, 'w', encoding='utf-8') as f:
+        f.writelines(linhas_novas)
 
 
 def remover_maquina(uid):
@@ -787,19 +938,29 @@ def ler_avaliacoes_jogo(game_id):
     return resultado
 
 
-def salvar_avaliacao(game_id, autor_id, recomenda, comentario, linguagem):
-    """Cria ou atualiza a avaliação do autor para o jogo."""
+def salvar_avaliacao(game_id, autor_id, recomenda, comentario, linguagem_preferida):
+    """Cria ou atualiza a avaliação do autor para o jogo.
+
+    O idioma salvo é DETECTADO do texto do comentário (não a preferência do
+    autor), para que o sistema saiba traduzir corretamente quando outro
+    usuário visualizar. `linguagem_preferida` só é usada como fallback
+    quando a detecção falha (texto curto demais, etc).
+    """
     game_id   = str(game_id)
     autor_id  = str(autor_id)
     comentario = comentario.replace('|', '/').replace('\n', ' ').replace('\r', ' ').strip()
     if not comentario:
         return
+    idioma_detectado = i18n.detectar_idioma(comentario)
+    # Para textos muito curtos, langdetect erra; preferir a preferência do autor.
+    if len(comentario) < 25 and linguagem_preferida in i18n.IDIOMAS_SUPORTADOS:
+        idioma_detectado = linguagem_preferida
     todas = _ler_todas_avaliacoes()
     existente = next((a for a in todas if a['game_id'] == game_id and a['autor_id'] == autor_id), None)
     if existente:
         existente['recomenda']  = bool(recomenda)
         existente['comentario'] = comentario
-        existente['linguagem']  = linguagem
+        existente['linguagem']  = idioma_detectado
         existente['data']       = datetime.now().strftime("%d/%m/%Y")
     else:
         todas.append({
@@ -807,7 +968,7 @@ def salvar_avaliacao(game_id, autor_id, recomenda, comentario, linguagem):
             'autor_id':    autor_id,
             'recomenda':   bool(recomenda),
             'data':        datetime.now().strftime("%d/%m/%Y"),
-            'linguagem':   linguagem,
+            'linguagem':   idioma_detectado,
             'votos_uteis': 0,
             'voted_users': {},
             'comentario':  comentario
@@ -1049,8 +1210,9 @@ def fazer_login_sessao(usuario):
     session['gifts_sent']    = {}
     session['user_dob']      = usuario['dob']
     session['user_profile']  = {
-        'name':    usuario['nome'],
-        'details': usuario.get('notas', '')
+        'name':      usuario['nome'],
+        'details':   usuario.get('notas', ''),
+        'linguagem': ler_linguagem_maquina()
     }
     session['family']          = familia_sessao
     session['family_cooldown'] = False
@@ -1080,7 +1242,7 @@ def garantir_valores_sessao():
         return
     padroes = {
         'wallet': 100.00, 'library': [], 'wishlist': [], 'cart': [], 'gifts_sent': {},
-        'user_dob': None, 'user_profile': {'name': 'Usuário', 'details': '', 'linguagem': 'portuguesBrasil'},
+        'user_dob': None, 'user_profile': {'name': 'Usuário', 'details': '', 'linguagem': i18n.IDIOMA_PADRAO},
         'family': None, 'family_cooldown': False,
         'offline_mode': False, 'active_game': None, 'show_pe01_for': None
     }
@@ -1333,6 +1495,16 @@ def perfil(user_id):
     if is_self:
         trocas_restantes = LIMITE_TROCAS_USERNAME - usuario.get('trocas_username', 0)
 
+    # Bio: idioma de origem detectado e tradução opcional sob demanda
+    bio_texto         = usuario.get('notas', '') or ''
+    bio_idioma_origem = i18n.detectar_idioma(bio_texto) if bio_texto else i18n.IDIOMA_PADRAO
+    idioma_leitor     = (session.get('user_profile') or {}).get('linguagem') or i18n.IDIOMA_PADRAO
+    bio_pode_traduzir = bool(bio_texto) and bio_idioma_origem != idioma_leitor
+    bio_traduzir_flag = request.args.get('bio_traduzida') == '1'
+    bio_traduzida     = None
+    if bio_traduzir_flag and bio_pode_traduzir:
+        bio_traduzida = i18n.traduzir(bio_texto, idioma_leitor, bio_idioma_origem)
+
     return render_template('perfil.html',
                            perfil_user=usuario,
                            is_self=is_self,
@@ -1344,7 +1516,13 @@ def perfil(user_id):
                            familia=familia,
                            comentarios=comentarios,
                            trocas_restantes=trocas_restantes,
-                           limite_trocas=LIMITE_TROCAS_USERNAME)
+                           limite_trocas=LIMITE_TROCAS_USERNAME,
+                           bio_idioma_origem=bio_idioma_origem,
+                           bio_idioma_nome=i18n.nome_idioma(bio_idioma_origem),
+                           bio_bandeira=i18n.bandeira(bio_idioma_origem),
+                           bio_pode_traduzir=bio_pode_traduzir,
+                           bio_traduzir_flag=bio_traduzir_flag,
+                           bio_traduzida=bio_traduzida)
 
 
 @app.route('/perfil/<user_id>/comentar', methods=['POST'])
@@ -1483,7 +1661,7 @@ def index():
 def game(game_id):
     game_data  = GAMES.get(game_id)
     if not game_data:
-        return "Jogo não encontrado", 404
+        return i18n.traduzir("Jogo não encontrado", _idioma_usuario(), i18n.IDIOMA_PADRAO), 404
     show_modal = request.args.get('added') == '1'
     na_wishlist = game_id in session.get('wishlist', [])
 
@@ -1507,13 +1685,16 @@ def update_profile():
     name    = request.form.get('name')
     details = request.form.get('details')
     dob_str = request.form.get('dob')
-    linguagem = request.form.get('linguagem', 'portuguesBrasil')
+    linguagem = request.form.get('linguagem', i18n.IDIOMA_PADRAO)
+    if linguagem not in i18n.IDIOMAS_SUPORTADOS:
+        linguagem = i18n.IDIOMA_PADRAO
     session['user_profile'] = {'name': name, 'details': details, 'linguagem': linguagem}
     if dob_str:
         session['user_dob'] = dob_str
     session.modified = True
-    # Persiste no banco para que o perfil reflita as alterações entre sessões
+    # Dados do usuário ficam em usuarios.txt; idioma é da máquina (maquina.txt).
     atualizar_usuario_db(session['user_id'], nome=name, notas=details, dob=dob_str or None)
+    salvar_linguagem_maquina(linguagem)
     flash('Dados do perfil atualizados com sucesso!', 'sucesso')
     return redirect(request.referrer or url_for('index'))
 
@@ -1524,7 +1705,7 @@ def add_to_cart(game_id):
     purchase_type = request.form.get('purchase_type', 'self')
 
     if not game_data:
-        return "Jogo não encontrado", 404
+        return i18n.traduzir("Jogo não encontrado", _idioma_usuario(), i18n.IDIOMA_PADRAO), 404
 
     if purchase_type == 'self':
         if game_id in session['library'] or any(i['id'] == game_id and not i['is_gift'] for i in session['cart']):
@@ -1582,7 +1763,7 @@ def submit_review(game_id):
         flash("Erro [FE02]: Por favor, escreva um comentário para descrever sua experiência.", "error")
         return redirect(url_for('game', game_id=game_id))
 
-    idioma_usuario = session['user_profile'].get('linguagem', 'portuguesBrasil')
+    idioma_usuario = session['user_profile'].get('linguagem', i18n.IDIOMA_PADRAO)
     salvar_avaliacao(game_id, session['user_id'], recomenda, comentario, idioma_usuario)
     flash("Sua análise foi publicada com sucesso!", "sucesso")
     return redirect(url_for('game', game_id=game_id))

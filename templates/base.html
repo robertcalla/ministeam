@@ -9,37 +9,37 @@
 <header class="navbar">
     <div class="nav-left">
         <a href="{{ url_for('reset_session') }}"
-           onclick="return confirm('Isto irá limpar os cookies e APAGAR todos os dados (amizades, famílias, bibliotecas, carteiras e sessões). As contas de usuário serão mantidas. Continuar?');"
-           title="Limpar tudo: cookies e todos os arquivos de dados (exceto as contas de usuário)" style="text-decoration: none; cursor: pointer;">
+           onclick="return confirm('{{ "Isto irá limpar os cookies e APAGAR todos os dados (amizades, famílias, bibliotecas, carteiras e sessões). As contas de usuário serão mantidas. Continuar?"|t }}');"
+           title="{{ "Limpar tudo: cookies e todos os arquivos de dados (exceto as contas de usuário)"|t }}" style="text-decoration: none; cursor: pointer;">
             <div class="logo">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="MINISTEAM Logo" style="height: 40px; display: block;">
             </div>
         </a>
         <nav>
-            <a href="{{ url_for('index') }}">Loja</a>
-            <a href="{{ url_for('wishlist') }}">Lista de Desejos</a>
-            <a href="{{ url_for('library') }}">Biblioteca</a>
-            <a href="{{ url_for('amigos') }}">Amigos</a>
-            <a href="{{ url_for('family') }}">Família</a>
+            <a href="{{ url_for('index') }}">{{ "Loja"|t }}</a>
+            <a href="{{ url_for('wishlist') }}">{{ "Lista de Desejos"|t }}</a>
+            <a href="{{ url_for('library') }}">{{ "Biblioteca"|t }}</a>
+            <a href="{{ url_for('amigos') }}">{{ "Amigos"|t }}</a>
+            <a href="{{ url_for('family') }}">{{ "Família"|t }}</a>
         </nav>
     </div>
 
     <div class="nav-right" style="display: flex; align-items: center; gap: 15px;">
         <a href="{{ url_for('cart') }}" class="btn-blue" style="text-decoration: none; padding: 5px 12px; font-size: 13px; background: #213545; color: #66c0f4;">
-            🛒 Carrinho ({{ session['cart']|length }})
+            🛒 {{ "Carrinho"|t }} ({{ session['cart']|length }})
         </a>
 
         <!-- Menu da conta (foto de perfil) -->
         <div class="account-menu">
-            <div class="user-profile" onclick="toggleAccountMenu(event)" title="Conta de {{ session['user_profile']['name'] }}">
+            <div class="user-profile" onclick="toggleAccountMenu(event)" title="{{ "Conta de"|t }} {{ session['user_profile']['name'] }}">
                 <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Perfil">
             </div>
             <div class="account-dropdown" id="accountDropdown">
                 <div class="account-dropdown-name">{{ session['user_profile']['name'] }}</div>
-                <a href="{{ url_for('meu_perfil') }}">👤 Meu perfil</a>
-                <a href="{{ url_for('carteira') }}">💳 Minha carteira <span class="acc-saldo">R$ {{ "%.2f"|format(session['wallet']) }}</span></a>
-                <a href="{{ url_for('trocar_usuario') }}">🔄 Trocar usuário</a>
-                <a href="{{ url_for('logout') }}" class="acc-logout">⏻ Finalizar sessão</a>
+                <a href="{{ url_for('meu_perfil') }}">👤 {{ "Meu perfil"|t }}</a>
+                <a href="{{ url_for('carteira') }}">💳 {{ "Minha carteira"|t }} <span class="acc-saldo">R$ {{ "%.2f"|format(session['wallet']) }}</span></a>
+                <a href="{{ url_for('trocar_usuario') }}">🔄 {{ "Trocar usuário"|t }}</a>
+                <a href="{{ url_for('logout') }}" class="acc-logout">⏻ {{ "Finalizar sessão"|t }}</a>
             </div>
         </div>
     </div>
@@ -47,8 +47,8 @@
 
 {% if promo_evento %}
 <div class="sale-banner">
-    🎉 <strong>{{ promo_nome }}</strong> — Ofertas por tempo limitado!{% if promo_fim %} Termina em {{ promo_fim }}.{% endif %}
-    <a href="{{ url_for('index') }}">Ver ofertas →</a>
+    🎉 <strong>{{ promo_nome|t }}</strong> — {{ "Ofertas por tempo limitado!"|t }}{% if promo_fim %} {{ "Termina em"|t }} {{ promo_fim }}.{% endif %}
+    <a href="{{ url_for('index') }}">{{ "Ver ofertas →"|t }}</a>
 </div>
 {% endif %}
 
@@ -56,44 +56,41 @@
 <div id="userProfileModal" class="modal-overlay" style="display: none;">
     <div class="modal-content" style="background: #171a21; border: 1px solid #2a475e; width: 480px; box-shadow: 0 0 15px rgba(0,0,0,0.7);">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a475e; padding-bottom: 10px; margin-bottom: 15px;">
-            <h2 style="color: #66c0f4; margin: 0; font-size: 18px;">📋 Dados da Conta</h2>
+            <h2 style="color: #66c0f4; margin: 0; font-size: 18px;">📋 {{ "Dados da Conta"|t }}</h2>
             <span style="cursor: pointer; color: #8f98a0; font-size: 22px; font-weight: bold;" onclick="closeUserProfileModal()">&times;</span>
         </div>
 
         <div style="margin-bottom: 12px; font-size: 12px; color: #8f98a0;">
-            Logado como: <strong style="color: #66c0f4;">{{ session['user_profile']['name'] }}</strong>
+            {{ "Logado como:"|t }} <strong style="color: #66c0f4;">{{ session['user_profile']['name'] }}</strong>
         </div>
 
         <form action="{{ url_for('update_profile') }}" method="POST">
             <div style="margin-bottom: 12px;">
-                <label style="font-size: 12px; color: #8f98a0;">Nome de Exibição:</label>
+                <label style="font-size: 12px; color: #8f98a0;">{{ "Nome de Exibição:"|t }}</label>
                 <input type="text" name="name" value="{{ session['user_profile']['name'] }}" style="width: 100%; padding: 8px; background: #1b2838; color: white; border: 1px solid #2a475e; border-radius: 2px;">
             </div>
 
             <div style="margin-bottom: 15px;">
-                <label style="font-size: 12px; color: #8f98a0;">Detalhes do Perfil / Notas:</label>
+                <label style="font-size: 12px; color: #8f98a0;">{{ "Detalhes do Perfil / Notas:"|t }}</label>
                 <textarea name="details" style="width: 100%; padding: 8px; background: #1b2838; color: white; border: 1px solid #2a475e; border-radius: 2px; height: 60px; resize: none;">{{ session['user_profile']['details'] }}</textarea>
             </div>
             <div style="margin-bottom: 15px;">
-                <label style="font-size: 12px; color: #8f98a0;">Idioma de Preferência (Análises):</label>
+                <label style="font-size: 12px; color: #8f98a0;">{{ "Idioma de Preferência (interface e avaliações):"|t }}</label>
                 <select name="linguagem" style="width: 100%; padding: 8px; margin-top: 6px; background: #1b2838; color: white; border: 1px solid #2a475e; border-radius: 2px;">
-                    <option value="portuguesBrasil" {% if session['user_profile'].get('linguagem') == 'portuguesBrasil' %}selected{% endif %}>Português (Brasil)</option>
-                    <option value="ingles" {% if session['user_profile'].get('linguagem') == 'ingles' %}selected{% endif %}>Inglês</option>
-                    <option value="alemao" {% if session['user_profile'].get('linguagem') == 'alemao' %}selected{% endif %}>Alemão</option>
-                    <option value="chinesSimplificado" {% if session['user_profile'].get('linguagem') == 'chinesSimplificado' %}selected{% endif %}>Chinês Simplificado</option>
-                    <option value="polones" {% if session['user_profile'].get('linguagem') == 'polones' %}selected{% endif %}>Polonês</option>
-                    <option value="coreano" {% if session['user_profile'].get('linguagem') == 'coreano' %}selected{% endif %}>Coreano</option>
+                    {% for idioma in idiomas_suportados %}
+                    <option value="{{ idioma }}" {% if session['user_profile'].get('linguagem') == idioma %}selected{% endif %}>{{ bandeira_idioma(idioma) }} {{ nome_idioma(idioma)|t }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div style="margin-bottom: 20px; background: rgba(0,0,0,0.2); padding: 12px; border: 1px solid #3a688c; border-radius: 3px;">
-                <label style="font-size: 12px; color: #ff9900; font-weight: bold;">📅 Data de Nascimento:</label>
+                <label style="font-size: 12px; color: #ff9900; font-weight: bold;">📅 {{ "Data de Nascimento:"|t }}</label>
                 <input type="date" name="dob" value="{{ session['user_dob'] if session['user_dob'] else '' }}" style="width: 100%; padding: 8px; margin-top: 6px; background: #171a21; color: white; border: 1px solid #2a475e; border-radius: 2px;">
-                <p style="font-size: 10px; color: #8f98a0; margin-top: 4px;">*Necessária para acessar jogos com classificação etária. Sem ela, títulos +10 e +18 serão bloqueados.</p>
+                <p style="font-size: 10px; color: #8f98a0; margin-top: 4px;">{{ "*Necessária para acessar jogos com classificação etária. Sem ela, títulos +10 e +18 serão bloqueados."|t }}</p>
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                <button type="button" class="btn-blue" onclick="closeUserProfileModal()">Fechar</button>
-                <button type="submit" class="btn-green">Salvar Alterações</button>
+                <button type="button" class="btn-blue" onclick="closeUserProfileModal()">{{ "Fechar"|t }}</button>
+                <button type="submit" class="btn-green">{{ "Salvar Alterações"|t }}</button>
             </div>
         </form>
     </div>
@@ -104,7 +101,7 @@
     {% if messages %}
     <div class="flash-messages">
         {% for category, message in messages %}
-        <div class="flash {% if category == 'sucesso' or 'sucesso' in message %}success{% else %}error{% endif %}">{{ message }}</div>
+        <div class="flash {% if category == 'sucesso' or 'sucesso' in message %}success{% else %}error{% endif %}">{{ message|t }}</div>
         {% endfor %}
     </div>
     {% endif %}

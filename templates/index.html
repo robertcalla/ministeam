@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}Destaques - Ministeam{% endblock %}
+{% block title %}{{ "Destaques"|t }} - Ministeam{% endblock %}
 
 {% block content %}
 {% if promo_evento %}
 <div class="event-hero">
-    <div class="event-hero-tag">PROMOÇÃO ATIVA</div>
-    <h1 style="margin: 6px 0;">{{ promo_nome }}</h1>
-    <p style="color: #b3e0ff;">Aproveite os descontos em jogos selecionados{% if promo_fim %} até {{ promo_fim }}{% endif %}!</p>
+    <div class="event-hero-tag">{{ "PROMOÇÃO ATIVA"|t }}</div>
+    <h1 style="margin: 6px 0;">{{ promo_nome|t }}</h1>
+    <p style="color: #b3e0ff;">{{ "Aproveite os descontos em jogos selecionados"|t }}{% if promo_fim %} {{ "até"|t }} {{ promo_fim }}{% endif %}!</p>
 </div>
 {% endif %}
 
-<h1>Destaques e Recomendações</h1>
+<h1>{{ "Destaques e Recomendações"|t }}</h1>
 <div class="game-grid">
     {% for id, game in games.items() %}
     {% set p = preco_info(id) %}
@@ -24,7 +24,7 @@
         </a>
         <div class="game-info">
             <h3>{{ game.name }}</h3>
-            <p style="font-size: 11px; color: #8f98a0; margin-bottom: 10px;">{{ game.genres | join(', ') }}</p>
+            <p style="font-size: 11px; color: #8f98a0; margin-bottom: 10px;">{{ game.genres | map('t') | join(', ') }}</p>
             <div class="price-action">
                 {% if p.on_sale %}
                 <span class="price-block">
@@ -35,7 +35,7 @@
                 {% else %}
                 <span class="price">R$ {{ "%.2f"|format(p.final) }}</span>
                 {% endif %}
-                <a href="{{ url_for('game', game_id=id) }}" class="btn-blue">Ver Detalhes</a>
+                <a href="{{ url_for('game', game_id=id) }}" class="btn-blue">{{ "Ver Detalhes"|t }}</a>
             </div>
         </div>
     </div>

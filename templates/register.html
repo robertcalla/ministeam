@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Criar Conta - Ministeam</title>
+    <title>{{ "Criar Conta"|t }} - Ministeam</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -138,47 +138,46 @@
     {% if messages %}
     <div class="flash-messages">
         {% for category, message in messages %}
-        <div class="flash">{{ message }}</div>
+        <div class="flash">{{ message|t }}</div>
         {% endfor %}
     </div>
     {% endif %}
     {% endwith %}
 
-    <h3>✨ Criar nova conta</h3>
+    <h3>✨ {{ "Criar nova conta"|t }}</h3>
 
     <form method="POST">
         <div class="form-group">
-            <label>Nome de usuário <span style="color:#b52a1c;">*</span></label>
-            <input type="text" name="username" required placeholder="ex: joao_silva" autocomplete="username"
-                   pattern="[a-zA-Z0-9_]+" title="Use apenas letras, números e underscore">
-            <p class="hint">Usado para fazer login. Apenas letras, números e _</p>
+            <label>{{ "Nome de usuário"|t }} <span style="color:#b52a1c;">*</span></label>
+            <input type="text" name="username" required placeholder="{{ 'ex: joao_silva'|t }}" autocomplete="username"
+                   pattern="[a-zA-Z0-9_]+" title="{{ 'Use apenas letras, números e underscore'|t }}">
+            <p class="hint">{{ "Usado para fazer login. Apenas letras, números e _"|t }}</p>
         </div>
 
         <div class="form-group">
-            <label>Senha <span style="color:#b52a1c;">*</span></label>
-            <input type="password" name="password" required placeholder="Mínimo 4 caracteres" autocomplete="new-password">
+            <label>{{ "Senha"|t }} <span style="color:#b52a1c;">*</span></label>
+            <input type="password" name="password" required placeholder="{{ 'Mínimo 4 caracteres'|t }}" autocomplete="new-password">
         </div>
 
         <div class="form-group">
-            <label>Nome de exibição <span style="color:#b52a1c;">*</span></label>
-            <input type="text" name="display_name" required placeholder="ex: João Silva">
-            <p class="hint">Nome que aparecerá para outros usuários.</p>
+            <label>{{ "Nome de exibição"|t }} <span style="color:#b52a1c;">*</span></label>
+            <input type="text" name="display_name" required placeholder="{{ 'ex: João Silva'|t }}">
+            <p class="hint">{{ "Nome que aparecerá para outros usuários."|t }}</p>
         </div>
 
         <div class="dob-section">
-            <label>📅 Data de Nascimento</label>
+            <label>📅 {{ "Data de Nascimento"|t }}</label>
             <input type="date" name="dob">
             <p class="hint">
-                Opcional agora, mas necessária para jogar títulos com classificação etária.
-                Sem ela, o acesso a jogos +10 e +18 será bloqueado.
+                {{ "Opcional agora, mas necessária para jogar títulos com classificação etária. Sem ela, o acesso a jogos +10 e +18 será bloqueado."|t }}
             </p>
         </div>
 
-        <button type="submit" class="btn-green">Criar Conta e Entrar</button>
+        <button type="submit" class="btn-green">{{ "Criar Conta e Entrar"|t }}</button>
     </form>
 
     <div class="footer-links">
-        <p>Já tem uma conta? <a href="{{ url_for('login') }}">Entrar</a></p>
+        <p>{{ "Já tem uma conta?"|t }} <a href="{{ url_for('login') }}">{{ "Entrar"|t }}</a></p>
     </div>
 </div>
 

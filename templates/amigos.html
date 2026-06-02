@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}Amigos - Ministeam{% endblock %}
+{% block title %}{{ "Amigos"|t }} - Ministeam{% endblock %}
 
 {% block content %}
-<h1>Amigos</h1>
+<h1>{{ "Amigos"|t }}</h1>
 
 <!-- Barra de busca por @ -->
 <form method="GET" action="{{ url_for('amigos') }}" style="margin-bottom: 28px;">
@@ -18,7 +18,7 @@
                 name="q"
                 id="amigos-search-input"
                 value="{{ query }}"
-                placeholder="Digite o início do @ para buscar (ex: ro → @robert, @rodrigo)"
+                placeholder="{{ 'Digite o início do @ para buscar (ex: ro → @robert, @rodrigo)'|t }}"
                 autocomplete="off"
                 style="
                     width: 100%; box-sizing: border-box;
@@ -34,25 +34,21 @@
                 border-radius: 0 0 4px 4px; overflow: hidden;
             "></div>
         </div>
-        <button type="submit" class="btn-blue" style="padding: 10px 20px; white-space: nowrap;">Buscar</button>
+        <button type="submit" class="btn-blue" style="padding: 10px 20px; white-space: nowrap;">{{ "Buscar"|t }}</button>
         {% if query %}
         <a href="{{ url_for('amigos') }}" class="btn-blue"
            style="padding: 10px 16px; text-decoration: none; white-space: nowrap; background: #4a4a5a;">
-            ✕ Limpar
+            ✕ {{ "Limpar"|t }}
         </a>
         {% endif %}
     </div>
     <p style="color: #8f98a0; font-size: 12px; margin-top: 6px;">
-        Mostra apenas usuários cujo @ <strong>começa</strong> com o que você digitou.
-        Deixe em branco para ver sugestões de amigos de amigos.
+        {{ "Mostra apenas usuários cujo @ começa com o que você digitou. Deixe em branco para ver sugestões de amigos de amigos."|t }}
     </p>
 </form>
 
-<!-- ================================================================ -->
-<!-- MEUS AMIGOS                                                       -->
-<!-- ================================================================ -->
 <h2 style="margin-bottom: 12px;">
-    Meus Amigos
+    {{ "Meus Amigos"|t }}
     <span style="font-size: 14px; color: #8f98a0; font-weight: normal;">({{ meus_amigos|length }})</span>
 </h2>
 
@@ -67,7 +63,7 @@
         <div>
             <a href="{{ url_for('perfil', user_id=amigo.id) }}" style="color: #66c0f4; font-weight: 600; text-decoration: none;">{{ amigo.nome }}</a>
             <span style="color: #8f98a0; font-size: 13px; margin-left: 8px;">@{{ amigo.username }}</span>
-            <a href="{{ url_for('perfil', user_id=amigo.id) }}" style="color: #8f98a0; font-size: 12px; margin-left: 8px; text-decoration: none;">› ver perfil</a>
+            <a href="{{ url_for('perfil', user_id=amigo.id) }}" style="color: #8f98a0; font-size: 12px; margin-left: 8px; text-decoration: none;">› {{ "ver perfil"|t }}</a>
         </div>
         <a href="{{ url_for('amigos_remover', friend_id=amigo.id) }}"
            style="
@@ -75,8 +71,8 @@
                border-radius: 4px; padding: 6px 14px; font-size: 13px;
                text-decoration: none; white-space: nowrap;
            "
-           onclick="return confirm('Remover {{ amigo.nome }} da lista de amigos?')">
-            Remover
+           onclick="return confirm('{{ "Remover"|t }} {{ amigo.nome }} {{ "da lista de amigos?"|t }}')">
+            {{ "Remover"|t }}
         </a>
     </div>
     {% endfor %}
@@ -86,28 +82,22 @@
     background: rgba(0,0,0,0.15); border: 1px dashed #2a3f5f;
     border-radius: 6px; padding: 24px; text-align: center; margin-bottom: 32px;
 ">
-    <p style="color: #8f98a0;">Você ainda não tem amigos adicionados.</p>
+    <p style="color: #8f98a0;">{{ "Você ainda não tem amigos adicionados."|t }}</p>
 </div>
 {% endif %}
 
-<!-- ================================================================ -->
-<!-- RESULTADOS DE BUSCA OU SUGESTÕES                                  -->
-<!-- ================================================================ -->
-
 {% if query %}
-<!-- Resultados da busca -->
 <h2 style="margin-bottom: 12px;">
-    Resultados para <span style="color: #4b9cd3;">@{{ query }}</span>
+    {{ "Resultados para"|t }} <span style="color: #4b9cd3;">@{{ query }}</span>
     <span style="font-size: 14px; color: #8f98a0; font-weight: normal;">({{ sugestoes|length }})</span>
 </h2>
 {% else %}
-<!-- Sugestões de amigos de amigos -->
 <h2 style="margin-bottom: 4px;">
-    Talvez você conheça
-    <span style="font-size: 14px; color: #8f98a0; font-weight: normal;">— amigos de amigos</span>
+    {{ "Talvez você conheça"|t }}
+    <span style="font-size: 14px; color: #8f98a0; font-weight: normal;">— {{ "amigos de amigos"|t }}</span>
 </h2>
 <p style="color: #8f98a0; font-size: 13px; margin-bottom: 12px;">
-    Até 5 sugestões baseadas na sua rede de amigos.
+    {{ "Até 5 sugestões baseadas na sua rede de amigos."|t }}
 </p>
 {% endif %}
 
@@ -127,7 +117,7 @@
                 font-size: 11px; color: #4b9cd3; background: rgba(75,156,211,0.12);
                 border: 1px solid rgba(75,156,211,0.3); border-radius: 3px;
                 padding: 2px 6px; margin-left: 8px;
-            ">amigo de amigo</span>
+            ">{{ "amigo de amigo"|t }}</span>
             {% endif %}
         </div>
         <a href="{{ url_for('amigos_adicionar', friend_id=usuario.id) }}"
@@ -136,7 +126,7 @@
                border-radius: 4px; padding: 6px 14px; font-size: 13px;
                text-decoration: none; white-space: nowrap;
            ">
-            + Adicionar
+            + {{ "Adicionar"|t }}
         </a>
     </div>
     {% endfor %}
@@ -148,13 +138,13 @@
 ">
     {% if query %}
     <p style="color: #8f98a0;">
-        Nenhum usuário encontrado com <strong>@{{ query }}…</strong><br>
-        <span style="font-size: 13px;">Lembre-se: a busca considera apenas o início do @usuário.</span>
+        {{ "Nenhum usuário encontrado com"|t }} <strong>@{{ query }}…</strong><br>
+        <span style="font-size: 13px;">{{ "Lembre-se: a busca considera apenas o início do @usuário."|t }}</span>
     </p>
     {% else %}
     <p style="color: #8f98a0;">
-        Sem sugestões no momento.<br>
-        <span style="font-size: 13px;">Adicione amigos para que possamos sugerir amigos deles!</span>
+        {{ "Sem sugestões no momento."|t }}<br>
+        <span style="font-size: 13px;">{{ "Adicione amigos para que possamos sugerir amigos deles!"|t }}</span>
     </p>
     {% endif %}
 </div>

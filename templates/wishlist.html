@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}Lista de Desejos - Ministeam{% endblock %}
+{% block title %}{{ "Lista de Desejos"|t }} - Ministeam{% endblock %}
 
 {% block content %}
-<h1>Lista de Desejos</h1>
+<h1>{{ "Lista de Desejos"|t }}</h1>
 <p style="color: #8f98a0; margin-bottom: 20px;">
-    {{ jogos|length }} jogo(s) na sua lista de desejos.
+    {{ jogos|length }} {{ "jogo(s) na sua lista de desejos."|t }}
 </p>
 
 {% if jogos %}
@@ -20,10 +20,10 @@
         <div class="wishlist-info">
             <a href="{{ url_for('game', game_id=game.id) }}" class="wishlist-name">{{ game.name }}</a>
             <div class="wishlist-sub">
-                <span class="review-pos">{{ game.reviews }}</span>
-                <span style="color:#8f98a0;"> · {{ game.genres | join(', ') }}</span>
+                <span class="review-pos">{{ game.reviews|t }}</span>
+                <span style="color:#8f98a0;"> · {{ game.genres | map('t') | join(', ') }}</span>
             </div>
-            <div class="wishlist-sub" style="color:#8f98a0;">Lançamento: {{ game.release_date }}</div>
+            <div class="wishlist-sub" style="color:#8f98a0;">{{ "Lançamento:"|t }} {{ game.release_date|t }}</div>
         </div>
 
         <div class="wishlist-buy">
@@ -40,15 +40,15 @@
             </div>
             <div class="wishlist-actions">
                 {% if game.id in session['library'] %}
-                <span class="owned-tag">Na biblioteca</span>
+                <span class="owned-tag">{{ "Na biblioteca"|t }}</span>
                 {% else %}
                 <form action="{{ url_for('add_to_cart', game_id=game.id) }}" method="POST" style="margin:0;">
                     <input type="hidden" name="purchase_type" value="self">
                     {% if game.age_rating == 0 %}<input type="hidden" name="dob" value="none">{% endif %}
-                    <button type="submit" class="btn-green" style="font-size: 12px; padding: 7px 12px;">Ao carrinho</button>
+                    <button type="submit" class="btn-green" style="font-size: 12px; padding: 7px 12px;">{{ "Ao carrinho"|t }}</button>
                 </form>
                 {% endif %}
-                <a href="{{ url_for('wishlist_remove', game_id=game.id) }}" class="wishlist-remove">Remover</a>
+                <a href="{{ url_for('wishlist_remove', game_id=game.id) }}" class="wishlist-remove">{{ "Remover"|t }}</a>
             </div>
         </div>
     </div>
@@ -56,11 +56,11 @@
 </div>
 {% else %}
 <div style="background: rgba(0,0,0,0.2); padding: 40px; text-align: center; border-radius: 4px;">
-    <p style="margin-bottom: 20px; color: #8f98a0;">Sua lista de desejos está vazia.</p>
+    <p style="margin-bottom: 20px; color: #8f98a0;">{{ "Sua lista de desejos está vazia."|t }}</p>
     <p style="margin-bottom: 20px; color: #8f98a0; font-size: 13px;">
-        Navegue pela loja e clique em <strong>"+ Adicionar à Lista de Desejos"</strong> nos jogos que quiser acompanhar.
+        {{ "Navegue pela loja e clique em"|t }} <strong>"+ {{ "Adicionar à Lista de Desejos"|t }}"</strong> {{ "nos jogos que quiser acompanhar."|t }}
     </p>
-    <a href="{{ url_for('index') }}" class="btn-blue">Ir para a Loja</a>
+    <a href="{{ url_for('index') }}" class="btn-blue">{{ "Ir para a Loja"|t }}</a>
 </div>
 {% endif %}
 {% endblock %}

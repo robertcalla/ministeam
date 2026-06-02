@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ perfil_user.nome }} - Perfil Ministeam{% endblock %}
+{% block title %}{{ perfil_user.nome }} - {{ "Perfil"|t }} Ministeam{% endblock %}
 
 {% block content %}
 
-<!-- Cabeçalho do perfil -->
 <div class="profile-header">
     <div class="profile-avatar">
         <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="{{ perfil_user.nome }}">
@@ -12,74 +11,89 @@
     <div class="profile-id">
         <h1 style="margin: 0;">{{ perfil_user.nome }}</h1>
         <div class="profile-username">@{{ perfil_user.username }}</div>
-        <p class="profile-bio">{{ perfil_user.notas or 'Este usuário ainda não escreveu nada sobre si.' }}</p>
+
+        {% if perfil_user.notas %}
+            {% if bio_traduzir_flag and bio_traduzida %}
+                <p class="profile-bio">{{ bio_traduzida }}</p>
+                <div class="profile-bio-meta" style="font-size:12px; color:#8f98a0; margin-top:-6px; margin-bottom:10px;">
+                    {{ bio_bandeira }} {{ "Traduzido de"|t }} <em>{{ bio_idioma_nome|t }}</em>
+                    · <a href="{{ url_for('perfil', user_id=perfil_user.id) }}" style="color:#66c0f4;">{{ "Ver original"|t }}</a>
+                </div>
+            {% else %}
+                <p class="profile-bio">{{ perfil_user.notas }}</p>
+                <div class="profile-bio-meta" style="font-size:12px; color:#8f98a0; margin-top:-6px; margin-bottom:10px;">
+                    {{ bio_bandeira }}
+                    {% if bio_pode_traduzir %}
+                    · <a href="{{ url_for('perfil', user_id=perfil_user.id, bio_traduzida=1) }}" style="color:#66c0f4;">🌐 {{ "Traduzir"|t }}</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            <p class="profile-bio">{{ "Este usuário ainda não escreveu nada sobre si."|t }}</p>
+        {% endif %}
 
         <div class="profile-actions">
             {% if is_self %}
-            <button class="btn-blue" onclick="openUserProfileModal()">✎ Editar Perfil</button>
-            <a href="{{ url_for('carteira') }}" class="btn-blue">💳 Minha Carteira</a>
+            <button class="btn-blue" onclick="openUserProfileModal()">✎ {{ "Editar Perfil"|t }}</button>
+            <a href="{{ url_for('carteira') }}" class="btn-blue">💳 {{ "Minha Carteira"|t }}</a>
             {% elif is_friend %}
-            <button class="btn-green" onclick="document.getElementById('giftSaldoModal').style.display='flex'">🎁 Presentear saldo</button>
+            <button class="btn-green" onclick="document.getElementById('giftSaldoModal').style.display='flex'">🎁 {{ "Presentear saldo"|t }}</button>
             <a href="{{ url_for('amigos_remover', friend_id=perfil_user.id) }}" class="btn-blue"
                style="background:#7a3030; color:#ffb3b3;"
-               onclick="return confirm('Remover {{ perfil_user.nome }} dos amigos?')">Remover amigo</a>
+               onclick="return confirm('{{ "Remover"|t }} {{ perfil_user.nome }} {{ "dos amigos?"|t }}')">{{ "Remover amigo"|t }}</a>
             {% else %}
-            <a href="{{ url_for('amigos_adicionar', friend_id=perfil_user.id) }}" class="btn-green">+ Adicionar amigo</a>
+            <a href="{{ url_for('amigos_adicionar', friend_id=perfil_user.id) }}" class="btn-green">+ {{ "Adicionar amigo"|t }}</a>
             {% endif %}
         </div>
     </div>
 
-    <!-- Estatísticas -->
     <div class="profile-stats">
-        <div class="stat"><span class="stat-num">{{ jogos_biblioteca|length }}</span><span class="stat-lbl">Jogos</span></div>
-        <div class="stat"><span class="stat-num">{{ amigos|length }}</span><span class="stat-lbl">Amigos</span></div>
-        <div class="stat"><span class="stat-num">{{ total_horas }}</span><span class="stat-lbl">Horas</span></div>
-        <div class="stat"><span class="stat-num">{{ jogos_desejos|length }}</span><span class="stat-lbl">Desejos</span></div>
+        <div class="stat"><span class="stat-num">{{ jogos_biblioteca|length }}</span><span class="stat-lbl">{{ "Jogos"|t }}</span></div>
+        <div class="stat"><span class="stat-num">{{ amigos|length }}</span><span class="stat-lbl">{{ "Amigos"|t }}</span></div>
+        <div class="stat"><span class="stat-num">{{ total_horas }}</span><span class="stat-lbl">{{ "Horas"|t }}</span></div>
+        <div class="stat"><span class="stat-num">{{ jogos_desejos|length }}</span><span class="stat-lbl">{{ "Desejos"|t }}</span></div>
     </div>
 </div>
 
 {% if familia %}
 <div class="profile-family">
-    👪 Membro da família <strong>{{ familia.name }}</strong>
+    👪 {{ "Membro da família"|t }} <strong>{{ familia.name }}</strong>
 </div>
 {% endif %}
 
 <div class="profile-columns">
-    <!-- Coluna principal -->
     <div class="profile-main">
 
         {% if is_self %}
-        <!-- Configurações da conta: trocar @usuário (limitado) -->
         <section class="profile-section">
-            <h2>Configurações da conta</h2>
+            <h2>{{ "Configurações da conta"|t }}</h2>
             <p style="color:#c7d5e0; margin-bottom: 6px;">
-                Seu @usuário atual: <strong style="color:#66c0f4;">@{{ perfil_user.username }}</strong>
+                {{ "Seu @usuário atual:"|t }} <strong style="color:#66c0f4;">@{{ perfil_user.username }}</strong>
             </p>
             <p class="muted" style="margin-bottom: 14px;">
-                Cada conta pode trocar o @usuário no máximo {{ limite_trocas }} vezes.
-                Trocas restantes: <strong style="color:{% if trocas_restantes > 0 %}#79a016{% else %}#b52a1c{% endif %};">{{ trocas_restantes }}</strong>.
+                {{ "Cada conta pode trocar o @usuário no máximo"|t }} {{ limite_trocas }} {{ "vezes."|t }}
+                {{ "Trocas restantes:"|t }} <strong style="color:{% if trocas_restantes > 0 %}#79a016{% else %}#b52a1c{% endif %};">{{ trocas_restantes }}</strong>.
             </p>
 
             {% if trocas_restantes > 0 %}
             <form action="{{ url_for('trocar_username') }}" method="POST"
-                  onsubmit="return confirm('Tem certeza? Esta troca consome 1 das suas {{ trocas_restantes }} troca(s) restantes.');"
+                  onsubmit="return confirm('{{ "Tem certeza? Esta troca consome 1 das suas trocas restantes."|t }}');"
                   style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
                 <span style="color:#8f98a0;">@</span>
                 <input type="text" name="novo_username" required
-                       pattern="[A-Za-z0-9_]+" title="Apenas letras, números e underscore"
+                       pattern="[A-Za-z0-9_]+" title="{{ "Apenas letras, números e underscore"|t }}"
                        placeholder="novo_usuario"
                        style="flex:1; min-width:200px; padding:9px; background:#1b2838; color:#fff; border:1px solid #2a475e; border-radius:2px;">
-                <button type="submit" class="btn-green">Trocar @usuário</button>
+                <button type="submit" class="btn-green">{{ "Trocar @usuário"|t }}</button>
             </form>
             {% else %}
-            <p class="muted">🔒 Você atingiu o limite de trocas de @usuário.</p>
+            <p class="muted">🔒 {{ "Você atingiu o limite de trocas de @usuário."|t }}</p>
             {% endif %}
         </section>
         {% endif %}
 
-        <!-- Jogos obtidos + horas -->
         <section class="profile-section">
-            <h2>Jogos ({{ jogos_biblioteca|length }})</h2>
+            <h2>{{ "Jogos"|t }} ({{ jogos_biblioteca|length }})</h2>
             {% if jogos_biblioteca %}
             <div class="profile-games">
                 {% for item in jogos_biblioteca %}
@@ -87,20 +101,19 @@
                     <img src="{{ url_for('static', filename='images/jogo' ~ item.game.id ~ '.jpg') }}" alt="{{ item.game.name }}">
                     <div class="profile-game-info">
                         <span class="profile-game-name">{{ item.game.name }}</span>
-                        <span class="profile-game-hours">{{ item.horas }} h jogadas</span>
+                        <span class="profile-game-hours">{{ item.horas }} h {{ "jogadas"|t }}</span>
                     </div>
                 </a>
                 {% endfor %}
             </div>
             {% else %}
-            <p class="muted">Nenhum jogo na biblioteca ainda.</p>
+            <p class="muted">{{ "Nenhum jogo na biblioteca ainda."|t }}</p>
             {% endif %}
         </section>
 
-        <!-- Lista de desejos (visível apenas para o próprio usuário ou amigos) -->
         {% if is_self or is_friend %}
         <section class="profile-section">
-            <h2>Lista de Desejos ({{ jogos_desejos|length }})</h2>
+            <h2>{{ "Lista de Desejos"|t }} ({{ jogos_desejos|length }})</h2>
             {% if jogos_desejos %}
             <div class="profile-games">
                 {% for game in jogos_desejos %}
@@ -118,23 +131,22 @@
                 {% endfor %}
             </div>
             {% else %}
-            <p class="muted">Nenhum jogo na lista de desejos.</p>
+            <p class="muted">{{ "Nenhum jogo na lista de desejos."|t }}</p>
             {% endif %}
         </section>
         {% else %}
         <section class="profile-section">
-            <h2>Lista de Desejos</h2>
-            <p class="muted">🔒 A lista de desejos de {{ perfil_user.nome }} é visível apenas para amigos.</p>
+            <h2>{{ "Lista de Desejos"|t }}</h2>
+            <p class="muted">🔒 {{ "A lista de desejos é visível apenas para amigos."|t }}</p>
         </section>
         {% endif %}
 
-        <!-- Mural de comentários -->
         <section class="profile-section">
-            <h2>Comentários ({{ comentarios|length }})</h2>
+            <h2>{{ "Comentários"|t }} ({{ comentarios|length }})</h2>
 
             <form action="{{ url_for('perfil_comentar', user_id=perfil_user.id) }}" method="POST" class="comment-form">
-                <textarea name="texto" maxlength="300" placeholder="Deixe um comentário {% if is_self %}no seu próprio mural{% else %}para {{ perfil_user.nome }}{% endif %}..." required></textarea>
-                <button type="submit" class="btn-green">Publicar</button>
+                <textarea name="texto" maxlength="300" placeholder="{% if is_self %}{{ 'Deixe um comentário no seu próprio mural...'|t }}{% else %}{{ 'Deixe um comentário...'|t }}{% endif %}" required></textarea>
+                <button type="submit" class="btn-green">{{ "Publicar"|t }}</button>
             </form>
 
             {% if comentarios %}
@@ -147,21 +159,20 @@
                             <a href="{{ url_for('perfil', user_id=c.autor_id) }}" class="comment-author">{{ c.autor_nome }}</a>
                             <span class="comment-date">{{ c.data }}</span>
                         </div>
-                        <div class="comment-text">{{ c.texto }}</div>
+                        <div class="comment-text">{{ c.texto|t }}</div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
             {% else %}
-            <p class="muted">Ainda não há comentários. Seja o primeiro!</p>
+            <p class="muted">{{ "Ainda não há comentários. Seja o primeiro!"|t }}</p>
             {% endif %}
         </section>
     </div>
 
-    <!-- Coluna lateral: amigos -->
     <aside class="profile-aside">
         <section class="profile-section">
-            <h2>Amigos ({{ amigos|length }})</h2>
+            <h2>{{ "Amigos"|t }} ({{ amigos|length }})</h2>
             {% if amigos %}
             <div class="friend-mini-list">
                 {% for a in amigos %}
@@ -175,23 +186,22 @@
                 {% endfor %}
             </div>
             {% else %}
-            <p class="muted">Sem amigos ainda.</p>
+            <p class="muted">{{ "Sem amigos ainda."|t }}</p>
             {% endif %}
         </section>
     </aside>
 </div>
 
 {% if is_friend %}
-<!-- Modal: presentear saldo para o amigo -->
 <div id="giftSaldoModal" class="modal-overlay" style="display:none;">
     <div class="modal-content">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <h2 style="margin:0;">🎁 Presentear saldo</h2>
+            <h2 style="margin:0;">🎁 {{ "Presentear saldo"|t }}</h2>
             <span style="cursor:pointer; color:#8f98a0; font-size:22px;" onclick="document.getElementById('giftSaldoModal').style.display='none'">&times;</span>
         </div>
         <p style="color:#8f98a0; font-size:13px; margin-bottom:16px;">
-            Comprar saldo Steam para <strong style="color:#66c0f4;">{{ perfil_user.nome }}</strong>.
-            A forma de pagamento será escolhida na próxima etapa.
+            {{ "Comprar saldo Steam para"|t }} <strong style="color:#66c0f4;">{{ perfil_user.nome }}</strong>.
+            {{ "A forma de pagamento será escolhida na próxima etapa."|t }}
         </p>
 
         <div class="wallet-options">
@@ -200,18 +210,18 @@
                 <input type="hidden" name="valor" value="{{ valor }}">
                 <input type="hidden" name="para" value="{{ perfil_user.id }}">
                 <span class="wallet-option-val">R$ {{ "%.2f"|format(valor) }}</span>
-                <button type="submit" class="btn-green" style="width:100%;">Presentear</button>
+                <button type="submit" class="btn-green" style="width:100%;">{{ "Presentear"|t }}</button>
             </form>
             {% endfor %}
         </div>
 
         <form action="{{ url_for('carteira_comprar') }}" method="POST" class="wallet-custom" style="margin-top:14px;">
             <input type="hidden" name="para" value="{{ perfil_user.id }}">
-            <label style="font-size:13px; color:#66c0f4;">Outro valor (R$):</label>
+            <label style="font-size:13px; color:#66c0f4;">{{ "Outro valor (R$):"|t }}</label>
             <div style="display:flex; gap:10px; margin-top:6px;">
-                <input type="number" name="valor" min="1" step="0.01" placeholder="Ex: 30.00"
+                <input type="number" name="valor" min="1" step="0.01" placeholder="{{ 'Ex: 30.00'|t }}"
                        style="flex:1; padding:10px; background:#1b2838; color:white; border:1px solid #2a475e; border-radius:2px;">
-                <button type="submit" class="btn-blue">Presentear</button>
+                <button type="submit" class="btn-blue">{{ "Presentear"|t }}</button>
             </div>
         </form>
     </div>

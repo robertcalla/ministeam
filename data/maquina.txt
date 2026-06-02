@@ -1,5 +1,8 @@
 # =============================================================================
-# MINISTEAM - Contas desta Máquina
-# Cada linha contém o ID de um usuário que já fez login neste computador.
+# MINISTEAM - Configurações e Contas desta Máquina
+# - Linhas de config: chave | valor   (ex: linguagem | pt-br)
+# - Linhas de conta:  apenas o ID do usuário que já fez login aqui
+# Idiomas: pt-br | en | de | zh-cn | pl | ko
 # =============================================================================
+linguagem | pt-br
 1

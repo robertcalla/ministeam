@@ -1,0 +1,1764 @@
+# =============================================================================
+# MINISTEAM - Cache de Traduções
+# Formato: idioma_destino | texto_origem || texto_traduzido
+# Quebras de linha e pipes escapados como \n e \|
+# =============================================================================
+en | Lista de Desejos || Wish List
+de | Carrinho de Compras || Warenkorb
+pt-br | Das Spiel hat zu viele Bugs. || O jogo tem muitos bugs.
+en | Bem vindo ao Ministeam, o melhor lugar para encontrar Aventura Épica || Welcome to Ministeam, the best place to find Aventura Épica
+en | Carrinho || Cart
+en | A lista de desejos é visível apenas para amigos. || The wish list is only visible to friends.
+de | A lista de desejos é visível apenas para amigos. || Die Wunschliste ist nur für Freunde sichtbar.
+zh-cn | A lista de desejos é visível apenas para amigos. || 愿望清单仅对好友可见。
+pl | A lista de desejos é visível apenas para amigos. || Lista życzeń jest widoczna tylko dla znajomych.
+ko | A lista de desejos é visível apenas para amigos. || 위시리스트는 친구에게만 표시됩니다.
+en | Liberar Parente || Release Relative
+de | Liberar Parente || Relative Freigabe
+zh-cn | Liberar Parente || 发布相关
+pl | Liberar Parente || Wydanie względne
+ko | Liberar Parente || 릴리스 친척
+en | Mínimo 4 caracteres || Minimum 4 characters
+de | Mínimo 4 caracteres || Mindestens 4 Zeichen
+zh-cn | Mínimo 4 caracteres || 最少 4 个字符
+pl | Mínimo 4 caracteres || Minimum 4 znaki
+ko | Mínimo 4 caracteres || 최소 4자
+en | Membros da Família || Family Members
+de | Membros da Família || Familienmitglieder
+zh-cn | Membros da Família || 家庭成员
+pl | Membros da Família || Członkowie rodziny
+ko | Membros da Família || 가족 구성원
+en | Destaques e Recomendações || Highlights and Recommendations
+de | Destaques e Recomendações || Highlights und Empfehlungen
+zh-cn | Destaques e Recomendações || 亮点和建议
+pl | Destaques e Recomendações || Najważniejsze informacje i rekomendacje
+ko | Destaques e Recomendações || 하이라이트 및 권장사항
+en | Aproveite os descontos em jogos selecionados || Take advantage of discounts on selected games
+de | Aproveite os descontos em jogos selecionados || Profitieren Sie von Rabatten auf ausgewählte Spiele
+pl | Aproveite os descontos em jogos selecionados || Skorzystaj ze zniżek na wybrane gry
+ko | Aproveite os descontos em jogos selecionados || 일부 게임에 대한 할인 혜택을 누리세요
+en | Presentear saldo || Gift balance
+de | Presentear saldo || Geschenkguthaben
+zh-cn | Presentear saldo || 礼品余额
+pl | Presentear saldo || Bilans prezentów
+ko | Presentear saldo || 선물 잔액
+en | em || in
+de | em || In
+zh-cn | em || 在
+pl | em || W
+ko | em || ~에
+en | Pool de Licenças da Família || Family License Pool
+de | Pool de Licenças da Família || Familienlizenzpool
+zh-cn | Pool de Licenças da Família || 家庭许可证池
+pl | Pool de Licenças da Família || Pula licencji rodzinnych
+ko | Pool de Licenças da Família || 가족 라이선스 풀
+en | Dados da Conta || Account Data
+de | Dados da Conta || Kontodaten
+zh-cn | Dados da Conta || 账户数据
+pl | Dados da Conta || Dane konta
+ko | Dados da Conta || 계정 데이터
+en | Tipo: Presente || Type: Gift
+de | Tipo: Presente || Typ: Geschenk
+zh-cn | Tipo: Presente || 类型： 礼品
+pl | Tipo: Presente || Typ: Prezent
+ko | Tipo: Presente || 유형: 선물
+en | Horas || Hours
+de | Horas || Std
+zh-cn | Horas || 时间
+pl | Horas || Godziny
+ko | Horas || 시간
+en | Usado para fazer login. Apenas letras, números e _ || Used to log in. Only letters, numbers and _
+de | Usado para fazer login. Apenas letras, números e _ || Wird zum Anmelden verwendet. Nur Buchstaben, Zahlen und _
+zh-cn | Usado para fazer login. Apenas letras, números e _ || 用于登录。仅限字母、数字和_
+pl | Usado para fazer login. Apenas letras, números e _ || Służy do logowania. Tylko litery, cyfry i _
+ko | Usado para fazer login. Apenas letras, números e _ || 로그인 시 사용됩니다. 문자, 숫자, _만 가능합니다.
+en | Configurações || Settings
+de | Configurações || Einstellungen
+zh-cn | Configurações || 设置
+pl | Configurações || Ustawienia
+ko | Configurações || 설정
+en | Membro || Member
+de | Membro || Mitglied
+zh-cn | Membro || 成员
+pl | Membro || Członek
+ko | Membro || 회원
+en | Idade verificada automaticamente pelo seu perfil. || Age automatically verified by your profile.
+de | Idade verificada automaticamente pelo seu perfil. || Das Alter wird automatisch durch Ihr Profil überprüft.
+zh-cn | Idade verificada automaticamente pelo seu perfil. || 通过您的个人资料自动验证年龄。
+pl | Idade verificada automaticamente pelo seu perfil. || Wiek automatycznie weryfikowany przez Twój profil.
+ko | Idade verificada automaticamente pelo seu perfil. || 프로필을 통해 자동으로 연령이 확인됩니다.
+en | Não Recomendado || Not Recommended
+de | Não Recomendado || Nicht empfohlen
+zh-cn | Não Recomendado || 不推荐
+pl | Não Recomendado || Niezalecane
+ko | Não Recomendado || 권장되지 않음
+en | Não elegível para Compartilhamento Familiar || Not eligible for Family Sharing
+de | Não elegível para Compartilhamento Familiar || Kein Anspruch auf Familienfreigabe
+zh-cn | Não elegível para Compartilhamento Familiar || 不符合家庭共享资格
+pl | Não elegível para Compartilhamento Familiar || Nie kwalifikuje się do udostępniania rodziny
+ko | Não elegível para Compartilhamento Familiar || 가족 공유에 적합하지 않음
+en | Item adicionado ao carrinho! || Item added to cart!
+de | Item adicionado ao carrinho! || Artikel zum Warenkorb hinzugefügt!
+zh-cn | Item adicionado ao carrinho! || 商品已添加到购物车！
+pl | Item adicionado ao carrinho! || Artykuł dodany do koszyka!
+ko | Item adicionado ao carrinho! || 장바구니에 상품이 추가되었습니다!
+en | vezes. || times.
+de | vezes. || mal.
+zh-cn | vezes. || 次。
+pl | vezes. || czasy.
+ko | vezes. || 타임스.
+en | Isto irá limpar os cookies e APAGAR todos os dados (amizades, famílias, bibliotecas, carteiras e sessões). As contas de usuário serão mantidas. Continuar? || This will clear cookies and DELETE all data (friends, families, libraries, wallets and sessions). User accounts will be maintained. Continue?
+de | Isto irá limpar os cookies e APAGAR todos os dados (amizades, famílias, bibliotecas, carteiras e sessões). As contas de usuário serão mantidas. Continuar? || Dadurch werden Cookies gelöscht und alle Daten (Freunde, Familien, Bibliotheken, Geldbörsen und Sitzungen) LÖSCHEN. Benutzerkonten bleiben erhalten. Weitermachen?
+zh-cn | Isto irá limpar os cookies e APAGAR todos os dados (amizades, famílias, bibliotecas, carteiras e sessões). As contas de usuário serão mantidas. Continuar? || 这将清除 cookie 并删除所有数据（朋友、家人、图书馆、钱包和会话）。用户帐户将得到维护。继续？
+pl | Isto irá limpar os cookies e APAGAR todos os dados (amizades, famílias, bibliotecas, carteiras e sessões). As contas de usuário serão mantidas. Continuar? || Spowoduje to wyczyszczenie plików cookie i USUNIĘCIE wszystkich danych (znajomych, rodzin, bibliotek, portfeli i sesji). Konta użytkowników zostaną utrzymane. Kontynuować?
+ko | Isto irá limpar os cookies e APAGAR todos os dados (amizades, famílias, bibliotecas, carteiras e sessões). As contas de usuário serão mantidas. Continuar? || 이렇게 하면 쿠키가 지워지고 모든 데이터(친구, 가족, 도서관, 지갑 및 세션)가 삭제됩니다. 사용자 계정은 유지됩니다. 계속하다?
+en | Seu carrinho está vazio. || Your cart is empty.
+de | Seu carrinho está vazio. || Ihr Warenkorb ist leer.
+zh-cn | Seu carrinho está vazio. || 您的购物车是空的。
+pl | Seu carrinho está vazio. || Twój koszyk jest pusty.
+ko | Seu carrinho está vazio. || 장바구니가 비어 있습니다.
+en | Tem certeza? Esta ação transfere a fundação da família para || He is sure? This action transfers the family foundation to
+de | Tem certeza? Esta ação transfere a fundação da família para || Er ist sicher? Mit dieser Aktion wird die Familienstiftung auf übertragen
+zh-cn | Tem certeza? Esta ação transfere a fundação da família para || 他确定吗？这一行动将家族基金会转移到
+pl | Tem certeza? Esta ação transfere a fundação da família para || Jest pewien? Akcja ta przenosi fundację rodzinną na
+ko | Tem certeza? Esta ação transfere a fundação da família para || 그 사람이 확실해요? 이 조치는 가족 기반을 다음으로 이전합니다.
+en | Lançamento: || Launch:
+de | Lançamento: || Start:
+zh-cn | Lançamento: || 发射：
+pl | Lançamento: || Początek:
+ko | Lançamento: || 시작하다:
+en | presente para || gift for
+de | presente para || Geschenk für
+zh-cn | presente para || 给的礼物
+pl | presente para || prezent dla
+ko | presente para || 를 위한 선물
+en | Editar sua análise || Edit your analysis
+de | Editar sua análise || Bearbeiten Sie Ihre Analyse
+zh-cn | Editar sua análise || 编辑您的分析
+pl | Editar sua análise || Edytuj swoją analizę
+ko | Editar sua análise || 분석 편집
+en | jogadas || moves
+de | jogadas || bewegt sich
+zh-cn | jogadas || 动作
+pl | jogadas || porusza się
+ko | jogadas || 움직임
+en | Recomendado || Recommended
+de | Recomendado || Empfohlen
+zh-cn | Recomendado || 受到推崇的
+pl | Recomendado || Zalecony
+ko | Recomendado || 추천
+en | ATIVADO || ON
+de | ATIVADO || AN
+zh-cn | ATIVADO || 在
+pl | ATIVADO || NA
+ko | ATIVADO || 에
+en | Todos os Idiomas || All Languages
+de | Todos os Idiomas || Alle Sprachen
+zh-cn | Todos os Idiomas || 所有语言
+pl | Todos os Idiomas || Wszystkie języki
+ko | Todos os Idiomas || 모든 언어
+en | Loja || Store
+de | Loja || Speichern
+zh-cn | Loja || 店铺
+pl | Loja || Sklep
+ko | Loja || 가게
+en | Criar conta grátis || Create free account
+de | Criar conta grátis || Kostenloses Konto erstellen
+zh-cn | Criar conta grátis || 创建免费帐户
+ko | Criar conta grátis || 무료 계정 만들기
+en | Todos os Jogos || All Games
+de | Todos os Jogos || Alle Spiele
+zh-cn | Todos os Jogos || 所有游戏
+pl | Todos os Jogos || Wszystkie gry
+ko | Todos os Jogos || 모든 게임
+de | jogo(s) na sua lista de desejos. || Spiel(e) auf Ihrer Wunschliste.
+zh-cn | jogo(s) na sua lista de desejos. || 您心愿单上的游戏。
+pl | jogo(s) na sua lista de desejos. || gry na Twojej liście życzeń.
+ko | jogo(s) na sua lista de desejos. || 위시리스트에 있는 게임.
+en | Adicionar fundos || Add funds
+de | Adicionar fundos || Geld hinzufügen
+zh-cn | Adicionar fundos || 添加资金
+pl | Adicionar fundos || Dodaj środki
+ko | Adicionar fundos || 자금 추가
+en | Selecione sua conta || Select your account
+de | Selecione sua conta || Wählen Sie Ihr Konto aus
+zh-cn | Selecione sua conta || 选择您的帐户
+pl | Selecione sua conta || Wybierz swoje konto
+ko | Selecione sua conta || 계정을 선택하세요
+en | Você ainda não tem amigos adicionados. || You have no friends added yet.
+de | Você ainda não tem amigos adicionados. || Du hast noch keine Freunde hinzugefügt.
+pl | Você ainda não tem amigos adicionados. || Nie masz jeszcze dodanych znajomych.
+ko | Você ainda não tem amigos adicionados. || 아직 추가된 친구가 없습니다.
+en | Ao carrinho || To cart
+de | Ao carrinho || Zum Warenkorb
+zh-cn | Ao carrinho || 到购物车
+pl | Ao carrinho || Do koszyka
+ko | Ao carrinho || 장바구니에
+en | Este membro se tornará o novo lider da família. Você continuará como membro comum. Esta ação não pode ser desfeita sem a cooperação do novo líder. || This member will become the new leader of the family. You will continue as a regular member. This action cannot be undone without the cooperation of the new leader.
+de | Este membro se tornará o novo lider da família. Você continuará como membro comum. Esta ação não pode ser desfeita sem a cooperação do novo líder. || Dieses Mitglied wird das neue Oberhaupt der Familie. Sie bleiben weiterhin ordentliches Mitglied. Diese Aktion kann ohne die Mitarbeit des neuen Leiters nicht rückgängig gemacht werden.
+zh-cn | Este membro se tornará o novo lider da família. Você continuará como membro comum. Esta ação não pode ser desfeita sem a cooperação do novo líder. || 这位成员将成为家庭的新领导者。您将继续作为正式会员。如果没有新领导人的合作，这一行动将无法撤销。
+pl | Este membro se tornará o novo lider da família. Você continuará como membro comum. Esta ação não pode ser desfeita sem a cooperação do novo líder. || Członek ten stanie się nowym przywódcą rodziny. Będziesz kontynuować jako zwykły członek. Tej akcji nie da się cofnąć bez współpracy nowego lidera.
+ko | Este membro se tornará o novo lider da família. Você continuará como membro comum. Esta ação não pode ser desfeita sem a cooperação do novo líder. || 이 구성원은 가족의 새로운 지도자가 될 것입니다. 계속 정회원으로 활동하게 됩니다. 이 조치는 새 지도자의 협조 없이는 취소될 수 없습니다.
+en | Salvar Alterações || Save Changes
+de | Salvar Alterações || Änderungen speichern
+zh-cn | Salvar Alterações || 保存更改
+pl | Salvar Alterações || Zapisz zmiany
+ko | Salvar Alterações || 변경 사항 저장
+en | Transferir Liderança para este Membro || Transfer Leadership to this Member
+de | Transferir Liderança para este Membro || Übertragen Sie die Führung auf dieses Mitglied
+zh-cn | Transferir Liderança para este Membro || 将领导权移交给该成员
+pl | Transferir Liderança para este Membro || Przenieś przywództwo na tego członka
+ko | Transferir Liderança para este Membro || 이 회원에게 리더십 이전
+en | Ver Detalhes || View Details
+de | Ver Detalhes || Details anzeigen
+zh-cn | Ver Detalhes || 查看详情
+pl | Ver Detalhes || Zobacz szczegóły
+ko | Ver Detalhes || 세부정보 보기
+en | Use apenas letras, números e underscore || Use only letters, numbers and underscores
+de | Use apenas letras, números e underscore || Verwenden Sie nur Buchstaben, Zahlen und Unterstriche
+zh-cn | Use apenas letras, números e underscore || 仅使用字母、数字和下划线
+pl | Use apenas letras, números e underscore || Używaj tylko liter, cyfr i podkreśleń
+ko | Use apenas letras, números e underscore || 문자, 숫자, 밑줄만 사용하세요.
+en | Todos os jogos || All games
+de | Todos os jogos || Alle Spiele
+zh-cn | Todos os jogos || 所有游戏
+pl | Todos os jogos || Wszystkie gry
+ko | Todos os jogos || 모든 게임
+en | Escolha um valor para comprar saldo. Você escolherá a forma de pagamento na próxima etapa. || Choose an amount to buy balance. You will choose your payment method in the next step.
+de | Escolha um valor para comprar saldo. Você escolherá a forma de pagamento na próxima etapa. || Wählen Sie einen Betrag aus, um das Guthaben zu kaufen. Im nächsten Schritt wählen Sie Ihre Zahlungsart aus.
+zh-cn | Escolha um valor para comprar saldo. Você escolherá a forma de pagamento na próxima etapa. || 选择购买余额的金额。您将在下一步中选择付款方式。
+pl | Escolha um valor para comprar saldo. Você escolherá a forma de pagamento na próxima etapa. || Wybierz kwotę zakupu salda. Metodę płatności wybierzesz w kolejnym kroku.
+ko | Escolha um valor para comprar saldo. Você escolherá a forma de pagamento na próxima etapa. || 잔액을 구매할 금액을 선택하세요. 다음 단계에서 결제 방법을 선택하게 됩니다.
+de | Lista de Desejos || Wunschliste
+zh-cn | Lista de Desejos || 愿望清单
+pl | Lista de Desejos || Lista życzeń
+ko | Lista de Desejos || 위시리스트
+en | Minha Carteira Steam || My Steam Wallet
+de | Minha Carteira Steam || Mein Steam-Wallet
+zh-cn | Minha Carteira Steam || 我的 Steam 钱包
+pl | Minha Carteira Steam || Mój portfel Steam
+ko | Minha Carteira Steam || 내 Steam 지갑
+en | Formas de Pagamento || Payment Methods
+de | Formas de Pagamento || Zahlungsmethoden
+zh-cn | Formas de Pagamento || 付款方式
+pl | Formas de Pagamento || Metody płatności
+ko | Formas de Pagamento || 결제 방법
+en | Cancelar || Cancel
+de | Cancelar || Stornieren
+zh-cn | Cancelar || 取消
+pl | Cancelar || Anulować
+ko | Cancelar || 취소
+en | Criar um Novo Grupo Familiar || Create a New Family Group
+de | Criar um Novo Grupo Familiar || Erstellen Sie eine neue Familiengruppe
+zh-cn | Criar um Novo Grupo Familiar || 创建新的家庭组
+pl | Criar um Novo Grupo Familiar || Utwórz nową grupę rodzinną
+ko | Criar um Novo Grupo Familiar || 새 가족 그룹 만들기
+en | Minha Biblioteca || My Library
+de | Minha Biblioteca || Meine Bibliothek
+pl | Minha Biblioteca || Moja biblioteka
+ko | Minha Biblioteca || 내 라이브러리
+en | Selecione um amigo... || Select a friend...
+de | Selecione um amigo... || Wählen Sie einen Freund aus...
+zh-cn | Selecione um amigo... || 选择一个朋友...
+pl | Selecione um amigo... || Wybierz znajomego...
+ko | Selecione um amigo... || 친구를 선택하세요...
+en | Adicionar || To add
+de | Adicionar || Zum Hinzufügen
+zh-cn | Adicionar || 添加
+pl | Adicionar || Aby dodać
+ko | Adicionar || 추가하려면
+en | Deseja comprar uma licença adicional para o pool da família? || Do you want to purchase an additional license for your family pool?
+de | Deseja comprar uma licença adicional para o pool da família? || Sie möchten eine Zusatzlizenz für Ihren Familienpool erwerben?
+zh-cn | Deseja comprar uma licença adicional para o pool da família? || 您想为您的家庭泳池购买额外的许可证吗？
+pl | Deseja comprar uma licença adicional para o pool da família? || Chcesz kupić dodatkową licencję na swoją rodzinną pulę?
+ko | Deseja comprar uma licença adicional para o pool da família? || 가족 풀에 대한 추가 라이선스를 구매하시겠습니까?
+en | Classificação Indicativa: || Indicative Rating:
+de | Classificação Indicativa: || Indikative Bewertung:
+zh-cn | Classificação Indicativa: || 指示性评级：
+pl | Classificação Indicativa: || Ocena orientacyjna:
+ko | Classificação Indicativa: || 지표 등급:
+en | Nenhuma análise encontrada para este filtro. || No reviews found for this filter.
+de | Nenhuma análise encontrada para este filtro. || Für diesen Filter wurden keine Bewertungen gefunden.
+zh-cn | Nenhuma análise encontrada para este filtro. || 没有找到对此过滤器的评论。
+pl | Nenhuma análise encontrada para este filtro. || Nie znaleziono recenzji tego filtra.
+ko | Nenhuma análise encontrada para este filtro. || 이 필터에 대한 리뷰를 찾을 수 없습니다.
+en | Voltar ao Carrinho || Return to Cart
+de | Voltar ao Carrinho || Zurück zum Warenkorb
+zh-cn | Voltar ao Carrinho || 返回购物车
+pl | Voltar ao Carrinho || Wróć do koszyka
+ko | Voltar ao Carrinho || 장바구니로 돌아가기
+en | Recomendados || Recommended
+de | Recomendados || Empfohlen
+zh-cn | Recomendados || 受到推崇的
+pl | Recomendados || Zalecony
+ko | Recomendados || 추천
+en | Usar saldo da minha Carteira Steam || Use my Steam Wallet balance
+de | Usar saldo da minha Carteira Steam || Verwenden Sie mein Steam-Wallet-Guthaben
+zh-cn | Usar saldo da minha Carteira Steam || 使用我的 Steam 钱包余额
+pl | Usar saldo da minha Carteira Steam || Użyj salda mojego Portfela Steam
+ko | Usar saldo da minha Carteira Steam || 내 Steam 지갑 잔액을 사용하세요
+en | Lider || Leader
+de | Lider || Führer
+zh-cn | Lider || 领导者
+pl | Lider || Lider
+ko | Lider || 지도자
+en | Até 5 sugestões baseadas na sua rede de amigos. || Up to 5 suggestions based on your redand friends.
+de | Até 5 sugestões baseadas na sua rede de amigos. || Bis zu 5 Vorschläge basierend auf Ihrem redund Ihren Freunden.
+zh-cn | Até 5 sugestões baseadas na sua rede de amigos. || 根据您的 red 和朋友最多提供 5 个建议。
+pl | Até 5 sugestões baseadas na sua rede de amigos. || Do 5 sugestii na podstawie Twoich redi znajomych.
+ko | Até 5 sugestões baseadas na sua rede de amigos. || 귀하의 red과 친구들을 기반으로 최대 5개의 제안을 제공합니다.
+en | Use o saldo da sua Carteira para comprar jogos na loja sem precisar de outro meio de pagamento. || Use your Wallet balance to purchase games in the store without needing another payment method.
+de | Use o saldo da sua Carteira para comprar jogos na loja sem precisar de outro meio de pagamento. || Verwenden Sie Ihr Wallet-Guthaben, um Spiele im Store zu kaufen, ohne eine andere Zahlungsmethode zu benötigen.
+zh-cn | Use o saldo da sua Carteira para comprar jogos na loja sem precisar de outro meio de pagamento. || 使用您的电子钱包余额在商店中购买游戏，无需其他付款方式。
+pl | Use o saldo da sua Carteira para comprar jogos na loja sem precisar de outro meio de pagamento. || Użyj salda w Portfelu, aby kupować gry w sklepie bez konieczności stosowania innej metody płatności.
+ko | Use o saldo da sua Carteira para comprar jogos na loja sem precisar de outro meio de pagamento. || 다른 결제 수단 없이 월렛 잔액을 사용하여 스토어에서 게임을 구매할 수 있습니다.
+en | Logado como: || Logged in as:
+de | Logado como: || Angemeldet als:
+zh-cn | Logado como: || 登录身份：
+pl | Logado como: || Zalogowałem się jako:
+ko | Logado como: || 다음 계정으로 로그인됨:
+en | Fundada por || Founded by
+de | Fundada por || Gegründet von
+zh-cn | Fundada por || 创立者：
+pl | Fundada por || Założona przez
+ko | Fundada por || 설립자:
+en | Indisponível || Unavailable
+de | Indisponível || Nicht verfügbar
+zh-cn | Indisponível || 不可用
+pl | Indisponível || Nie płynny
+ko | Indisponível || 없는
+en | Transferir Liderança || Transfer Leadership
+de | Transferir Liderança || Führung übertragen
+zh-cn | Transferir Liderança || 转移领导权
+pl | Transferir Liderança || Przeniesienie przywództwa
+ko | Transferir Liderança || 리더십 이전
+en | Avaliações: || Reviews:
+de | Avaliações: || Rezensionen:
+zh-cn | Avaliações: || 评论：
+pl | Avaliações: || Recenzje:
+ko | Avaliações: || 리뷰:
+en | até || until
+de | até || bis
+zh-cn | até || 直到
+pl | até || dopóki
+ko | até || ~까지
+en | Trocas restantes: || Remaining exchanges:
+de | Trocas restantes: || Verbleibende Umtausche:
+zh-cn | Trocas restantes: || 剩余兑换：
+pl | Trocas restantes: || Pozostałe wymiany:
+ko | Trocas restantes: || 남은 교환:
+en | Ex: 75.00 || Ex: 75.00
+de | Ex: 75.00 || Beispiel: 75,00
+zh-cn | Ex: 75.00 || 例如：75.00
+pl | Ex: 75.00 || Np.: 75,00
+ko | Ex: 75.00 || 예: 75.00
+en | Resumo do Pedido || Summary of Pedido
+de | Resumo do Pedido || Zusammenfassung von Pedido
+zh-cn | Resumo do Pedido || Pedido 概要
+pl | Resumo do Pedido || Podsumowanie Pedido
+ko | Resumo do Pedido || Pedido 요약
+en | Data de Nascimento || Date of birth
+de | Data de Nascimento || Geburtsdatum
+zh-cn | Data de Nascimento || 出生日期
+pl | Data de Nascimento || Data urodzenia
+ko | Data de Nascimento || 생일
+en | Ver meu Carrinho || View my Cart
+de | Ver meu Carrinho || Sehen Sie sich meinen Warenkorb an
+zh-cn | Ver meu Carrinho || 查看我的购物车
+pl | Ver meu Carrinho || Zobacz mój koszyk
+ko | Ver meu Carrinho || 내 장바구니 보기
+en | Na biblioteca || In the library
+de | Na biblioteca || In der Bibliothek
+zh-cn | Na biblioteca || 在图书馆
+pl | Na biblioteca || W bibliotece
+ko | Na biblioteca || 도서관에서
+en | ex: joao_silva || ex: joao_silva
+de | ex: joao_silva || Beispiel: joao_silva
+zh-cn | ex: joao_silva || 例如：joao_席尔瓦
+pl | ex: joao_silva || np.: joao_silva
+ko | ex: joao_silva || 예: joao_실바
+en | O saldo não cobre o total. Selecione um método complementar para os restantes || The balance does not cover the total. Select a complementary method for the remaining ones
+de | O saldo não cobre o total. Selecione um método complementar para os restantes || Der Restbetrag deckt nicht die Gesamtsumme ab. Wählen Sie für die übrigen eine ergänzende Methode aus
+zh-cn | O saldo não cobre o total. Selecione um método complementar para os restantes || 余额不包括总额。为其余方法选择补充方法
+pl | O saldo não cobre o total. Selecione um método complementar para os restantes || Saldo nie obejmuje całości. Dla pozostałych wybierz metodę uzupełniającą
+ko | O saldo não cobre o total. Selecione um método complementar para os restantes || 잔액은 총액을 포함하지 않습니다. 나머지에 대해서는 보완적인 방법을 선택
+en | Finalizar sessão || End session
+de | Finalizar sessão || Sitzung beenden
+zh-cn | Finalizar sessão || 结束会话
+pl | Finalizar sessão || Zakończ sesję
+ko | Finalizar sessão || 세션 종료
+en | Método complementar indisponível. || Complementary method unavailable.
+de | Método complementar indisponível. || Komplementäre Methode nicht verfügbar.
+zh-cn | Método complementar indisponível. || 无法使用补充方法。
+pl | Método complementar indisponível. || Metoda uzupełniająca niedostępna.
+ko | Método complementar indisponível. || 보완적인 방법을 사용할 수 없습니다.
+en | Selecione um método de pagamento para o valor total de || Select a payment method for the total amount of
+de | Selecione um método de pagamento para o valor total de || Wählen Sie eine Zahlungsmethode für den Gesamtbetrag aus
+zh-cn | Selecione um método de pagamento para o valor total de || 选择总金额的付款方式
+pl | Selecione um método de pagamento para o valor total de || Wybierz metodę płatności za łączną kwotę
+ko | Selecione um método de pagamento para o valor total de || 총 금액에 대한 결제 방법을 선택하세요.
+en | Configurações do membro || Member Settings
+de | Configurações do membro || Mitgliedereinstellungen
+zh-cn | Configurações do membro || 会员设置
+pl | Configurações do membro || Ustawienia członkowskie
+ko | Configurações do membro || 회원 설정
+en | Você recomenda este jogo? || Do you recommend this game?
+de | Você recomenda este jogo? || Empfehlen Sie dieses Spiel?
+zh-cn | Você recomenda este jogo? || 你推荐这个游戏吗？
+pl | Você recomenda este jogo? || Czy polecasz tę grę?
+ko | Você recomenda este jogo? || 이 게임을 추천하시나요?
+en | Comentários || Comments
+de | Comentários || Kommentare
+zh-cn | Comentários || 评论
+pl | Comentários || Uwagi
+ko | Comentários || 댓글
+en | Ainda não há comentários. Seja o primeiro! || There are no comments yet. Be the first!
+de | Ainda não há comentários. Seja o primeiro! || Es liegen noch keine Kommentare vor. Seien Sie der Erste!
+zh-cn | Ainda não há comentários. Seja o primeiro! || 还没有评论。成为第一！
+pl | Ainda não há comentários. Seja o primeiro! || Nie ma jeszcze żadnych komentarzy. Bądź pierwszy!
+ko | Ainda não há comentários. Seja o primeiro! || 아직 댓글이 없습니다. 첫 번째가 되세요!
+en | nos jogos que quiser acompanhar. || in the games you want to follow.
+de | nos jogos que quiser acompanhar. || in den Spielen, die Sie verfolgen möchten.
+zh-cn | nos jogos que quiser acompanhar. || 在您想要关注的游戏中。
+pl | nos jogos que quiser acompanhar. || w grach, które chcesz śledzić.
+ko | nos jogos que quiser acompanhar. || 당신이 팔로우하고 싶은 게임에서.
+en | Adicionar ao Carrinho || Add to Cart
+de | Adicionar ao Carrinho || in den Warenkorb legen
+zh-cn | Adicionar ao Carrinho || 添加到购物车
+pl | Adicionar ao Carrinho || Dodaj do koszyka
+ko | Adicionar ao Carrinho || 장바구니에 추가
+en | Adicione amigos para que possamos sugerir amigos deles! || Add friends so we can suggest their friends!
+de | Adicione amigos para que possamos sugerir amigos deles! || Füge Freunde hinzu, damit wir ihre Freunde vorschlagen können!
+zh-cn | Adicione amigos para que possamos sugerir amigos deles! || 添加朋友，以便我们推荐他们的朋友！
+pl | Adicione amigos para que possamos sugerir amigos deles! || Dodaj znajomych, abyśmy mogli zasugerować ich znajomych!
+ko | Adicione amigos para que possamos sugerir amigos deles! || 우리가 친구를 추천할 수 있도록 친구를 추가하세요!
+en | Todos os seus amigos já fazem parte desta família! || All your friends are already part of this family!
+de | Todos os seus amigos já fazem parte desta família! || Alle deine Freunde sind bereits Teil dieser Familie!
+pl | Todos os seus amigos já fazem parte desta família! || Wszyscy Twoi znajomi są już częścią tej rodziny!
+ko | Todos os seus amigos já fazem parte desta família! || 모든 친구들은 이미 이 가족의 일원입니다!
+en | para || to
+de | para || Zu
+zh-cn | para || 到
+pl | para || Do
+ko | para || 에게
+en | Ver Família || See Family
+de | Ver Família || Siehe Familie
+zh-cn | Ver Família || 查看家人
+pl | Ver Família || Zobacz Rodzina
+ko | Ver Família || 가족 보기
+en | Confirmar e Pagar || Confirm and Pay
+de | Confirmar e Pagar || Bestätigen und bezahlen
+zh-cn | Confirmar e Pagar || 确认并付款
+pl | Confirmar e Pagar || Potwierdź i zapłać
+ko | Confirmar e Pagar || 확인 및 결제
+en | Nenhum jogo na biblioteca ainda. || No games in the library yet.
+de | Nenhum jogo na biblioteca ainda. || Noch keine Spiele in der Bibliothek.
+zh-cn | Nenhum jogo na biblioteca ainda. || 库中还没有游戏。
+pl | Nenhum jogo na biblioteca ainda. || Nie ma jeszcze żadnych gier w bibliotece.
+ko | Nenhum jogo na biblioteca ainda. || 아직 라이브러리에 게임이 없습니다.
+en | Inglês || English
+de | Inglês || Englisch
+zh-cn | Inglês || 英语
+pl | Inglês || angielski
+ko | Inglês || 영어
+en | Ex: 30.00 || Ex: 30.00
+de | Ex: 30.00 || Beispiel: 30.00
+zh-cn | Ex: 30.00 || 例如：30:00
+pl | Ex: 30.00 || Np.: 30.00
+ko | Ex: 30.00 || 예: 30.00
+en | Pesquisar amigo por nome... || Search friend by name...
+de | Pesquisar amigo por nome... || Freund nach Namen suchen...
+zh-cn | Pesquisar amigo por nome... || 按名字搜索好友...
+pl | Pesquisar amigo por nome... || Wyszukaj znajomego po imieniu...
+ko | Pesquisar amigo por nome... || 이름으로 친구 검색...
+en | Escreva o que você achou do jogo... || Write what you thought of the game...
+de | Escreva o que você achou do jogo... || Schreiben Sie, was Sie von dem Spiel halten ...
+zh-cn | Escreva o que você achou do jogo... || 写下你对这个游戏的看法...
+pl | Escreva o que você achou do jogo... || Napisz co myślisz o grze...
+ko | Escreva o que você achou do jogo... || 게임에 대해 어떻게 생각하는지 적어보세요.
+en | Entrar || To enter
+de | Entrar || Eintreten
+zh-cn | Entrar || 进入
+pl | Entrar || Aby wejść
+ko | Entrar || 들어가려면
+en | Revisão e Pagamento || Review and Payment
+de | Revisão e Pagamento || Überprüfung und Zahlung
+zh-cn | Revisão e Pagamento || 审核及付款
+pl | Revisão e Pagamento || Przegląd i płatność
+ko | Revisão e Pagamento || 검토 및 결제
+en | Comprar Saldo || Buy Balance
+de | Comprar Saldo || Guthaben kaufen
+zh-cn | Comprar Saldo || 购买余额
+pl | Comprar Saldo || Kup Saldo
+ko | Comprar Saldo || 잔액 구매
+en | Selecione como deseja pagar pelo saldo: || Select how you want to pay your balance:
+de | Selecione como deseja pagar pelo saldo: || Wählen Sie aus, wie Sie Ihren Restbetrag bezahlen möchten:
+zh-cn | Selecione como deseja pagar pelo saldo: || 选择您想要支付余额的方式：
+pl | Selecione como deseja pagar pelo saldo: || Wybierz sposób, w jaki chcesz spłacić saldo:
+ko | Selecione como deseja pagar pelo saldo: || 잔액 결제 방법을 선택하세요.
+en | Apenas o lider pode alterar permissões de membros. || Only the leader can change member permissions.
+de | Apenas o lider pode alterar permissões de membros. || Nur der Leiter kann die Mitgliedsberechtigungen ändern.
+zh-cn | Apenas o lider pode alterar permissões de membros. || 只有领导才能更改成员权限。
+pl | Apenas o lider pode alterar permissões de membros. || Tylko lider może zmieniać uprawnienia członków.
+ko | Apenas o lider pode alterar permissões de membros. || 리더만이 구성원 권한을 변경할 수 있습니다.
+en | Desejos || Wishes
+de | Desejos || Wünsche
+zh-cn | Desejos || 愿望
+pl | Desejos || Życzenia
+ko | Desejos || 소원
+en | Requisitos de Sistema || System Requirements
+de | Requisitos de Sistema || Systemanforderungen
+zh-cn | Requisitos de Sistema || 系统要求
+pl | Requisitos de Sistema || Wymagania systemowe
+ko | Requisitos de Sistema || 시스템 요구사항
+en | Idiomas: || Languages:
+de | Idiomas: || Sprachen:
+zh-cn | Idiomas: || 语言：
+pl | Idiomas: || Języki:
+ko | Idiomas: || 언어:
+en | Comprar Saldo Steam || Buy Steam Balance
+de | Comprar Saldo Steam || Steam-Guthaben kaufen
+zh-cn | Comprar Saldo Steam || 购买 Steam 余额
+pl | Comprar Saldo Steam || Kup saldo Steam
+ko | Comprar Saldo Steam || Steam 잔액 구매
+en | Mínimos || Minimum
+de | Mínimos || Minimum
+zh-cn | Mínimos || 最低限度
+pl | Mínimos || Minimum
+ko | Mínimos || 최저한의
+en | ex: João Silva || ex: João Silva
+de | ex: João Silva || Beispiel: João Silva
+zh-cn | ex: João Silva || 例如：João 席尔瓦
+pl | ex: João Silva || np.: João Silva
+ko | ex: João Silva || 예: João 실바
+en | Comprar || Buy
+de | Comprar || Kaufen
+zh-cn | Comprar || 买
+pl | Comprar || Kupić
+ko | Comprar || 구입하다
+en | Você || You
+de | Você || Du
+zh-cn | Você || 你
+pl | Você || Ty
+ko | Você || 너
+en | Cada conta pode trocar o @usuário no máximo || Each account can change the @user at most
+de | Cada conta pode trocar o @usuário no máximo || Jedes Konto kann höchstens den @user ändern
+pt-br | Amazing gameplay and graphics. Highly recommended to play with friends! || Jogabilidade e gráficos incríveis. Altamente recomendadoed para jogar com amigos!
+zh-cn | Cada conta pode trocar o @usuário no máximo || 每个账号最多可以更改@user
+pt-br | Das Spiel hat zu viele Bugs. Ich kann es im Moment nicht empfehlen. || O jogo tem muitos bugs. Não posso recomendá-lo no momento.
+pl | Cada conta pode trocar o @usuário no máximo || Każde konto może co najwyżej zmienić @użytkownika
+ko | Cada conta pode trocar o @usuário no máximo || 각 계정은 최대 @user를 변경할 수 있습니다.
+en | Finalizar Compras || Finalize Purchases
+de | Finalizar Compras || Einkäufe abschließen
+zh-cn | Finalizar Compras || 完成购买
+pl | Finalizar Compras || Sfinalizuj zakupy
+ko | Finalizar Compras || 구매 완료
+en | Destaques || Highlights
+de | Destaques || Höhepunkte
+zh-cn | Destaques || 亮点
+pl | Destaques || Przegląd najważniejszych wydarzeń
+ko | Destaques || 하이라이트
+en | Filtrar por Idioma: || Filter by Language:
+de | Filtrar por Idioma: || Nach Sprache filtern:
+zh-cn | Filtrar por Idioma: || 按语言过滤：
+pl | Filtrar por Idioma: || Filtruj według języka:
+ko | Filtrar por Idioma: || 언어별로 필터링:
+en | Não || No
+de | Não || NEIN
+zh-cn | Não || 不
+pl | Não || NIE
+ko | Não || 아니요
+en | Data de Nascimento: || Date of birth:
+de | Data de Nascimento: || Geburtsdatum:
+zh-cn | Data de Nascimento: || 出生日期：
+pl | Data de Nascimento: || Data urodzenia:
+ko | Data de Nascimento: || 생일:
+en | Licenças no Banco: || Licenses at the Bank:
+de | Licenças no Banco: || Lizenzen bei der Bank:
+zh-cn | Licenças no Banco: || 银行牌照：
+pl | Licenças no Banco: || Licencje w Banku:
+en | PROMOÇÃO ATIVA || ACTIVE PROMOTION
+ko | Licenças no Banco: || 은행 라이센스:
+en | Seu Carrinho || Your Cart
+en | Limpar tudo: cookies e todos os arquivos de dados (exceto as contas de usuário) || Clear all: cookies and all data files (except user accounts)
+de | Seu Carrinho || Ihr Warenkorb
+zh-cn | Seu Carrinho || 您的购物车
+en | Biblioteca || Library
+en | Amigos || Friends
+en | Família || Family
+pl | Seu Carrinho || Twój koszyk
+en | Conta de || account
+en | Meu perfil || My profile
+en | Minha carteira || My wallet
+ko | Seu Carrinho || 장바구니
+en | Saldo disponível || Available balance
+en | Trocar usuário || Change user
+en | Ofertas por tempo limitado! || Limited time offers!
+de | Saldo disponível || Verfügbares Guthaben
+en | Termina em || Ends in
+zh-cn | Saldo disponível || 可用余额
+en | Ver ofertas → || View offers →
+pl | Saldo disponível || Dostępne saldo
+en | Nome de Exibição: || Display name:
+en | Detalhes do Perfil / Notas: || Profile Details/Notes:
+ko | Saldo disponível || 사용 가능한 잔액
+en | Nenhum jogo da Família Steam disponível para você no momento. || No Steam Family games available to you at this time.
+en | Idioma de Preferência (interface e avaliações): || Preferred Language (interface and reviews):
+en | *Necessária para acessar jogos com classificação etária. Sem ela, títulos +10 e +18 serão bloqueados. || *Required to access age-rated games. Without it, +10 and +18 titles will be blocked.
+de | Nenhum jogo da Família Steam disponível para você no momento. || Derzeit stehen Ihnen keine Steam Family-Spiele zur Verfügung.
+en | Fechar || Fechar
+zh-cn | Nenhum jogo da Família Steam disponível para você no momento. || 目前没有可供您玩的 Steam 家庭游戏。
+en | Português (Brasil) || Portuguese (Brazil)
+en | Alemão || German
+en | Chinês Simplificado || Simplified Chinese
+pl | Nenhum jogo da Família Steam disponível para você no momento. || W tej chwili nie są dostępne żadne gry rodzinne Steam.
+en | Polonês || Polish
+en | Coreano || Korean
+en | RPG || RPG
+ko | Nenhum jogo da Família Steam disponível para você no momento. || 현재 이용 가능한 Steam Family 게임이 없습니다.
+en | Ação || Action
+en | Polonês || Polish
+en | Aventura || Adventure
+de | Polonês || Polieren
+en | Cooperativo || Cooperative
+zh-cn | Polonês || 抛光
+pl | Polonês || Polski
+en | Terror || Terror
+ko | Polonês || 광택
+en | Sobrevivência || Survival
+en | Buscar || Search
+de | Buscar || Suchen
+en | Mundo Aberto || Open World
+en | Corrida || Race
+zh-cn | Buscar || 搜索
+en | Casual || Casual
+pl | Buscar || Szukaj
+en | Arcade || Arcadian
+ko | Buscar || 찾다
+en | Já tem uma conta? || Already have an account?
+en | Estratégia || Strategy
+en | Multijogador || Multiplayer
+en | Tático || Tactical
+de | Já tem uma conta? || Sie haben bereits ein Konto?
+de | Português (Brasil) || Portugiesisch (Brasilien)
+zh-cn | Já tem uma conta? || 已经有帐户？
+de | Alemão || Deutsch
+de | Chinês Simplificado || Vereinfachtes Chinesisch
+de | Polonês || Polieren
+pl | Já tem uma conta? || Masz już konto?
+de | Coreano || Koreanisch
+de | RPG || Rollenspiel
+ko | Já tem uma conta? || 이미 계정이 있나요?
+de | Ação || Aktion
+de | Aventura || Abenteuer
+de | Cooperativo || Kooperative
+de | Terror || Terror
+en | Deixe um comentário no seu próprio mural... || Leave a comment on your own wall...
+de | Sobrevivência || Überleben
+de | Mundo Aberto || Offene Welt
+de | Deixe um comentário no seu próprio mural... || Hinterlassen Sie einen Kommentar auf Ihrer eigenen Pinnwand ...
+de | Corrida || Wettrennen
+de | Casual || Lässig
+de | Família || Familie
+de | Arcade || arkadisch
+de | Estratégia || Strategie
+pl | Deixe um comentário no seu próprio mural... || Zostaw komentarz na swojej tablicy...
+de | Multijogador || Mehrspieler
+ko | Deixe um comentário no seu próprio mural... || 자신의 담벼락에 댓글을 남겨주세요...
+de | Tático || Taktisch
+en | Convidar Amigos || Invite Friends
+de | Convidar Amigos || Freunde einladen
+zh-cn | Convidar Amigos || 邀请好友
+pl | Convidar Amigos || Zaproś znajomych
+ko | Convidar Amigos || 친구 초대
+en | amigo de amigo || friend of friend
+de | amigo de amigo || Freund des Freundes
+de | Carrinho || Warenkorb
+de | Biblioteca || Bibliothek
+zh-cn | amigo de amigo || 朋友的朋友
+pl | amigo de amigo || przyjaciel przyjaciela
+ko | amigo de amigo || 친구의 친구
+en | Boleto Bancário || Bank Slip
+de | Boleto Bancário || Bankbeleg
+zh-cn | Boleto Bancário || 银行单据
+pl | Boleto Bancário || Kupon bankowy
+ko | Boleto Bancário || 은행 전표
+en | Saldo da Carteira Steam: || Steam Wallet Balance:
+de | Saldo da Carteira Steam: || Steam-Wallet-Guthaben:
+zh-cn | Saldo da Carteira Steam: || Steam 钱包余额：
+pl | Saldo da Carteira Steam: || Saldo portfela Steam:
+ko | Saldo da Carteira Steam: || Steam 지갑 잔액:
+en | Ex: Família Silva || Ex: Silva Family
+de | Ex: Família Silva || Ex: Familie Silva
+zh-cn | Ex: Família Silva || 例如：席尔瓦家族
+pl | Ex: Família Silva || Przykład: Rodzina Silvy
+de | PROMOÇÃO ATIVA || AKTIVE WERBUNG
+de | Limpar tudo: cookies e todos os arquivos de dados (exceto as contas de usuário) || Alles löschen: Cookies und alle Datendateien (außer Benutzerkonten)
+ko | Ex: Família Silva || 예: 실바 가족
+de | Amigos || Freunde
+en | Trocar @usuário || Change @user
+de | Conta de || Konto
+de | Trocar @usuário || Benutzer wechseln
+de | Meu perfil || Mein Profil
+zh-cn | Trocar @usuário || 更改@用户
+de | Minha carteira || Meine Brieftasche
+de | Trocar usuário || Benutzer wechseln
+pl | Trocar @usuário || Zmień @użytkownika
+de | Ofertas por tempo limitado! || Zeitlich begrenzte Angebote!
+de | Termina em || Endet in
+ko | Trocar @usuário || @사용자 변경
+de | Ver ofertas → || Angebote ansehen →
+en | Simular Parente Jogando || Simulate Relative Playing
+de | Nome de Exibição: || Anzeigename:
+de | Simular Parente Jogando || Simulieren Sie relatives Spielen
+de | Detalhes do Perfil / Notas: || Profildetails/Anmerkungen:
+zh-cn | Simular Parente Jogando || 模拟相对演奏
+de | Idioma de Preferência (interface e avaliações): || Bevorzugte Sprache (Benutzeroberfläche und Rezensionen):
+pl | Simular Parente Jogando || Symuluj grę względną
+ko | Simular Parente Jogando || 상대 재생 시뮬레이션
+de | *Necessária para acessar jogos com classificação etária. Sem ela, títulos +10 e +18 serão bloqueados. || *Erforderlich für den Zugriff auf Spiele mit Altersfreigabe. Ohne sie werden die Titel +10 und +18 gesperrt.
+en | Digite o início do @ para buscar (ex: ro → @robert, @rodrigo) || Type the beginning of @ to search (e.g. ro → @robert, @rodrigo)
+de | Digite o início do @ para buscar (ex: ro → @robert, @rodrigo) || Geben Sie den Anfang von @ ein, um zu suchen (z. B. ro → @robert, @rodrigo).
+de | Fechar || Fechar
+zh-cn | Digite o início do @ para buscar (ex: ro → @robert, @rodrigo) || 输入 @ 开头进行搜索（例如 ro → @robert、@rodrigo）
+pl | Digite o início do @ para buscar (ex: ro → @robert, @rodrigo) || Wpisz początek @, aby wyszukać (np. ro → @robert, @rodrigo)
+ko | Digite o início do @ para buscar (ex: ro → @robert, @rodrigo) || 검색하려면 @의 시작 부분을 입력하세요(예: ro → @robert, @rodrigo).
+en | Gerenciamento da Família da Steam || Steam Family Management
+de | Gerenciamento da Família da Steam || Steam-Familienverwaltung
+zh-cn | Gerenciamento da Família da Steam || Steam 家庭管理
+pl | Gerenciamento da Família da Steam || Zarządzanie rodziną na Steamie
+ko | Gerenciamento da Família da Steam || Steam 가족 관리
+en | Sim || Yes
+de | Sim || Ja
+zh-cn | Sim || 是的
+pl | Sim || Tak
+ko | Sim || 예
+en | Português (Brasil) || Portuguese (Brazil)
+de | Português (Brasil) || Portugiesisch (Brasilien)
+zh-cn | Português (Brasil) || 葡萄牙语（巴西）
+pl | Português (Brasil) || portugalski (Brazylia)
+ko | Português (Brasil) || 포르투갈어(브라질)
+en | Família Steam || Steam Family
+de | Família Steam || Steam-Familie
+zh-cn | Família Steam || 蒸汽家族
+pl | Família Steam || Rodzina Steama
+ko | Família Steam || 스팀 제품군
+en | Minha carteira || My wallet
+de | Minha carteira || Meine Brieftasche
+zh-cn | Minha carteira || 我的钱包
+en | Aventura Épica leva você a um vasto mundo de fantasia repleto de masmorras sombrias, chefes colossais e tesouros lendários. Forme um grupo com até quatro amigos, personalize seu herói com centenas de habilidades e enfrente uma campanha épica de mais de 60 horas. Cada masmorra é gerada com desafios únicos, garantindo que nenhuma jornada seja igual. || Aventura Épica takes you to a vast fantasy world filled with dark dungeons, colossal bosses and legendary treasures. Form a party with up to four friends, customize your hero with hundreds of skills and face an epic campaign lasting over 60 hours. Each dungeon is generated with unique challenges, ensuring no two journeys are the same.
+en | Fantasia || Fantasy
+pl | Minha carteira || Mój portfel
+en | Masmorras || Dungeons
+ko | Minha carteira || 내 지갑
+en | História Rica || Rich History
+en | Sua lista de desejos está vazia. || Your wish list is empty.
+en | SO: Windows 10 64-bit · CPU: Intel i5-4460 · RAM: 8 GB · GPU: GTX 760 · 40 GB || OS: Windows 10 64-bit · CPU: Intel i5-4460 · RAM: 8 GB · GPU: GTX 760 · 40 GB
+en | SO: Windows 11 64-bit · CPU: Intel i7-9700 · RAM: 16 GB · GPU: RTX 2060 · 40 GB SSD || OS: Windows 11 64-bit · CPU: Intel i7-9700 · RAM: 16 GB · GPU: RTX 2060 · 40 GB SSD
+de | Sua lista de desejos está vazia. || Ihre Wunschliste ist leer.
+en | Explore masmorras e derrote monstros com amigos nesta jornada incrível. || Explore dungeons and defeat monsters with friends on this incredible journey.
+zh-cn | Sua lista de desejos está vazia. || 您的愿望清单是空的。
+en | Muito positivas || Very positive
+pl | Sua lista de desejos está vazia. || Twoja lista życzeń jest pusta.
+en | 15 de março de 2024 || March 15, 2024
+en | Um jogador || One player
+ko | Sua lista de desejos está vazia. || 위시리스트가 비어 있습니다.
+en | Família || Family
+en | Cooperativo online || Online cooperative
+de | Família || Familie
+zh-cn | Família || 家庭
+en | Conquistas Steam || Steam Achievements
+pl | Família || Rodzina
+ko | Família || 가족
+en | Nuvem Steam || Steam Cloud
+en | Minha Biblioteca de Jogos || My Game Library
+en | Suporte a controle || Control support
+en | Português || Portuguese
+en | Espanhol || Spanish
+de | Minha Biblioteca de Jogos || Meine Spielebibliothek
+en | Francês || French
+en | Jogo excelente! Muito divertido para jogar em grupo. || Excellent game! Very fun to play in groups.
+zh-cn | Minha Biblioteca de Jogos || 我的游戏库
+en | A lógica por trás dos puzzles deste jogo é fantástica. || The logic behind the puzzles in this game is fantastic.
+en | Das Spiel hat zu viele Bugs. Ich kann es im Moment nicht empfehlen. || The game has too many bugs. I can't recommend it at the moment.
+pl | Minha Biblioteca de Jogos || Moja biblioteka gier
+de | Aventura Épica leva você a um vasto mundo de fantasia repleto de masmorras sombrias, chefes colossais e tesouros lendários. Forme um grupo com até quatro amigos, personalize seu herói com centenas de habilidades e enfrente uma campanha épica de mais de 60 horas. Cada masmorra é gerada com desafios únicos, garantindo que nenhuma jornada seja igual. || Aventura Épica entführt Sie in eine riesige Fantasiewelt voller dunkler Dungeons, kolossaler Bosse und legendärer Schätze. Bilden Sie eine Gruppe mit bis zu vier Freunden, passen Sie Ihren Helden mit Hunderten von Fähigkeiten an und stellen Sie sich einer epischen Kampagne, die über 60 Stunden dauert. Jeder Dungeon wird mit einzigartigen Herausforderungen generiert, sodass keine zwei Reisen gleich sind.
+ko | Minha Biblioteca de Jogos || 내 게임 라이브러리
+de | Fantasia || Fantasie
+en | Publicar Análise || Publish Analysis
+de | Publicar Análise || Analyse veröffentlichen
+de | Masmorras || Dungeons
+de | História Rica || Reichhaltige Geschichte
+zh-cn | Publicar Análise || 发布分析
+pl | Publicar Análise || Publikuj analizę
+de | SO: Windows 10 64-bit · CPU: Intel i5-4460 · RAM: 8 GB · GPU: GTX 760 · 40 GB || Betriebssystem: Windows 10 64-Bit · CPU: Intel i5-4460 · RAM: 8 GB · GPU: GTX 760 · 40 GB
+ko | Publicar Análise || 분석 게시
+de | Carrinho || Warenkorb
+de | SO: Windows 11 64-bit · CPU: Intel i7-9700 · RAM: 16 GB · GPU: RTX 2060 · 40 GB SSD || Betriebssystem: Windows 11 64-Bit · CPU: Intel i7-9700 · RAM: 16 GB · GPU: RTX 2060 · 40 GB SSD
+zh-cn | Carrinho || 大车
+pl | Carrinho || Wózek
+ko | Carrinho || 카트
+de | Explore masmorras e derrote monstros com amigos nesta jornada incrível. || Erkunden Sie auf dieser unglaublichen Reise Dungeons und besiegen Sie Monster mit Freunden.
+en | A forma de pagamento será escolhida na próxima etapa. || The payment method will be chosen in the next step.
+de | Muito positivas || Sehr positiv
+de | A forma de pagamento será escolhida na próxima etapa. || Im nächsten Schritt wird die Zahlungsart ausgewählt.
+de | 15 de março de 2024 || 15. März 2024
+zh-cn | A forma de pagamento será escolhida na próxima etapa. || 付款方式将在下一步中选择。
+de | Um jogador || Ein Spieler
+pl | A forma de pagamento será escolhida na próxima etapa. || Sposób płatności zostanie wybrany w kolejnym kroku.
+ko | A forma de pagamento será escolhida na próxima etapa. || 결제 방법은 다음 단계에서 선택됩니다.
+de | Cooperativo online || Online-Kooperative
+en | Não tem uma conta? || Don't have an account?
+de | Conquistas Steam || Steam-Erfolge
+de | Não tem uma conta? || Sie haben noch kein Konto?
+de | Nuvem Steam || Steam Cloud
+zh-cn | Não tem uma conta? || 没有帐户？
+de | Suporte a controle || Kontrollunterstützung
+pl | Não tem uma conta? || Nie masz konta?
+de | Português || Portugiesisch
+ko | Não tem uma conta? || 계정이 없나요?
+de | Espanhol || Spanisch
+de | Francês || Französisch
+en | Você já possui este jogo na sua biblioteca. || You already have this game in your library.
+de | Você já possui este jogo na sua biblioteca. || Sie haben dieses Spiel bereits in Ihrer Bibliothek.
+de | Jogo excelente! Muito divertido para jogar em grupo. || Ausgezeichnetes Spiel! Es macht sehr viel Spaß, in Gruppen zu spielen.
+de | A lógica por trás dos puzzles deste jogo é fantástica. || Die Logik hinter den Rätseln in diesem Spiel ist fantastisch.
+zh-cn | Você já possui este jogo na sua biblioteca. || 您的库中已经有这款游戏。
+de | Amazing gameplay and graphics. Highly recommended to play with friends! || Erstaunliches Gameplay und Grafik. Ich kann es wärmstens empfehlened, um mit Freunden zu spielen!
+pl | Você já possui este jogo na sua biblioteca. || Masz już tę grę w swojej bibliotece.
+ko | Você já possui este jogo na sua biblioteca. || 귀하의 라이브러리에는 이미 이 게임이 있습니다.
+en | Você achou essa avaliação útil? || Did you find this review helpful?
+de | Você achou essa avaliação útil? || Fanden Sie diese Rezension hilfreich?
+zh-cn | Você achou essa avaliação útil? || 您觉得这篇评论有帮助吗？
+pl | Você achou essa avaliação útil? || Czy ta recenzja była dla Ciebie pomocna?
+ko | Você achou essa avaliação útil? || 이 리뷰가 도움이 되었나요?
+en | Opcional agora, mas necessária para jogar títulos com classificação etária. Sem ela, o acesso a jogos +10 e +18 será bloqueado. || Optional now, but required to play age-rated titles. Without it, access to +10 and +18 games will be blocked.
+de | Opcional agora, mas necessária para jogar títulos com classificação etária. Sem ela, o acesso a jogos +10 e +18 será bloqueado. || Jetzt optional, aber erforderlich, um Titel mit Altersfreigabe zu spielen. Ohne sie wird der Zugriff auf +10- und +18-Spiele gesperrt.
+pl | Opcional agora, mas necessária para jogar títulos com classificação etária. Sem ela, o acesso a jogos +10 e +18 será bloqueado. || Opcjonalne teraz, ale wymagane do grania w tytuły przeznaczone dla danego wieku. Bez tego dostęp do gier +10 i +18 zostanie zablokowany.
+ko | Opcional agora, mas necessária para jogar títulos com classificação etária. Sem ela, o acesso a jogos +10 e +18 será bloqueado. || 지금은 선택 사항이지만 연령 제한 타이틀을 재생하려면 필수입니다. 그렇지 않으면 +10 및 +18 게임에 대한 액세스가 차단됩니다.
+en | Meus Amigos || My Friends
+de | Meus Amigos || Meine Freunde
+zh-cn | Meus Amigos || 我的朋友
+pl | Meus Amigos || Moi przyjaciele
+ko | Meus Amigos || 내 친구
+en | Mostra apenas usuários cujo @ começa com o que você digitou. Deixe em branco para ver sugestões de amigos de amigos. || Only shows users whose @ starts with what you typed. Leave blank to see suggestions from friends of friends.
+de | Mostra apenas usuários cujo @ começa com o que você digitou. Deixe em branco para ver sugestões de amigos de amigos. || Zeigt nur Benutzer an, deren @ mit Ihrer Eingabe beginnt. Lassen Sie das Feld leer, um Vorschläge von Freunden von Freunden anzuzeigen.
+zh-cn | Mostra apenas usuários cujo @ começa com o que você digitou. Deixe em branco para ver sugestões de amigos de amigos. || 仅显示 @ 以您键入的内容开头的用户。留空以查看朋友的朋友的建议。
+pl | Mostra apenas usuários cujo @ começa com o que você digitou. Deixe em branco para ver sugestões de amigos de amigos. || Pokazuje tylko użytkowników, których @ zaczyna się od tego, co wpisałeś. Pozostaw puste, aby zobaczyć sugestie znajomych znajomych.
+ko | Mostra apenas usuários cujo @ começa com o que você digitou. Deixe em branco para ver sugestões de amigos de amigos. || @가 입력한 내용으로 시작하는 사용자만 표시합니다. 친구의 친구가 제안한 내용을 보려면 비워 두세요.
+en | Outro valor (R$): || Other value (R$):
+de | Outro valor (R$): || Anderer Wert (R$):
+zh-cn | Outro valor (R$): || 其他价值（雷亚尔）：
+pl | Outro valor (R$): || Inna wartość (R$):
+ko | Outro valor (R$): || 기타 가치(R$):
+en | Resumo || Summary
+de | Resumo || Zusammenfassung
+zh-cn | Resumo || 概括
+pl | Resumo || Streszczenie
+ko | Resumo || 요약
+en | Configurações do Membro || Member Settings
+de | Configurações do Membro || Mitgliedereinstellungen
+zh-cn | Configurações do Membro || 会员设置
+pl | Configurações do Membro || Ustawienia członkowskie
+ko | Configurações do Membro || 회원 설정
+en | Senha || Password
+de | Senha || Passwort
+zh-cn | Senha || 密码
+pl | Senha || Hasło
+ko | Senha || 비밀번호
+en | Remover amigo || Remove friend
+de | Remover amigo || Freund entfernen
+zh-cn | Remover amigo || 删除好友
+pl | Remover amigo || Usuń znajomego
+ko | Remover amigo || 친구 삭제
+en | Criar nova conta || Create new account
+de | Criar nova conta || Neues Konto erstellen
+zh-cn | Criar nova conta || 创建新帐户
+pl | Criar nova conta || Utwórz nowe konto
+ko | Criar nova conta || 새 계정 만들기
+en | para sua conta || to your account
+de | para sua conta || auf Ihr Konto
+zh-cn | para sua conta || 到您的帐户
+pl | para sua conta || na Twoje konto
+ko | para sua conta || 귀하의 계정으로
+en | DESATIVADO || OFF
+de | DESATIVADO || AUS
+zh-cn | DESATIVADO || 离开
+pl | DESATIVADO || WYŁĄCZONY
+ko | DESATIVADO || 끄다
+en | 👑 Criador da família || 👑 Family Creator
+de | 👑 Criador da família || 👑 Familienschöpfer
+zh-cn | 👑 Criador da família || 👑 家庭创造者
+pl | 👑 Criador da família || 👑 Twórca rodziny
+ko | 👑 Criador da família || 😘 가족 창조자
+en | Ofertas por tempo limitado! || Limited time offers!
+de | Ofertas por tempo limitado! || Zeitlich begrenzte Angebote!
+zh-cn | Ofertas por tempo limitado! || 限时优惠！
+pl | Ofertas por tempo limitado! || Oferty ograniczone czasowo!
+ko | Ofertas por tempo limitado! || 기간 한정 혜택!
+en | PROMOÇÃO ATIVA || ACTIVE PROMOTION
+de | PROMOÇÃO ATIVA || AKTIVE WERBUNG
+zh-cn | PROMOÇÃO ATIVA || 积极推广
+pl | PROMOÇÃO ATIVA || AKTYWNA PROMOCJA
+ko | PROMOÇÃO ATIVA || 적극적인 프로모션
+en | Nenhum jogo compartilhado no cofre da família ainda. || No shared games in the family vault yet.
+de | Nenhum jogo compartilhado no cofre da família ainda. || Noch keine geteilten Spiele im Familientresor.
+zh-cn | Nenhum jogo compartilhado no cofre da família ainda. || 家庭保管库中还没有共享游戏。
+pl | Nenhum jogo compartilhado no cofre da família ainda. || Nie ma jeszcze żadnych udostępnionych gier w skarbcu rodzinnym.
+ko | Nenhum jogo compartilhado no cofre da família ainda. || 아직 가족 금고에 공유된 게임이 없습니다.
+en | Classificação: || Classification:
+de | Classificação: || Einstufung:
+zh-cn | Classificação: || 分类：
+pl | Classificação: || Klasyfikacja:
+ko | Classificação: || 분류:
+en | Gerenciamento de Família || Family Management
+de | Gerenciamento de Família || Familienmanagement
+zh-cn | Gerenciamento de Família || 家族管理
+pl | Gerenciamento de Família || Zarządzanie rodziną
+ko | Gerenciamento de Família || 가족경영
+de | Comprar saldo Steam para || Kaufen Sie Steam-Guthaben für
+zh-cn | Comprar saldo Steam para || 购买 Steam 余额
+pl | Comprar saldo Steam para || Kup saldo Steam za
+ko | Comprar saldo Steam para || Steam 잔액 구매
+en | Nome que aparecerá para outros usuários. || Name that will appear to other users.
+de | Nome que aparecerá para outros usuários. || Name, der anderen Benutzern angezeigt wird.
+zh-cn | Nome que aparecerá para outros usuários. || 将向其他用户显示的名称。
+pl | Nome que aparecerá para outros usuários. || Nazwa, która będzie widoczna dla innych użytkowników.
+ko | Nome que aparecerá para outros usuários. || 다른 사용자에게 표시되는 이름입니다.
+en | Distribuidora: || Distributor:
+de | Distribuidora: || Verteiler:
+zh-cn | Distribuidora: || 经销商：
+pl | Distribuidora: || Dystrybutor:
+ko | Distribuidora: || 살수 장치:
+en | amigos de amigos || friends of friends
+de | amigos de amigos || Freunde von Freunden
+pl | amigos de amigos || przyjaciele przyjaciół
+ko | amigos de amigos || 친구의 친구
+en | Amigos || Friends
+de | Amigos || Freunde
+zh-cn | Amigos || 朋友们
+pl | Amigos || Przyjaciele
+ko | Amigos || 친구
+en | Enviar jogos diferentes para o mesmo amigo? || Send different games to the same friend?
+de | Enviar jogos diferentes para o mesmo amigo? || Verschiedene Spiele an denselben Freund senden?
+zh-cn | Enviar jogos diferentes para o mesmo amigo? || 向同一个朋友发送不同的游戏？
+pl | Enviar jogos diferentes para o mesmo amigo? || Wysyłać różne gry do tego samego znajomego?
+ko | Enviar jogos diferentes para o mesmo amigo? || 같은 친구에게 다른 게임을 보내시겠습니까?
+en | Marcadores populares para este produto: || Popular tags for this product:
+de | Marcadores populares para este produto: || Beliebte Tags für dieses Produkt:
+zh-cn | Marcadores populares para este produto: || 该产品的热门标签：
+pl | Marcadores populares para este produto: || Popularne tagi dla tego produktu:
+ko | Marcadores populares para este produto: || 이 제품의 인기 태그:
+en | Controles Parentais por Idade Ativos || Active Age Parental Controls
+de | Controles Parentais por Idade Ativos || Kindersicherung für aktives Alter
+zh-cn | Controles Parentais por Idade Ativos || 活跃年龄家长控制
+pl | Controles Parentais por Idade Ativos || Kontrola rodzicielska aktywnego wieku
+ko | Controles Parentais por Idade Ativos || 활성 연령 자녀 보호
+en | Entrar na sua conta || Login to your account
+de | Entrar na sua conta || Melden Sie sich bei Ihrem Konto an
+zh-cn | Entrar na sua conta || 登录您的帐户
+pl | Entrar na sua conta || Zaloguj się na swoje konto
+ko | Entrar na sua conta || 귀하의 계정에 로그인하십시오
+en | Confirmar Destinatários e Pagar || Confirm Recipients and Pay
+de | Confirmar Destinatários e Pagar || Bestätigen Sie die Empfänger und zahlen Sie
+zh-cn | Confirmar Destinatários e Pagar || 确认收件人并付款
+pl | Confirmar Destinatários e Pagar || Potwierdź odbiorców i zapłać
+ko | Confirmar Destinatários e Pagar || 수신자 확인 및 결제
+en | Nome de Exibição: || Display name:
+de | Nome de Exibição: || Anzeigename:
+zh-cn | Nome de Exibição: || 显示名称：
+pl | Nome de Exibição: || Nazwa wyświetlana:
+ko | Nome de Exibição: || 표시 이름:
+en | Membro da família || Family member
+de | Membro da família || Familienmitglied
+zh-cn | Membro da família || 家属
+pl | Membro da família || Członek rodziny
+ko | Membro da família || 가족 구성원
+en | Clique aqui para limpar o filtro e ver todas as análises. || Click here to clear the filter and see all reviews.
+de | Clique aqui para limpar o filtro e ver todas as análises. || Klicken Sie hier, um den Filter zu löschen und alle Bewertungen anzuzeigen.
+zh-cn | Clique aqui para limpar o filtro e ver todas as análises. || 单击此处清除过滤器并查看所有评论。
+pl | Clique aqui para limpar o filtro e ver todas as análises. || Kliknij tutaj, aby wyczyścić filtr i zobaczyć wszystkie recenzje.
+ko | Clique aqui para limpar o filtro e ver todas as análises. || 필터를 지우고 모든 리뷰를 보려면 여기를 클릭하세요.
+en | Trocar usuário || Change user
+de | Trocar usuário || Benutzer wechseln
+zh-cn | Trocar usuário || 更改用户
+pl | Trocar usuário || Zmień użytkownika
+ko | Trocar usuário || 사용자 변경
+en | PAINEL DE TESTES: || TESTING PANEL:
+de | PAINEL DE TESTES: || PRÜFGRUPPE:
+zh-cn | PAINEL DE TESTES: || 测试面板：
+pl | PAINEL DE TESTES: || PANEL TESTOWY:
+ko | PAINEL DE TESTES: || 테스트 패널:
+en | Por favor, selecione um amigo no menu de unificação. || Please select a friend from the merge menu.
+de | Por favor, selecione um amigo no menu de unificação. || Bitte wählen Sie einen Freund aus dem Zusammenführungsmenü aus.
+zh-cn | Por favor, selecione um amigo no menu de unificação. || 请从合并菜单中选择一位朋友。
+pl | Por favor, selecione um amigo no menu de unificação. || Wybierz znajomego z menu scalania.
+ko | Por favor, selecione um amigo no menu de unificação. || 병합 메뉴에서 친구를 선택해주세요.
+en | Termina em || Ends in
+de | Termina em || Endet in
+zh-cn | Termina em || 结束于
+pl | Termina em || Kończy się w
+ko | Termina em || 종료 날짜
+en | Criar Conta e Entrar || Create Account and Login
+de | Criar Conta e Entrar || Konto erstellen und anmelden
+zh-cn | Criar Conta e Entrar || 创建帐户并登录
+pl | Criar Conta e Entrar || Utwórz konto i zaloguj się
+ko | Criar Conta e Entrar || 계정 생성 및 로그인
+en | Comprado por você || Bought by you
+de | Comprado por você || Von Ihnen gekauft
+zh-cn | Comprado por você || 被你买了
+pl | Comprado por você || Kupiony przez Ciebie
+ko | Comprado por você || 당신이 구입
+en | Editar Perfil || Edit Profile
+de | Editar Perfil || Profil bearbeiten
+zh-cn | Editar Perfil || 编辑个人资料
+pl | Editar Perfil || Edytuj profil
+ko | Editar Perfil || 프로필 편집
+en | Desenvolvedor: || Developedor:
+de | Desenvolvedor: || Entwickelnedoder:
+zh-cn | Desenvolvedor: || 开发ed或：
+pl | Desenvolvedor: || Opracuj__MTTSTKN_210__lub:
+ko | Desenvolvedor: || ed을 개발하거나:
+en | Ir para a Loja || Go to Store
+de | Ir para a Loja || Gehen Sie zum Store
+zh-cn | Ir para a Loja || 前往商店
+pl | Ir para a Loja || Przejdź do sklepu
+ko | Ir para a Loja || 매장으로 이동
+en | Escrever uma Análise || Write an Analysis
+de | Escrever uma Análise || Schreiben Sie eine Analyse
+zh-cn | Escrever uma Análise || 写一篇分析
+pl | Escrever uma Análise || Napisz analizę
+ko | Escrever uma Análise || 분석 작성
+en | Total: || Total:
+de | Total: || Gesamt:
+zh-cn | Total: || 全部的：
+pl | Total: || Całkowity:
+ko | Total: || 총:
+en | Limpar || To clean
+de | Limpar || Zum Reinigen
+zh-cn | Limpar || 清洁
+pl | Limpar || Do czyszczenia
+ko | Limpar || 청소하다
+en | Não é possível alterar o Modo Offline com um jogo em execução. Feche o jogo primeiro. || It is not possible to change Offline Mode while a game is running. Close the game first.
+de | Não é possível alterar o Modo Offline com um jogo em execução. Feche o jogo primeiro. || Es ist nicht möglich, den Offline-Modus zu ändern, während ein Spiel läuft. Schließen Sie zuerst das Spiel.
+zh-cn | Não é possível alterar o Modo Offline com um jogo em execução. Feche o jogo primeiro. || 游戏运行时无法更改离线模式。先关闭游戏。
+pl | Não é possível alterar o Modo Offline com um jogo em execução. Feche o jogo primeiro. || Nie można zmienić trybu offline, gdy gra jest uruchomiona. Najpierw zamknij grę.
+ko | Não é possível alterar o Modo Offline com um jogo em execução. Feche o jogo primeiro. || 게임 실행 중에는 오프라인 모드를 변경할 수 없습니다. 먼저 게임을 닫으세요.
+en | Comprar como presente || Buy as a gift
+de | Comprar como presente || Als Geschenk kaufen
+zh-cn | Comprar como presente || 购买作为礼物
+pl | Comprar como presente || Kup jako prezent
+ko | Comprar como presente || 선물로 구매
+en | Análises de Clientes || Customer Reviews
+de | Análises de Clientes || Kundenrezensionen
+zh-cn | Análises de Clientes || 客户评价
+pl | Análises de Clientes || Recenzje klientów
+ko | Análises de Clientes || 고객 리뷰
+en | Adicionar amigo || Add friend
+de | Adicionar amigo || Freund hinzufügen
+zh-cn | Adicionar amigo || 添加好友
+pl | Adicionar amigo || Dodaj znajomego
+ko | Adicionar amigo || 친구 추가
+en | Coreano || Korean
+de | Coreano || Koreanisch
+zh-cn | Coreano || 韩国人
+pl | Coreano || koreański
+ko | Coreano || 한국인
+en | Limpar tudo: cookies e todos os arquivos de dados (exceto as contas de usuário) || Clear all: cookies and all data files (except user accounts)
+de | Limpar tudo: cookies e todos os arquivos de dados (exceto as contas de usuário) || Alles löschen: Cookies und alle Datendateien (außer Benutzerkonten)
+zh-cn | Limpar tudo: cookies e todos os arquivos de dados (exceto as contas de usuário) || 全部清除：cookie 和所有数据文件（用户帐户除外）
+pl | Limpar tudo: cookies e todos os arquivos de dados (exceto as contas de usuário) || Wyczyść wszystko: pliki cookie i wszystkie pliki danych (z wyjątkiem kont użytkowników)
+ko | Limpar tudo: cookies e todos os arquivos de dados (exceto as contas de usuário) || 모두 지우기: 쿠키 및 모든 데이터 파일(사용자 계정 제외)
+en | Alemão || German
+de | Alemão || Deutsch
+zh-cn | Alemão || 德语
+pl | Alemão || niemiecki
+ko | Alemão || 독일 사람
+en | Lembre-se: a busca considera apenas o início do @usuário. || Remember: the search only considers the beginning of @user.
+de | Lembre-se: a busca considera apenas o início do @usuário. || Denken Sie daran: Die Suche berücksichtigt nur den Anfang von @user.
+zh-cn | Lembre-se: a busca considera apenas o início do @usuário. || 请记住：搜索仅考虑@user 的开头。
+pl | Lembre-se: a busca considera apenas o início do @usuário. || Pamiętaj: wyszukiwanie uwzględnia tylko początek @user.
+ko | Lembre-se: a busca considera apenas o início do @usuário. || 기억하세요: 검색에서는 @user의 시작 부분만 고려합니다.
+en | Nenhum jogo disponível na sua biblioteca. || No games available in your library.
+de | Nenhum jogo disponível na sua biblioteca. || In Ihrer Bibliothek sind keine Spiele verfügbar.
+zh-cn | Nenhum jogo disponível na sua biblioteca. || 您的库中没有可用的游戏。
+pl | Nenhum jogo disponível na sua biblioteca. || Brak gier dostępnych w Twojej bibliotece.
+ko | Nenhum jogo disponível na sua biblioteca. || 라이브러리에 사용 가능한 게임이 없습니다.
+en | Compre um jogo na loja ou convide amigos para unificar as bibliotecas! || Buy a game from the store or invite friends to combine libraries!
+de | Compre um jogo na loja ou convide amigos para unificar as bibliotecas! || Kaufen Sie ein Spiel im Store oder laden Sie Freunde ein, Bibliotheken zu kombinieren!
+zh-cn | Compre um jogo na loja ou convide amigos para unificar as bibliotecas! || 从商店购买游戏或邀请朋友组合库！
+pl | Compre um jogo na loja ou convide amigos para unificar as bibliotecas! || Kup grę w sklepie lub zaproś znajomych do łączenia bibliotek!
+ko | Compre um jogo na loja ou convide amigos para unificar as bibliotecas! || 상점에서 게임을 구매하거나 친구를 초대하여 라이브러리를 통합하세요!
+en | ver perfil || view profile
+de | ver perfil || Profil ansehen
+zh-cn | ver perfil || 查看个人资料
+pl | ver perfil || zobacz profil
+ko | ver perfil || 프로필 보기
+en | Sobre o jogo || About the game
+de | Sobre o jogo || Über das Spiel
+zh-cn | Sobre o jogo || 关于游戏
+pl | Sobre o jogo || O grze
+ko | Sobre o jogo || 게임 정보
+en | Convidar para a Família || Invite to the Family
+de | Convidar para a Família || Zur Familie einladen
+zh-cn | Convidar para a Família || 邀请加入家庭
+pl | Convidar para a Família || Zaproś do Rodziny
+ko | Convidar para a Família || 가족에게 초대하기
+en | Exibindo || Displaying
+de | Exibindo || Anzeigen
+zh-cn | Exibindo || 显示中
+pl | Exibindo || Wyświetlanie
+ko | Exibindo || 표시
+en | dos amigos? || of friends?
+de | dos amigos? || von Freunden?
+zh-cn | dos amigos? || 朋友的？
+pl | dos amigos? || przyjaciół?
+ko | dos amigos? || 친구의?
+en | *Necessária para acessar jogos com classificação etária. Sem ela, títulos +10 e +18 serão bloqueados. || *Required to access age-rated games. Without it, +10 and +18 titles will be blocked.
+de | *Necessária para acessar jogos com classificação etária. Sem ela, títulos +10 e +18 serão bloqueados. || *Erforderlich für den Zugriff auf Spiele mit Altersfreigabe. Ohne sie werden die Titel +10 und +18 gesperrt.
+zh-cn | *Necessária para acessar jogos com classificação etária. Sem ela, títulos +10 e +18 serão bloqueados. || *需要访问年龄分级的游戏。没有它，+10 和 +18 标题将被阻止。
+pl | *Necessária para acessar jogos com classificação etária. Sem ela, títulos +10 e +18 serão bloqueados. || *Wymagane, aby uzyskać dostęp do gier przeznaczonych dla osób pełnoletnich. Bez tego tytuły +10 i +18 zostaną zablokowane.
+ko | *Necessária para acessar jogos com classificação etária. Sem ela, títulos +10 e +18 serão bloqueados. || *연령 등급 게임에 액세스하려면 필요합니다. 그렇지 않으면 +10 및 +18 타이틀이 차단됩니다.
+en | Minha Carteira || My Wallet
+de | Minha Carteira || Mein Portemonnaie
+zh-cn | Minha Carteira || 我的钱包
+pl | Minha Carteira || Mój portfel
+ko | Minha Carteira || 내 지갑
+en | Modo Offline: || Offline Mode:
+de | Modo Offline: || Offline-Modus:
+zh-cn | Modo Offline: || 离线模式：
+pl | Modo Offline: || Tryb offline:
+ko | Modo Offline: || 오프라인 모드:
+en | da lista de amigos? || from your friends list?
+de | da lista de amigos? || aus deiner Freundesliste?
+zh-cn | da lista de amigos? || 从你的朋友名单中？
+pl | da lista de amigos? || z listy znajomych?
+ko | da lista de amigos? || 친구 목록에서요?
+en | Conta de || account
+de | Conta de || Konto
+zh-cn | Conta de || 帐户
+pl | Conta de || konto
+ko | Conta de || 계정
+en | Traduzido automaticamente. Ver original || Automatically translated. View original
+de | Traduzido automaticamente. Ver original || Automatisch übersetzt. Original ansehen
+zh-cn | Traduzido automaticamente. Ver original || 自动翻译。查看原文
+pl | Traduzido automaticamente. Ver original || Przetłumaczone automatycznie. Zobacz oryginał
+ko | Traduzido automaticamente. Ver original || 자동으로 번역되었습니다. 원본 보기
+en | Confirmar Transferência || Confirm Transfer
+de | Confirmar Transferência || Bestätigen Sie die Übertragung
+zh-cn | Confirmar Transferência || 确认转账
+pl | Confirmar Transferência || Potwierdź transfer
+ko | Confirmar Transferência || 전송 확인
+en | Fechar || Fechar
+de | Fechar || Fechar
+zh-cn | Fechar || 铁char
+pl | Fechar || Fechar
+ko | Fechar || Fechar
+en | Você ainda pode comprá-lo como presente para um amigo abaixo. || You can even buy it as a gift for a friend below.
+de | Você ainda pode comprá-lo como presente para um amigo abaixo. || Sie können es unten sogar als Geschenk für einen Freund kaufen.
+zh-cn | Você ainda pode comprá-lo como presente para um amigo abaixo. || 您甚至可以在下面购买它作为礼物送给朋友。
+pl | Você ainda pode comprá-lo como presente para um amigo abaixo. || Możesz go nawet kupić jako prezent dla przyjaciela poniżej.
+ko | Você ainda pode comprá-lo como presente para um amigo abaixo. || 아래에서 친구에게 선물로 구입할 수도 있습니다.
+en | Livre || Free
+de | Livre || Frei
+zh-cn | Livre || 自由的
+pl | Livre || Bezpłatny
+ko | Livre || 무료
+en | ou entre com outra conta || or sign in with another account
+de | ou entre com outra conta || oder melden Sie sich mit einem anderen Konto an
+zh-cn | ou entre com outra conta || 或使用其他帐户登录
+pl | ou entre com outra conta || lub zaloguj się na inne konto
+ko | ou entre com outra conta || 또는 다른 계정으로 로그인
+en | Tipo: Compra Própria || Type: Own Purchase
+de | Tipo: Compra Própria || Typ: Eigener Kauf
+zh-cn | Tipo: Compra Própria || 类型：自购
+pl | Tipo: Compra Própria || Typ: zakup własny
+ko | Tipo: Compra Própria || 유형: 자체 구매
+en | Perfil || Profile
+de | Perfil || Profil
+zh-cn | Perfil || 轮廓
+pl | Perfil || Profil
+ko | Perfil || 윤곽
+en | Publicar || Publish
+de | Publicar || Veröffentlichen
+zh-cn | Publicar || 发布
+pl | Publicar || Publikować
+ko | Publicar || 게시
+en | Continuar Comprando || Continue Shopping
+de | Continuar Comprando || Weiter einkaufen
+zh-cn | Continuar Comprando || 继续购物
+pl | Continuar Comprando || Kontynuuj zakupy
+ko | Continuar Comprando || 계속 쇼핑하기
+en | esgotado || exhausted
+de | esgotado || erschöpft
+zh-cn | esgotado || 筋疲力尽的
+pl | esgotado || wyczerpany
+ko | esgotado || 탈진한
+en | Nenhum jogo na lista de desejos. || No games on the wish list.
+de | Nenhum jogo na lista de desejos. || Keine Spiele auf der Wunschliste.
+zh-cn | Nenhum jogo na lista de desejos. || 愿望清单上没有游戏。
+pl | Nenhum jogo na lista de desejos. || Brak gier na liście życzeń.
+ko | Nenhum jogo na lista de desejos. || 위시리스트에 게임이 없습니다.
+en | Nome da Família Steam || Steam Family Name
+de | Nome da Família Steam || Steam-Familienname
+zh-cn | Nome da Família Steam || Steam 家族名称
+pl | Nome da Família Steam || Nazwisko rodzinne Steam
+ko | Nome da Família Steam || Steam 제품군 이름
+en | Jogar || To play
+de | Jogar || Zum Spielen
+zh-cn | Jogar || 玩
+pl | Jogar || Grać
+ko | Jogar || 놀다
+en | Confirmar e Unificar Licenças || Confirm and Merge Licenses
+de | Confirmar e Unificar Licenças || Lizenzen bestätigen und zusammenführen
+zh-cn | Confirmar e Unificar Licenças || 确认并合并许可证
+pl | Confirmar e Unificar Licenças || Potwierdź i scal licencje
+ko | Confirmar e Unificar Licenças || 라이센스 확인 및 병합
+en | Executando... || Running...
+de | Executando... || Läuft...
+zh-cn | Executando... || 跑步...
+pl | Executando... || Działanie...
+ko | Executando... || 달리기...
+en | Chinês Simplificado || Simplified Chinese
+de | Chinês Simplificado || Vereinfachtes Chinesisch
+zh-cn | Chinês Simplificado || 简体中文
+pl | Chinês Simplificado || Uproszczony chiński
+ko | Chinês Simplificado || 중국어 간체
+en | Total Estimado: || Estimated Total:
+de | Total Estimado: || Geschätzte Gesamtsumme:
+zh-cn | Total Estimado: || 预计总计：
+pl | Total Estimado: || Szacunkowa suma:
+ko | Total Estimado: || 예상 합계:
+en | Escolha o amigo para a distribuição... || Choose a friend for distribution...
+de | Escolha o amigo para a distribuição... || Wählen Sie einen Freund zur Verteilung aus...
+zh-cn | Escolha o amigo para a distribuição... || 选择一个朋友进行分发...
+pl | Escolha o amigo para a distribuição... || Wybierz znajomego do dystrybucji...
+ko | Escolha o amigo para a distribuição... || 배포할 친구를 선택하세요...
+en | Mapeie sua biblioteca automaticamente, compartilhe jogos e gerencie controles parentais por idade. || Automatically map your library, share games, and manage parental controls by age.
+de | Mapeie sua biblioteca automaticamente, compartilhe jogos e gerencie controles parentais por idade. || Ordnen Sie Ihre Bibliothek automatisch zu, teilen Sie Spiele und verwalten Sie die Kindersicherung nach Alter.
+zh-cn | Mapeie sua biblioteca automaticamente, compartilhe jogos e gerencie controles parentais por idade. || 自动映射您的图书馆、共享游戏并按年龄管理家长控制。
+pl | Mapeie sua biblioteca automaticamente, compartilhe jogos e gerencie controles parentais por idade. || Automatycznie mapuj swoją bibliotekę, udostępniaj gry i zarządzaj kontrolą rodzicielską według wieku.
+ko | Mapeie sua biblioteca automaticamente, compartilhe jogos e gerencie controles parentais por idade. || 자동으로 라이브러리를 매핑하고, 게임을 공유하고, 연령별로 자녀 보호 기능을 관리하세요.
+en | Seu @usuário atual: || Your current @user:
+de | Seu @usuário atual: || Ihr aktueller @Benutzer:
+zh-cn | Seu @usuário atual: || 您当前的@用户：
+pl | Seu @usuário atual: || Twój obecny @użytkownik:
+ko | Seu @usuário atual: || 귀하의 현재 @사용자:
+en | Tem certeza? Esta troca consome 1 das suas trocas restantes. || He is sure? This exchange consumes 1 of your remaining exchanges.
+de | Tem certeza? Esta troca consome 1 das suas trocas restantes. || Er ist sicher? Dieser Tausch verbraucht 1 Ihrer verbleibenden Tauschgeschäfte.
+zh-cn | Tem certeza? Esta troca consome 1 das suas trocas restantes. || 他确定吗？此兑换消耗您剩余的 1 次兑换。
+pl | Tem certeza? Esta troca consome 1 das suas trocas restantes. || Jest pewien? Ta wymiana zużywa 1 z pozostałych wymian.
+ko | Tem certeza? Esta troca consome 1 das suas trocas restantes. || 그 사람이 확실해요? 이 교환은 남은 교환 중 1개를 소모합니다.
+en | Navegue pela loja e clique em || Browse the store and click
+de | Navegue pela loja e clique em || Durchsuchen Sie den Shop und klicken Sie
+zh-cn | Navegue pela loja e clique em || 浏览商店并点击
+pl | Navegue pela loja e clique em || Przeglądaj sklep i kliknij
+ko | Navegue pela loja e clique em || 매장을 둘러보고 클릭하세요.
+en | anos || years
+de | anos || Jahre
+zh-cn | anos || 年
+pl | anos || lata
+ko | anos || 연령
+en | Talvez você conheça || Maybe you know
+de | Talvez você conheça || Vielleicht weißt du es
+zh-cn | Talvez você conheça || 也许你知道
+pl | Talvez você conheça || Może wiesz
+ko | Talvez você conheça || 아마도 당신은 알고 있을 것이다
+en | Ver ofertas → || View offers →
+de | Ver ofertas → || Angebote ansehen →
+zh-cn | Ver ofertas → || 查看优惠 →
+pl | Ver ofertas → || Zobacz oferty →
+ko | Ver ofertas → || 제안 보기 →
+en | Detalhes do Perfil / Notas: || Profile Details/Notes:
+de | Detalhes do Perfil / Notas: || Profildetails/Anmerkungen:
+zh-cn | Detalhes do Perfil / Notas: || 个人资料详情/注释：
+pl | Detalhes do Perfil / Notas: || Szczegóły profilu/Notatki:
+ko | Detalhes do Perfil / Notas: || 프로필 세부정보/참고:
+en | Esvaziar Carrinho || Empty Cart
+de | Esvaziar Carrinho || Leerer Warenkorb
+zh-cn | Esvaziar Carrinho || 空购物车
+pl | Esvaziar Carrinho || Pusty wózek
+ko | Esvaziar Carrinho || 빈 장바구니
+en | Configurações da conta || Account Settings
+de | Configurações da conta || Kontoeinstellungen
+zh-cn | Configurações da conta || 账户设置
+pl | Configurações da conta || Ustawienia konta
+ko | Configurações da conta || 계정 설정
+en | Remover || Remove
+de | Remover || Entfernen
+zh-cn | Remover || 消除
+pl | Remover || Usunąć
+ko | Remover || 제거하다
+en | Idioma de Preferência (interface e avaliações): || Preferred Language (interface and reviews):
+de | Idioma de Preferência (interface e avaliações): || Bevorzugte Sprache (Benutzeroberfläche und Rezensionen):
+zh-cn | Idioma de Preferência (interface e avaliações): || 首选语言（界面和评论）：
+pl | Idioma de Preferência (interface e avaliações): || Preferowany język (interfejs i recenzje):
+ko | Idioma de Preferência (interface e avaliações): || 선호하는 언어(인터페이스 및 리뷰):
+en | Biblioteca || Library
+de | Biblioteca || Bibliothek
+zh-cn | Biblioteca || 图书馆
+pl | Biblioteca || Biblioteka
+ko | Biblioteca || 도서관
+en | Resultados para || Results for
+de | Resultados para || Ergebnisse für
+zh-cn | Resultados para || 结果：
+pl | Resultados para || Wyniki dla
+ko | Resultados para || 다음에 대한 결과
+en | Voltar para a Loja || Return to Store
+de | Voltar para a Loja || Zurück zum Store
+zh-cn | Voltar para a Loja || 返回商店
+pl | Voltar para a Loja || Wróć do sklepu
+ko | Voltar para a Loja || 매장으로 돌아가기
+en | Na sua lista de desejos || On your wish list
+de | Na sua lista de desejos || Auf Ihrer Wunschliste
+zh-cn | Na sua lista de desejos || 在您的愿望清单上
+pl | Na sua lista de desejos || Na Twojej liście życzeń
+ko | Na sua lista de desejos || 당신의 위시리스트에
+en | pessoas acharam esta análise útil || people acharloved this review helpful
+de | pessoas acharam esta análise útil || Leute acharliebten diese Bewertung hilfreich
+zh-cn | pessoas acharam esta análise útil || 人们char喜欢这篇评论，很有帮助
+pl | pessoas acharam esta análise útil || ludzie acharuwielbiali, że ta recenzja była pomocna
+ko | pessoas acharam esta análise útil || achar명이 이 리뷰를 좋아했습니다.
+en | Nome de exibição || Display name
+de | Nome de exibição || Anzeigename
+zh-cn | Nome de exibição || 显示名称
+pl | Nome de exibição || Nazwa wyświetlana
+ko | Nome de exibição || 표시 이름
+en | Você precisa adquirir este jogo para publicar uma análise. || You must purchase this game to post a review.
+de | Você precisa adquirir este jogo para publicar uma análise. || Sie müssen dieses Spiel kaufen, um eine Rezension abzugeben.
+zh-cn | Você precisa adquirir este jogo para publicar uma análise. || 您必须购买该游戏才能发表评论。
+pl | Você precisa adquirir este jogo para publicar uma análise. || Aby opublikować recenzję, musisz kupić tę grę.
+ko | Você precisa adquirir este jogo para publicar uma análise. || 리뷰를 게시하려면 이 게임을 구매해야 합니다.
+en | Este jogo possui classificação livre. || This game is free to play.
+de | Este jogo possui classificação livre. || Dieses Spiel ist kostenlos spielbar.
+zh-cn | Este jogo possui classificação livre. || 这个游戏是免费的。
+pl | Este jogo possui classificação livre. || Ta gra jest darmowa.
+en | Dados do perfil atualizados com sucesso! || Profile data updated successfully!
+ko | Este jogo possui classificação livre. || 이 게임은 무료로 플레이할 수 있습니다.
+en | gosto de jogos e as vezes jogo. || I like games and sometimes I play.
+en | Apenas letras, números e underscore || Only letters, numbers and underscore
+de | Apenas letras, números e underscore || Nur Buchstaben, Zahlen und Unterstrich
+zh-cn | Apenas letras, números e underscore || 仅限字母、数字和下划线
+pl | Apenas letras, números e underscore || Tylko litery, cyfry i podkreślenie
+ko | Apenas letras, números e underscore || 문자, 숫자, 밑줄만 가능
+en | Sem sugestões no momento. || No suggestions at this time.
+de | Sem sugestões no momento. || Derzeit keine Vorschläge.
+zh-cn | Sem sugestões no momento. || 目前没有建议。
+pl | Sem sugestões no momento. || W tej chwili nie ma żadnych sugestii.
+ko | Sem sugestões no momento. || 지금은 제안사항이 없습니다.
+en | Em uso por parentes: || In use by relatives:
+de | Em uso por parentes: || Im Einsatz bei Angehörigen:
+en | Corrida Divertida é o party game definitivo para toda a família! Escolha entre dezenas de personagens carismáticos, dispute pistas malucas cheias de atalhos secretos e use power-ups hilários para virar a corrida no último segundo. Jogue em tela dividida com até quatro pessoas no mesmo sofá. || Corrida Divertida is the ultimate party game for the whole family! Choose from dozens of charismatic characters, compete on malucas tracks full of secret shortcuts, and use hilarious power-ups to turn the race around at the last second. Play split-screen with up to four people on the same couch.
+en | Karts || Karts
+en | Festa || Party
+en | Festa || Party
+zh-cn | Em uso por parentes: || 亲戚使用中：
+en | Colorido || Colorful
+en | Colorido || Colorful
+pl | Em uso por parentes: || Używany przez krewnych:
+en | Multijogador Local || Local Multiplayer
+en | Multijogador Local || Local Multiplayer
+ko | Em uso por parentes: || 친척이 사용 중:
+en | Fácil de Aprender || Easy to Learn
+en | Fácil de Aprender || Easy to Learn
+en | Você atingiu o limite de trocas de @usuário. || You have reached the @user exchange limit.
+en | SO: Windows 10 64-bit · CPU: Intel i3-6100 · RAM: 4 GB · GPU: GTX 650 · 15 GB || OS: Windows 10 64-bit · CPU: Intel i3-6100 · RAM: 4 GB · GPU: GTX 650 · 15 GB
+en | SO: Windows 10 64-bit · CPU: Intel i3-6100 · RAM: 4 GB · GPU: GTX 650 · 15 GB || OS: Windows 10 64-bit · CPU: Intel i3-6100 · RAM: 4 GB · GPU: GTX 650 · 15 GB
+de | Você atingiu o limite de trocas de @usuário. || Sie haben das @user-Austauschlimit erreicht.
+zh-cn | Você atingiu o limite de trocas de @usuário. || 您已达到@user 交换限制。
+en | SO: Windows 10 64-bit · CPU: Intel i5-7400 · RAM: 8 GB · GPU: GTX 1050 · 15 GB SSD || OS: Windows 10 64-bit · CPU: Intel i5-7400 · RAM: 8 GB · GPU: GTX 1050 · ​​15 GB SSD
+en | SO: Windows 10 64-bit · CPU: Intel i5-7400 · RAM: 8 GB · GPU: GTX 1050 · 15 GB SSD || OS: Windows 10 64-bit · CPU: Intel i5-7400 · RAM: 8 GB · GPU: GTX 1050 · ​​15 GB SSD
+pl | Você atingiu o limite de trocas de @usuário. || Osiągnąłeś limit wymiany @user.
+en | Corridas para toda a família. Karts coloridos e pistas malucas! || Races for the whole family. Colorful karts and malucas tracks!
+en | Corridas para toda a família. Karts coloridos e pistas malucas! || Races for the whole family. Colorful karts and malucas tracks!
+en | Positivas || Positive
+en | Positivas || Positive
+ko | Você atingiu o limite de trocas de @usuário. || @user 교환 한도에 도달했습니다.
+en | Deixe um comentário... || Leave a comment...
+en | 5 de junho de 2022 || June 5, 2022
+en | 5 de junho de 2022 || June 5, 2022
+en | Multijogador local || Local Multiplayer
+en | Multijogador local || Local Multiplayer
+de | Deixe um comentário... || Hinterlasse einen Kommentar...
+en | Tela dividida || Split screen
+en | Tela dividida || Split screen
+zh-cn | Deixe um comentário... || 发表评论...
+en | Suporte total a controle || Full control support
+en | Italiano || Italian
+en | Suporte total a controle || Full control support
+pl | Deixe um comentário... || Zostaw komentarz...
+ko | Deixe um comentário... || 댓글을 남겨주세요...
+en | Jogos || Games
+de | Jogos || Spiele
+zh-cn | Jogos || 游戏
+pl | Jogos || Zawody sportowe
+ko | Jogos || 계략
+en | Saldo Steam || Steam Balance
+de | Saldo Steam || Dampfbilanz
+zh-cn | Saldo Steam || 蒸汽平衡
+pl | Saldo Steam || Bilans pary
+ko | Saldo Steam || 스팀 밸런스
+en | Sem amigos ainda. || No friends yet.
+de | Sem amigos ainda. || Noch keine Freunde.
+zh-cn | Sem amigos ainda. || 还没有朋友。
+pl | Sem amigos ainda. || Nie ma jeszcze żadnych przyjaciół.
+ko | Sem amigos ainda. || 아직 친구가 없습니다.
+en | Presentear || Gifting
+de | Presentear || Schenken
+zh-cn | Presentear || 送礼
+pl | Presentear || Prezenty
+ko | Presentear || 선물하기
+en | Forma de Pagamento || Payment Method
+de | Forma de Pagamento || Zahlungsmethode
+zh-cn | Forma de Pagamento || 付款方式
+pl | Forma de Pagamento || Metoda płatności
+ko | Forma de Pagamento || 결제수단
+en | Nenhum usuário encontrado com || No users found with
+de | Nenhum usuário encontrado com || Keine Benutzer mit gefunden
+zh-cn | Nenhum usuário encontrado com || 没有找到用户
+pl | Nenhum usuário encontrado com || Nie znaleziono użytkowników z
+ko | Nenhum usuário encontrado com || 다음과 같은 사용자를 찾을 수 없습니다.
+en | Criar Conta || Create Account
+de | Criar Conta || Benutzerkonto erstellen
+zh-cn | Criar Conta || 创建账户
+pl | Criar Conta || Utwórz konto
+ko | Criar Conta || 계정 만들기
+en | Via Família Steam || Via Steam Family
+de | Via Família Steam || Über Steam Family
+zh-cn | Via Família Steam || 通过Steam家庭
+pl | Via Família Steam || Przez rodzinę Steam
+ko | Via Família Steam || Steam 가족을 통해
+en | Comprar Cópia Extra || Buy Extra Copy
+de | Comprar Cópia Extra || Kaufen Sie ein zusätzliches Exemplar
+zh-cn | Comprar Cópia Extra || 购买额外副本
+pl | Comprar Cópia Extra || Kup dodatkową kopię
+ko | Comprar Cópia Extra || 추가 사본 구매
+en | Para continuar, informe sua Data de Nascimento: || To continue, enter your Date of Birth:
+de | Para continuar, informe sua Data de Nascimento: || Um fortzufahren, geben Sie Ihr Geburtsdatum ein:
+zh-cn | Para continuar, informe sua Data de Nascimento: || 要继续，请输入您的出生日期：
+pl | Para continuar, informe sua Data de Nascimento: || Aby kontynuować, wpisz swoją datę urodzenia:
+ko | Para continuar, informe sua Data de Nascimento: || 계속하려면 생년월일을 입력하세요.
+en | Meu perfil || My profile
+de | Meu perfil || Mein Profil
+zh-cn | Meu perfil || 我的个人资料
+pl | Meu perfil || Mój profil
+ko | Meu perfil || 내 프로필
+en | Destinatário deste presente: || Recipient of this gift:
+de | Destinatário deste presente: || Empfänger dieses Geschenks:
+zh-cn | Destinatário deste presente: || 这份礼物的接受者：
+pl | Destinatário deste presente: || Odbiorca tego prezentu:
+ko | Destinatário deste presente: || 이 선물을 받는 사람:
+en | jogo(s). || games).
+de | jogo(s). || Spiele).
+zh-cn | jogo(s). || 游戏）。
+pl | jogo(s). || zawody sportowe).
+ko | jogo(s). || 계략).
+en | Nome de usuário || Username
+de | Nome de usuário || Benutzername
+zh-cn | Nome de usuário || 用户名
+pl | Nome de usuário || Nazwa użytkownika
+ko | Nome de usuário || 사용자 이름
+en | Publicado em || Published in
+de | Publicado em || Veröffentlicht in
+zh-cn | Publicado em || 发表于
+pl | Publicado em || Opublikowano w
+ko | Publicado em || 에 게시됨
+en | Disponível: || Available:
+de | Disponível: || Verfügbar:
+zh-cn | Disponível: || 可用的：
+pl | Disponível: || Dostępny:
+ko | Disponível: || 사용 가능:
+en | está pronto no seu carrinho. || It's ready in your cart.
+de | está pronto no seu carrinho. || Es liegt bereits in Ihrem Warenkorb.
+zh-cn | está pronto no seu carrinho. || 它已准备在您的购物车中。
+pl | está pronto no seu carrinho. || Jest gotowy w Twoim koszyku.
+ko | está pronto no seu carrinho. || 장바구니에 준비되어 있습니다.
+en | Seu Carrinho de Compras || Your Shopping Cart
+de | Seu Carrinho de Compras || Ihr Warenkorb
+zh-cn | Seu Carrinho de Compras || 您的购物车
+pl | Seu Carrinho de Compras || Twój koszyk
+ko | Seu Carrinho de Compras || 장바구니
+en | Adicionar à Lista de Desejos || Add to Wishlist
+de | Adicionar à Lista de Desejos || Zur Wunschliste hinzufügen
+zh-cn | Adicionar à Lista de Desejos || 添加到愿望清单
+pl | Adicionar à Lista de Desejos || Dodaj do listy życzeń
+ko | Adicionar à Lista de Desejos || 위시리스트에 추가
+en | Fechar Jogo || Fechar Game
+de | Fechar Jogo || Fechar Spiel
+zh-cn | Fechar Jogo || Fechar 游戏
+pl | Fechar Jogo || Fechar Gra
+ko | Fechar Jogo || Fechar 게임
+en | Traduzido de || Translated from
+en | Ver original || View original
+en | Traduzir || Translate
+en | Este usuário ainda não escreveu nada sobre si. || This user hasn't written anything about themselves yet.
+en | Comprar saldo Steam para || Buy Steam balance for
+zh-cn | Dados do perfil atualizados com sucesso! || 个人资料数据更新成功！
+zh-cn | gosto de jogos e as vezes jogo. || 我喜欢游戏，有时也会玩。
+zh-cn | RPG || 角色扮演游戏
+zh-cn | Ação || 行动
+zh-cn | Aventura || 冒险
+zh-cn | Cooperativo || 合作社
+zh-cn | Terror || 恐怖
+zh-cn | Sobrevivência || 生存
+zh-cn | Mundo Aberto || 开放世界
+zh-cn | Corrida || 种族
+zh-cn | Casual || 随意的
+zh-cn | Arcade || 阿卡迪亚
+zh-cn | Estratégia || 战略
+zh-cn | Multijogador || 多人游戏
+zh-cn | Tático || 战术上的
+zh-cn | Aproveite os descontos em jogos selecionados || 享受精选游戏的折扣
+zh-cn | Minha Biblioteca || 我的图书馆
+zh-cn | Todos os seus amigos já fazem parte desta família! || 您所有的朋友都已经是这个家庭的一部分了！
+zh-cn | Traduzido de || 翻译自
+zh-cn | Ver original || 查看原文
+zh-cn | Traduzir || 翻译
+zh-cn | Este usuário ainda não escreveu nada sobre si. || 该用户还没有写过任何关于自己的信息。
+zh-cn | Deixe um comentário no seu próprio mural... || 在您自己的墙上发表评论...
+en | jogo(s) na sua lista de desejos. || game(s) on your wishlist.
+en | Atmosférico || Atmospheric
+en | Combate || Fight
+en | Competitivo || Competitive
+en | Crafting || Crafting
+en | Difícil || Difficult
+en | Engraçado || Funny
+en | Estratégico || Strategic
+en | Extremamente positivas || Extremely positive
+en | Guerra || War
+en | Japonês || Japanese
+en | Jogo de combate de guerra com os amigos. Que vença a lombriguinha melhor! || War combat game with friends. May the best worm win!
+en | Jogo de terror com zumbis. Sobreviva a noites aterrorizantes com recursos escassos. || Horror game with zombies. Survive terrifying nights with scarce resources.
+en | Lombriguinha é um jogo de combate de guerra hilário e estratégico onde você comanda um exército de lombrigas armadas até os dentes. Enfrente seus amigos em batalhas táticas por turnos em cenários destrutíveis, use um arsenal absurdo de armas criativas e prove que a sua lombriguinha é a melhor do campo de batalha! || Lombriguinha is a hilarious and strategic war combat game where you command an army of worms armed to the teeth. Face your friends in turn-based tactical battles in destructible environments, use an absurd arsenal of creative weapons and prove that your little worm is the best on the battlefield!
+en | Multijogador online || Online Multiplayer
+en | Russo || Russian
+en | SO: Windows 10 64-bit · CPU: Intel i3-7100 · RAM: 4 GB · GPU: GTX 750 · 10 GB || OS: Windows 10 64-bit · CPU: Intel i3-7100 · RAM: 4 GB · GPU: GTX 750 · 10 GB
+en | SO: Windows 10 64-bit · CPU: Ryzen 3 1200 · RAM: 8 GB · GPU: GTX 1050 Ti · 50 GB || OS: Windows 10 64-bit · CPU: Ryzen 3 1200 · RAM: 8 GB · GPU: GTX 1050 Ti · 50 GB
+en | SO: Windows 11 64-bit · CPU: Intel i5-9400 · RAM: 8 GB · GPU: GTX 1060 · 10 GB SSD || OS: Windows 11 64-bit · CPU: Intel i5-9400 · RAM: 8 GB · GPU: GTX 1060 · 10 GB SSD
+en | SO: Windows 11 64-bit · CPU: Ryzen 5 5600 · RAM: 16 GB · GPU: RTX 3060 · 50 GB SSD || OS: Windows 11 64-bit · CPU: Ryzen 5 5600 · RAM: 16 GB · GPU: RTX 3060 · 50 GB SSD
+en | Sobrevivência Sombria coloca você em uma cidade devastada por uma praga implacável. Gerencie recursos escassos, fabrique armas improvisadas e fortifique seu esconderijo antes que a noite chegue. Cada decisão importa: o som de um tiro pode atrair hordas inteiras. Sozinho ou com amigos, até onde você irá para ver o amanhecer? || Sobrevivência Sombria places you in a city ravaged by a relentless plague. Manage scarce resources, craft makeshift weapons, and fortify your hideout before night comes. Every decision matters: the sound of a shot can attract entire hordes. Alone or with friends, how far will you go to see the dawn?
+en | Survival Horror || survival horror
+en | Zumbis || Zombies
+de | Atmosférico || Atmosphärisch
+de | Colorido || Bunt
+de | Combate || Kämpfen
+de | Competitivo || Wettbewerbsfähig
+de | Corrida Divertida é o party game definitivo para toda a família! Escolha entre dezenas de personagens carismáticos, dispute pistas malucas cheias de atalhos secretos e use power-ups hilários para virar a corrida no último segundo. Jogue em tela dividida com até quatro pessoas no mesmo sofá. || Corrida Divertida ist das ultimative Partyspiel für die ganze Familie! Wählen Sie aus Dutzenden charismatischer Charaktere, messen Sie sich auf malucas-Strecken voller geheimer Abkürzungen und nutzen Sie urkomische Power-Ups, um das Rennen in letzter Sekunde zu wenden. Spielen Sie im Splitscreen-Modus mit bis zu vier Personen auf derselben Couch.
+de | Corridas para toda a família. Karts coloridos e pistas malucas! || Rennen für die ganze Familie. Bunte Karts und malucas Strecken!
+de | Crafting || Basteln
+de | Difícil || Schwierig
+de | Engraçado || Lustig
+de | Estratégico || Strategisch
+de | Extremamente positivas || Äußerst positiv
+de | Festa || Party
+de | Fácil de Aprender || Leicht zu erlernen
+de | Guerra || Krieg
+de | Italiano || Italienisch
+de | Japonês || japanisch
+de | Jogo de combate de guerra com os amigos. Que vença a lombriguinha melhor! || Kriegskampfspiel mit Freunden. Möge der beste Wurm gewinnen!
+de | Jogo de terror com zumbis. Sobreviva a noites aterrorizantes com recursos escassos. || Horrorspiel mit Zombies. Überlebe schreckliche Nächte mit knappen Ressourcen.
+de | Karts || Karts
+de | Lombriguinha é um jogo de combate de guerra hilário e estratégico onde você comanda um exército de lombrigas armadas até os dentes. Enfrente seus amigos em batalhas táticas por turnos em cenários destrutíveis, use um arsenal absurdo de armas criativas e prove que a sua lombriguinha é a melhor do campo de batalha! || Lombriguinha ist ein urkomisches und strategisches Kriegskampfspiel, in dem Sie eine bis an die Zähne bewaffnete Armee von Würmern befehligen. Treten Sie Ihren Freunden in rundenbasierten taktischen Schlachten in zerstörbaren Umgebungen gegenüber, nutzen Sie ein absurdes Arsenal an kreativen Waffen und beweisen Sie, dass Ihr kleiner Wurm der Beste auf dem Schlachtfeld ist!
+de | Multijogador Local || Lokaler Mehrspielermodus
+de | Multijogador local || Lokaler Mehrspielermodus
+de | Multijogador online || Online-Multiplayer
+de | Positivas || Positiv
+de | Russo || Russisch
+de | SO: Windows 10 64-bit · CPU: Intel i3-6100 · RAM: 4 GB · GPU: GTX 650 · 15 GB || Betriebssystem: Windows 10 64-Bit · CPU: Intel i3-6100 · RAM: 4 GB · GPU: GTX 650 · 15 GB
+de | SO: Windows 10 64-bit · CPU: Intel i3-7100 · RAM: 4 GB · GPU: GTX 750 · 10 GB || Betriebssystem: Windows 10 64-Bit · CPU: Intel i3-7100 · RAM: 4 GB · GPU: GTX 750 · 10 GB
+de | SO: Windows 10 64-bit · CPU: Intel i5-7400 · RAM: 8 GB · GPU: GTX 1050 · 15 GB SSD || Betriebssystem: Windows 10 64-Bit · CPU: Intel i5-7400 · RAM: 8 GB · GPU: GTX 1050 · ​​15 GB SSD
+de | SO: Windows 10 64-bit · CPU: Ryzen 3 1200 · RAM: 8 GB · GPU: GTX 1050 Ti · 50 GB || Betriebssystem: Windows 10 64-Bit · CPU: Ryzen 3 1200 · RAM: 8 GB · GPU: GTX 1050 Ti · 50 GB
+de | SO: Windows 11 64-bit · CPU: Intel i5-9400 · RAM: 8 GB · GPU: GTX 1060 · 10 GB SSD || Betriebssystem: Windows 11 64-Bit · CPU: Intel i5-9400 · RAM: 8 GB · GPU: GTX 1060 · 10 GB SSD
+de | SO: Windows 11 64-bit · CPU: Ryzen 5 5600 · RAM: 16 GB · GPU: RTX 3060 · 50 GB SSD || Betriebssystem: Windows 11 64-Bit · CPU: Ryzen 5 5600 · RAM: 16 GB · GPU: RTX 3060 · 50 GB SSD
+de | Sobrevivência Sombria coloca você em uma cidade devastada por uma praga implacável. Gerencie recursos escassos, fabrique armas improvisadas e fortifique seu esconderijo antes que a noite chegue. Cada decisão importa: o som de um tiro pode atrair hordas inteiras. Sozinho ou com amigos, até onde você irá para ver o amanhecer? || Sobrevivência Sombria versetzt Sie in eine Stadt, die von einer unerbittlichen Seuche heimgesucht wird. Verwalten Sie knappe Ressourcen, stellen Sie provisorische Waffen her und befestigen Sie Ihr Versteck, bevor die Nacht hereinbricht. Jede Entscheidung zählt: Der Klang eines Schusses kann ganze Horden anlocken. Allein oder mit Freunden, wie weit werden Sie gehen, um die Morgendämmerung zu sehen?
+de | Suporte total a controle || Volle Kontrollunterstützung
+de | Survival Horror || Survival-Horror
+de | Tela dividida || Geteilter Bildschirm
+de | Zumbis || Zombies
+zh-cn | Atmosférico || 大气
+zh-cn | Aventura Épica leva você a um vasto mundo de fantasia repleto de masmorras sombrias, chefes colossais e tesouros lendários. Forme um grupo com até quatro amigos, personalize seu herói com centenas de habilidades e enfrente uma campanha épica de mais de 60 horas. Cada masmorra é gerada com desafios únicos, garantindo que nenhuma jornada seja igual. || Aventura Épica 带您进入一个广阔的奇幻世界，里面充满了黑暗的地牢、巨大的头目和传奇的宝藏。与最多四名朋友组成队伍，用数百种技能定制你的英雄，并面对持续超过 60 小时的史诗般的战役。每个地下城都有独特的挑战，确保没有两次旅程是相同的。
+zh-cn | Colorido || 丰富多彩的
+zh-cn | Combate || 斗争
+zh-cn | Competitivo || 竞争的
+zh-cn | Conquistas Steam || Steam 成就
+zh-cn | Cooperativo online || 线上合作
+zh-cn | Corrida Divertida é o party game definitivo para toda a família! Escolha entre dezenas de personagens carismáticos, dispute pistas malucas cheias de atalhos secretos e use power-ups hilários para virar a corrida no último segundo. Jogue em tela dividida com até quatro pessoas no mesmo sofá. || Corrida Divertida 是适合全家人的终极派对游戏！从数十个魅力十足的角色中进行选择，在充满秘密捷径的malucas赛道上竞争，并使用搞笑的能量提升在最后一秒扭转比赛。最多可与四人在同一张沙发上进行分屏游戏。
+zh-cn | Corridas para toda a família. Karts coloridos e pistas malucas! || 适合全家参加的比赛。色彩缤纷的卡丁车和malucas赛道！
+zh-cn | Crafting || 制作
+zh-cn | Difícil || 难的
+zh-cn | Engraçado || 有趣的
+zh-cn | Espanhol || 西班牙语
+zh-cn | Estratégico || 战略
+zh-cn | Explore masmorras e derrote monstros com amigos nesta jornada incrível. || 在这段不可思议的旅程中，与朋友一起探索地下城并击败怪物。
+zh-cn | Extremamente positivas || 极其积极
+zh-cn | Fantasia || 幻想
+zh-cn | Festa || 派对
+zh-cn | Francês || 法语
+zh-cn | Guerra || 战争
+zh-cn | História Rica || 丰富的历史
+zh-cn | Italiano || 意大利语
+zh-cn | Japonês || 日本人
+zh-cn | Jogo de combate de guerra com os amigos. Que vença a lombriguinha melhor! || 与朋友一起进行战争格斗游戏。祝最好的蠕虫获胜！
+zh-cn | Jogo de terror com zumbis. Sobreviva a noites aterrorizantes com recursos escassos. || 与僵尸的恐怖游戏。用稀缺的资源度过可怕的夜晚。
+zh-cn | Karts || 卡丁车
+zh-cn | Lombriguinha é um jogo de combate de guerra hilário e estratégico onde você comanda um exército de lombrigas armadas até os dentes. Enfrente seus amigos em batalhas táticas por turnos em cenários destrutíveis, use um arsenal absurdo de armas criativas e prove que a sua lombriguinha é a melhor do campo de batalha! || Lombriguinha 是一款搞笑的战略战争游戏，您可以指挥一支武装到牙齿的蠕虫大军。在可破坏的环境中，在回合制战术战斗中面对你的朋友，使用荒谬的创意武器库，并证明你的小蠕虫是战场上最好的！
+zh-cn | Masmorras || 地下城
+zh-cn | Muito positivas || 非常积极
+zh-cn | Multijogador Local || 本地多人游戏
+zh-cn | Multijogador local || 本地多人游戏
+zh-cn | Multijogador online || 在线多人游戏
+zh-cn | Nuvem Steam || 蒸汽云
+zh-cn | Português || 葡萄牙语
+zh-cn | Positivas || 积极的
+zh-cn | Russo || 俄语
+zh-cn | SO: Windows 10 64-bit · CPU: Intel i3-6100 · RAM: 4 GB · GPU: GTX 650 · 15 GB || 操作系统：Windows 10 64 位 · CPU：Intel i3-6100 · RAM：4 GB · GPU：GTX 650 · 15 GB
+zh-cn | SO: Windows 10 64-bit · CPU: Intel i3-7100 · RAM: 4 GB · GPU: GTX 750 · 10 GB || 操作系统：Windows 10 64 位 · CPU：Intel i3-7100 · RAM：4 GB · GPU：GTX 750 · 10 GB
+zh-cn | SO: Windows 10 64-bit · CPU: Intel i5-4460 · RAM: 8 GB · GPU: GTX 760 · 40 GB || 操作系统：Windows 10 64 位 · CPU：Intel i5-4460 · RAM：8 GB · GPU：GTX 760 · 40 GB
+zh-cn | SO: Windows 10 64-bit · CPU: Intel i5-7400 · RAM: 8 GB · GPU: GTX 1050 · 15 GB SSD || 操作系统：Windows 10 64位·CPU：Intel i5-7400·RAM：8 GB·GPU：GTX 1050·15 GB SSD
+zh-cn | SO: Windows 10 64-bit · CPU: Ryzen 3 1200 · RAM: 8 GB · GPU: GTX 1050 Ti · 50 GB || 操作系统：Windows 10 64 位 · CPU：Ryzen 3 1200 · RAM：8 GB · GPU：GTX 1050 Ti · 50 GB
+zh-cn | SO: Windows 11 64-bit · CPU: Intel i5-9400 · RAM: 8 GB · GPU: GTX 1060 · 10 GB SSD || 操作系统：Windows 11 64 位 · CPU：Intel i5-9400 · RAM：8 GB · GPU：GTX 1060 · 10 GB SSD
+zh-cn | SO: Windows 11 64-bit · CPU: Intel i7-9700 · RAM: 16 GB · GPU: RTX 2060 · 40 GB SSD || 操作系统：Windows 11 64 位 · CPU：Intel i7-9700 · RAM：16 GB · GPU：RTX 2060 · 40 GB SSD
+zh-cn | SO: Windows 11 64-bit · CPU: Ryzen 5 5600 · RAM: 16 GB · GPU: RTX 3060 · 50 GB SSD || 操作系统：Windows 11 64 位 · CPU：Ryzen 5 5600 · RAM：16 GB · GPU：RTX 3060 · 50 GB SSD
+zh-cn | Sobrevivência Sombria coloca você em uma cidade devastada por uma praga implacável. Gerencie recursos escassos, fabrique armas improvisadas e fortifique seu esconderijo antes que a noite chegue. Cada decisão importa: o som de um tiro pode atrair hordas inteiras. Sozinho ou com amigos, até onde você irá para ver o amanhecer? || Sobrevivência Sombria 将您置于一座被无情瘟疫蹂躏的城市中。管理稀缺资源，制作临时武器，并在夜幕降临之前加固你的藏身处。每个决定都很重要：枪声可以吸引整个部落。独自一人或与朋友一起，你会走多远才能看到黎明？
+zh-cn | Suporte a controle || 控制支持
+zh-cn | Suporte total a controle || 完全控制支持
+zh-cn | Survival Horror || 生存恐怖
+zh-cn | Tela dividida || 分屏
+zh-cn | Um jogador || 一名玩家
+zh-cn | Zumbis || 僵尸
+pl | Arcade || Arkadyjski
+pl | Atmosférico || Atmosferyczny
+pl | Aventura || Przygoda
+pl | Aventura Épica leva você a um vasto mundo de fantasia repleto de masmorras sombrias, chefes colossais e tesouros lendários. Forme um grupo com até quatro amigos, personalize seu herói com centenas de habilidades e enfrente uma campanha épica de mais de 60 horas. Cada masmorra é gerada com desafios únicos, garantindo que nenhuma jornada seja igual. || Aventura Épica przenosi Cię do rozległego świata fantasy, pełnego mrocznych lochów, kolosalnych bossów i legendarnych skarbów. Stwórz drużynę z maksymalnie czterema przyjaciółmi, dostosuj swojego bohatera za pomocą setek umiejętności i zmierz się z epicką kampanią trwającą ponad 60 godzin. Każdy loch jest generowany z unikalnymi wyzwaniami, dzięki czemu nie ma dwóch takich samych podróży.
+pl | Ação || Działanie
+pl | Casual || Zwykły
+pl | Colorido || Kolorowy
+pl | Combate || Walka
+pl | Competitivo || Konkurencyjny
+pl | Conquistas Steam || Osiągnięcia Steama
+pl | Cooperativo || Spółdzielnia
+pl | Cooperativo online || Spółdzielnia internetowa
+pl | Corrida || Wyścig
+pl | Corrida Divertida é o party game definitivo para toda a família! Escolha entre dezenas de personagens carismáticos, dispute pistas malucas cheias de atalhos secretos e use power-ups hilários para virar a corrida no último segundo. Jogue em tela dividida com até quatro pessoas no mesmo sofá. || Corrida Divertida to najlepsza gra towarzyska dla całej rodziny! Wybieraj spośród kilkudziesięciu charyzmatycznych postaci, rywalizuj na malucas torach pełnych tajnych skrótów i korzystaj z zabawnych ulepszeń, aby w ostatniej sekundzie odwrócić losy wyścigu. Graj na podzielonym ekranie z maksymalnie czterema osobami na tej samej kanapie.
+pl | Corridas para toda a família. Karts coloridos e pistas malucas! || Wyścigi dla całej rodziny. Kolorowe gokarty i malucas tory!
+pl | Crafting || Rzemiosło
+pl | Difícil || Trudny
+pl | Engraçado || Śmieszny
+pl | Espanhol || hiszpański
+pl | Estratégia || Strategia
+pl | Estratégico || Strategiczny
+pl | Explore masmorras e derrote monstros com amigos nesta jornada incrível. || Eksploruj lochy i pokonuj potwory z przyjaciółmi w tej niesamowitej podróży.
+pl | Extremamente positivas || Niezwykle pozytywne
+pl | Fantasia || Kaprys
+pl | Festa || Impreza
+pl | Francês || francuski
+pl | Fácil de Aprender || Łatwy do nauczenia
+pl | Guerra || Wojna
+pl | História Rica || Bogata historia
+pl | Italiano || włoski
+pl | Japonês || japoński
+pl | Jogo de combate de guerra com os amigos. Que vença a lombriguinha melhor! || Gra wojenna z przyjaciółmi. Niech wygra najlepszy robak!
+pl | Jogo de terror com zumbis. Sobreviva a noites aterrorizantes com recursos escassos. || Gra grozy z zombie. Przetrwaj przerażające noce, korzystając z ograniczonych zasobów.
+pl | Karts || Gokarty
+pl | Lombriguinha é um jogo de combate de guerra hilário e estratégico onde você comanda um exército de lombrigas armadas até os dentes. Enfrente seus amigos em batalhas táticas por turnos em cenários destrutíveis, use um arsenal absurdo de armas criativas e prove que a sua lombriguinha é a melhor do campo de batalha! || Lombriguinha to zabawna i strategiczna gra wojenna, w której dowodzisz armią robaków uzbrojonych po zęby. Zmierz się ze znajomymi w turowych bitwach taktycznych w zniszczalnych środowiskach, użyj absurdalnego arsenału kreatywnej broni i udowodnij, że Twój mały robak jest najlepszy na polu bitwy!
+pl | Masmorras || Lochy
+pl | Muito positivas || Bardzo pozytywne
+pl | Multijogador || Tryb wieloosobowy
+pl | Multijogador Local || Lokalny tryb wieloosobowy
+pl | Multijogador local || Lokalny tryb wieloosobowy
+pl | Multijogador online || Internetowy tryb wieloosobowy
+pl | Mundo Aberto || Otwarty świat
+pl | Nuvem Steam || Chmura parowa
+pl | Português || portugalski
+pl | Positivas || Pozytywny
+pl | RPG || RPG
+pl | Russo || rosyjski
+pl | SO: Windows 10 64-bit · CPU: Intel i3-6100 · RAM: 4 GB · GPU: GTX 650 · 15 GB || System operacyjny: Windows 10 64-bit · Procesor: Intel i3-6100 · RAM: 4 GB · Karta graficzna: GTX 650 · 15 GB
+pl | SO: Windows 10 64-bit · CPU: Intel i3-7100 · RAM: 4 GB · GPU: GTX 750 · 10 GB || System operacyjny: Windows 10 64-bit · Procesor: Intel i3-7100 · RAM: 4 GB · Karta graficzna: GTX 750 · 10 GB
+pl | SO: Windows 10 64-bit · CPU: Intel i5-4460 · RAM: 8 GB · GPU: GTX 760 · 40 GB || System operacyjny: Windows 10 64-bit · Procesor: Intel i5-4460 · RAM: 8 GB · Karta graficzna: GTX 760 · 40 GB
+pl | SO: Windows 10 64-bit · CPU: Intel i5-7400 · RAM: 8 GB · GPU: GTX 1050 · 15 GB SSD || System operacyjny: Windows 10 64-bit · Procesor: Intel i5-7400 · RAM: 8 GB · Karta graficzna: GTX 1050 · ​​​​15 GB SSD
+pl | SO: Windows 10 64-bit · CPU: Ryzen 3 1200 · RAM: 8 GB · GPU: GTX 1050 Ti · 50 GB || System operacyjny: Windows 10 64-bit · Procesor: Ryzen 3 1200 · RAM: 8 GB · Karta graficzna: GTX 1050 Ti · 50 GB
+pl | SO: Windows 11 64-bit · CPU: Intel i5-9400 · RAM: 8 GB · GPU: GTX 1060 · 10 GB SSD || System operacyjny: Windows 11 64-bit · Procesor: Intel i5-9400 · RAM: 8 GB · Karta graficzna: GTX 1060 · 10 GB SSD
+pl | SO: Windows 11 64-bit · CPU: Intel i7-9700 · RAM: 16 GB · GPU: RTX 2060 · 40 GB SSD || System operacyjny: Windows 11 64-bit · Procesor: Intel i7-9700 · RAM: 16 GB · Karta graficzna: RTX 2060 · 40 GB SSD
+pl | SO: Windows 11 64-bit · CPU: Ryzen 5 5600 · RAM: 16 GB · GPU: RTX 3060 · 50 GB SSD || System operacyjny: Windows 11 64-bit · Procesor: Ryzen 5 5600 · RAM: 16 GB · Karta graficzna: RTX 3060 · 50 GB SSD
+pl | Sobrevivência || Przetrwanie
+pl | Sobrevivência Sombria coloca você em uma cidade devastada por uma praga implacável. Gerencie recursos escassos, fabrique armas improvisadas e fortifique seu esconderijo antes que a noite chegue. Cada decisão importa: o som de um tiro pode atrair hordas inteiras. Sozinho ou com amigos, até onde você irá para ver o amanhecer? || Sobrevivência Sombria przenosi Cię do miasta spustoszonego przez nieubłaganą zarazę. Zarządzaj ograniczonymi zasobami, twórz prowizoryczną broń i wzmacniaj swoją kryjówkę, zanim nadejdzie noc. Każda decyzja ma znaczenie: dźwięk wystrzału może przyciągnąć całe hordy. Samotnie czy z przyjaciółmi, jak daleko się posuniesz, aby zobaczyć świt?
+pl | Suporte a controle || Wsparcie kontroli
+pl | Suporte total a controle || Pełne wsparcie kontroli
+pl | Survival Horror || horror przetrwania
+pl | Tela dividida || Podzielony ekran
+pl | Terror || Terror
+pl | Tático || Taktyczny
+pl | Um jogador || Jeden gracz
+pl | Zumbis || Zombie
+ko | Arcade || 아르카디아 사람
+ko | Atmosférico || 대기
+ko | Aventura || 모험
+ko | Aventura Épica leva você a um vasto mundo de fantasia repleto de masmorras sombrias, chefes colossais e tesouros lendários. Forme um grupo com até quatro amigos, personalize seu herói com centenas de habilidades e enfrente uma campanha épica de mais de 60 horas. Cada masmorra é gerada com desafios únicos, garantindo que nenhuma jornada seja igual. || Aventura Épica는 어두운 던전, 거대한 보스, 전설적인 보물로 가득한 광활한 판타지 세계로 여러분을 안내합니다. 최대 4명의 친구와 함께 파티를 구성하고, 수백 가지 기술로 영웅을 맞춤화하고, 60시간 이상 지속되는 장대한 캠페인에 맞서세요. 각 던전은 고유한 도전 과제로 생성되므로 두 가지 여정이 동일하지 않습니다.
+ko | Ação || 행동
+ko | Casual || 평상복
+ko | Colorido || 화려한
+ko | Combate || 싸움
+ko | Competitivo || 경쟁력 있는
+ko | Conquistas Steam || 스팀 업적
+ko | Cooperativo || 협동조합
+ko | Cooperativo online || 온라인 협동조합
+ko | Corrida || 경주
+ko | Corrida Divertida é o party game definitivo para toda a família! Escolha entre dezenas de personagens carismáticos, dispute pistas malucas cheias de atalhos secretos e use power-ups hilários para virar a corrida no último segundo. Jogue em tela dividida com até quatro pessoas no mesmo sofá. || Corrida Divertida은 온 가족을 위한 최고의 파티 게임입니다! 수십 명의 카리스마 넘치는 캐릭터 중에서 선택하고, 비밀 지름길로 가득한 malucas 트랙에서 경쟁하고, 재미있는 파워업을 사용하여 마지막 순간에 경주를 반전시키세요. 같은 소파에 최대 4명이 함께 분할 화면을 플레이할 수 있습니다.
+ko | Corridas para toda a família. Karts coloridos e pistas malucas! || 온 가족을 위한 경주. 다채로운 카트와 malucas 트랙!
+ko | Crafting || 제작
+ko | Difícil || 어려운
+ko | Engraçado || 재미있는
+ko | Espanhol || 스페인 사람
+ko | Estratégia || 전략
+ko | Estratégico || 전략적
+ko | Explore masmorras e derrote monstros com amigos nesta jornada incrível. || 이 놀라운 여정에서 친구들과 함께 던전을 탐험하고 몬스터를 물리치세요.
+ko | Extremamente positivas || 매우 긍정적
+ko | Fantasia || 공상
+ko | Festa || 파티
+ko | Francês || 프랑스 국민
+ko | Fácil de Aprender || 배우기 쉽다
+ko | Guerra || 전쟁
+ko | História Rica || 풍부한 역사
+ko | Italiano || 이탈리아 사람
+ko | Japonês || 일본어
+ko | Jogo de combate de guerra com os amigos. Que vença a lombriguinha melhor! || 친구들과 함께하는 전쟁 전투 게임. 최고의 벌레가 승리하길 바랍니다!
+ko | Jogo de terror com zumbis. Sobreviva a noites aterrorizantes com recursos escassos. || 좀비를 이용한 공포 게임. 부족한 자원으로 무서운 밤을 견뎌내세요.
+ko | Karts || 카트
+ko | Lombriguinha é um jogo de combate de guerra hilário e estratégico onde você comanda um exército de lombrigas armadas até os dentes. Enfrente seus amigos em batalhas táticas por turnos em cenários destrutíveis, use um arsenal absurdo de armas criativas e prove que a sua lombriguinha é a melhor do campo de batalha! || Lombriguinha은 완전 무장한 벌레 군대를 지휘하는 재미있고 전략적인 전쟁 전투 게임입니다. 파괴 가능한 환경에서 턴제 전술 전투에서 친구들과 대결하고, 터무니없는 창의적인 무기를 사용하고, 당신의 작은 벌레가 전장에서 최고임을 증명하세요!
+ko | Masmorras || 던전
+ko | Muito positivas || 매우 긍정적
+ko | Multijogador || 멀티플레이어
+ko | Multijogador Local || 로컬 멀티플레이어
+ko | Multijogador local || 로컬 멀티플레이어
+ko | Multijogador online || 온라인 멀티플레이어
+ko | Mundo Aberto || 오픈 월드
+ko | Nuvem Steam || 스팀 클라우드
+ko | Português || 포르투갈 인
+ko | Positivas || 긍정적인
+ko | RPG || 롤플레잉
+ko | Russo || 러시아인
+ko | SO: Windows 10 64-bit · CPU: Intel i3-6100 · RAM: 4 GB · GPU: GTX 650 · 15 GB || OS: Windows 10 64비트 · CPU: Intel i3-6100 · RAM: 4GB · GPU: GTX 650 · 15GB
+ko | SO: Windows 10 64-bit · CPU: Intel i3-7100 · RAM: 4 GB · GPU: GTX 750 · 10 GB || OS: Windows 10 64비트 · CPU: Intel i3-7100 · RAM: 4GB · GPU: GTX 750 · 10GB
+ko | SO: Windows 10 64-bit · CPU: Intel i5-4460 · RAM: 8 GB · GPU: GTX 760 · 40 GB || OS: Windows 10 64비트 · CPU: Intel i5-4460 · RAM: 8GB · GPU: GTX 760 · 40GB
+ko | SO: Windows 10 64-bit · CPU: Intel i5-7400 · RAM: 8 GB · GPU: GTX 1050 · 15 GB SSD || OS: Windows 10 64-bit · CPU: Intel i5-7400 · RAM: 8GB · GPU: GTX 1050 · ​​​​15GB SSD
+ko | SO: Windows 10 64-bit · CPU: Ryzen 3 1200 · RAM: 8 GB · GPU: GTX 1050 Ti · 50 GB || OS: Windows 10 64비트 · CPU: Ryzen 3 1200 · RAM: 8GB · GPU: GTX 1050 Ti · 50GB
+ko | SO: Windows 11 64-bit · CPU: Intel i5-9400 · RAM: 8 GB · GPU: GTX 1060 · 10 GB SSD || OS: Windows 11 64비트 · CPU: Intel i5-9400 · RAM: 8GB · GPU: GTX 1060 · 10GB SSD
+ko | SO: Windows 11 64-bit · CPU: Intel i7-9700 · RAM: 16 GB · GPU: RTX 2060 · 40 GB SSD || OS: Windows 11 64비트 · CPU: Intel i7-9700 · RAM: 16GB · GPU: RTX 2060 · 40GB SSD
+ko | SO: Windows 11 64-bit · CPU: Ryzen 5 5600 · RAM: 16 GB · GPU: RTX 3060 · 50 GB SSD || OS: Windows 11 64비트 · CPU: Ryzen 5 5600 · RAM: 16GB · GPU: RTX 3060 · 50GB SSD
+ko | Sobrevivência || 활착
+ko | Sobrevivência Sombria coloca você em uma cidade devastada por uma praga implacável. Gerencie recursos escassos, fabrique armas improvisadas e fortifique seu esconderijo antes que a noite chegue. Cada decisão importa: o som de um tiro pode atrair hordas inteiras. Sozinho ou com amigos, até onde você irá para ver o amanhecer? || Sobrevivência Sombria은 당신을 끊임없는 전염병으로 황폐화된 도시에 배치합니다. 부족한 자원을 관리하고, 임시 무기를 제작하고, 밤이 오기 전에 은신처를 강화하세요. 모든 결정이 중요합니다. 총소리는 전체 무리를 끌어들일 수 있습니다. 혼자 또는 친구들과 함께 새벽을 보러 어디까지 갈 것인가?
+ko | Suporte a controle || 제어 지원
+ko | Suporte total a controle || 전체 제어 지원
+ko | Survival Horror || 생존 공포
+ko | Tela dividida || 분할 화면
+ko | Terror || 공포
+ko | Tático || 전술적
+ko | Um jogador || 한 명의 플레이어
+ko | Zumbis || 좀비
+ko | Dados do perfil atualizados com sucesso! || 프로필 데이터가 성공적으로 업데이트되었습니다!
+ko | Traduzir || 번역하다
+de | Dados do perfil atualizados com sucesso! || Profildaten erfolgreich aktualisiert!
+de | Traduzir || Übersetzen
+pl | Dados do perfil atualizados com sucesso! || Dane profilu zostały pomyślnie zaktualizowane!
+pl | Traduzir || Tłumaczyć

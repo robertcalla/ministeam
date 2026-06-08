@@ -901,42 +901,66 @@ def remover_publisher_de_promocao(promo_id, publisher):
     return True, f"Jogos da {publisher} removidos da promoção."
 
 
-def _promocao_ativa_em(data_ref, promocoes):
-    """Retorna a promoção ativa em `data_ref` (AAAA-MM-DD).
+def ler_promocoes_ativas(data_ref=None):
+    """Lista TODAS as promoções ativas em `data_ref` (ou hoje), mais recente primeiro.
 
-    Se houver mais de uma cobrindo a data, escolhe a criada mais recentemente.
+    Várias promoções podem coexistir — o admin pode ter criado um evento
+    cobrindo MINIntendo e separadamente uma oferta de Lombriguinha; as duas
+    valem ao mesmo tempo. Para descontos, ver `ler_descontos_ativos`.
     """
-    candidatas = []
-    for p in promocoes:
-        ini, fim = p.get('data_inicio'), p.get('data_fim')
-        if ini and fim and ini <= data_ref <= fim and p.get('descontos'):
-            candidatas.append(p)
-    if not candidatas:
-        return None
-    candidatas.sort(key=lambda p: p.get('criado_em', ''), reverse=True)
-    return candidatas[0]
+    ref = data_ref or _data_str_hoje()
+    ativas = [
+        p for p in ler_historico_promocoes()
+        if p.get('data_inicio') and p.get('data_fim')
+        and p['data_inicio'] <= ref <= p['data_fim']
+        and p.get('descontos')
+    ]
+    ativas.sort(key=lambda p: p.get('criado_em', ''), reverse=True)
+    return ativas
+
+
+def ler_descontos_ativos(data_ref=None):
+    """Retorna {game_id: maior_desconto} unindo todas as promoções ativas.
+
+    Se um jogo aparece em duas promoções ativas (ex.: 30% via publisher
+    MINIntendo e 50% via oferta avulsa), prevalece o MAIOR — comportamento
+    intuitivo para o usuário final: a melhor oferta é sempre aplicada.
+    """
+    descontos = {}
+    for p in ler_promocoes_ativas(data_ref):
+        for gid, pct in p.get('descontos', {}).items():
+            try:
+                pct_i = int(pct)
+            except (TypeError, ValueError):
+                continue
+            descontos[str(gid)] = max(descontos.get(str(gid), 0), pct_i)
+    return descontos
 
 
 def ler_promocao():
-    """Retorna a promoção ATIVA agora no formato esperado pelo resto do app.
+    """Snapshot agregado para o banner do index e o cálculo de preços.
 
-    Estrutura: {modo, ativo, nome, data_fim, data_inicio, id, descontos{gid: pct}}.
-    Se não há promoção ativa, devolve um placeholder inativo.
+    - `descontos`: união das promoções ativas (maior % por jogo)
+    - `nome` / `data_fim` / `modo`: vêm da promoção 'evento' mais recente,
+      que é a que merece banner. Se nenhuma ativa for evento, `modo='unico'`
+      e o banner não aparece (a checagem em base.html exige modo evento).
     """
-    promocoes = ler_historico_promocoes()
-    ativa = _promocao_ativa_em(_data_str_hoje(), promocoes)
-    if not ativa:
+    ativas = ler_promocoes_ativas()
+    if not ativas:
         return {
             'modo': 'nenhum', 'nome': 'Promoção', 'data_fim': None,
             'data_inicio': None, 'id': None, 'descontos': {}, 'ativo': False
         }
+    eventos = [p for p in ativas if p.get('modo') == 'evento']
+    principal = eventos[0] if eventos else ativas[0]
+    fim_mais_distante = max(p['data_fim'] for p in (eventos or ativas))
     return {
-        'modo':        ativa.get('modo', 'evento'),
-        'nome':        ativa.get('nome', 'Promoção'),
-        'data_inicio': ativa.get('data_inicio'),
-        'data_fim':    ativa.get('data_fim'),
-        'id':          ativa.get('id'),
-        'descontos':   {gid: int(pct) for gid, pct in ativa.get('descontos', {}).items()},
+        'modo':        'evento' if eventos else 'unico',
+        'nome':        principal.get('nome', 'Promoção'),
+        'data_inicio': principal.get('data_inicio'),
+        'data_fim':    fim_mais_distante,
+        'id':          principal.get('id'),
+        'descontos':   ler_descontos_ativos(),
         'ativo':       True,
     }
 
@@ -2581,14 +2605,15 @@ def admin():
 
         return redirect(url_for('admin'))
 
-    promo            = ler_promocao()
     publishers       = agrupar_jogos_por_publisher()
     historico        = ler_historico_promocoes()
+    ativas           = ler_promocoes_ativas()
     hoje             = _data_str_hoje()
     return render_template(
         'admin.html',
-        promo=promo, games=GAMES, publishers=publishers,
-        historico=list(reversed(historico)),  # mais recentes primeiro
+        games=GAMES, publishers=publishers,
+        ativas=ativas,                          # todas as promoções ativas hoje
+        historico=list(reversed(historico)),    # mais recentes primeiro
         hoje=hoje,
     )
 

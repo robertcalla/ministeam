@@ -47,65 +47,87 @@
 </p>
 
 <!-- ============================================================ -->
-<!-- PROMOÇÃO ATIVA HOJE                                            -->
+<!-- PROMOÇÕES ATIVAS HOJE (várias podem coexistir)                 -->
 <!-- ============================================================ -->
 <div class="admin-status" style="background: rgba(0,0,0,0.25); border: 1px solid #2a475e; padding: 16px; margin-bottom: 24px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <h2 style="margin:0;">📣 {{ "Promoção ativa hoje"|t }}</h2>
-        {% if promo.ativo %}
-            <form method="POST" action="{{ url_for('admin') }}" style="display:inline;"
-                  onsubmit="return confirm('{{ "Remover a promoção inteira do histórico?"|t }}');">
-                <input type="hidden" name="acao" value="remover_promocao">
-                <input type="hidden" name="promo_id" value="{{ promo.id }}">
-                <button class="btn-blue" style="background:#7a3030; color:#ffb3b3; font-size:12px;">
-                    🗑 {{ "Remover esta promoção"|t }}
-                </button>
-            </form>
+    <h2 style="margin-top:0;">
+        📣
+        {% if ativas|length > 1 %}{{ "Promoções ativas hoje"|t }} ({{ ativas|length }})
+        {% else %}{{ "Promoção ativa hoje"|t }}
         {% endif %}
-    </div>
+    </h2>
 
-    {% if promo.ativo %}
-        <p style="margin:6px 0; color:#beee11;">
-            <strong>{{ promo.nome }}</strong>
-            <span style="color:#8f98a0;"> · {{ promo.data_inicio }} → {{ promo.data_fim }}</span>
+    {% if ativas %}
+        <p style="color:#8f98a0; font-size:12px; margin: 4px 0 14px;">
+            {{ "Se um jogo aparece em mais de uma promoção, o maior desconto é aplicado."|t }}
         </p>
-        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:10px; margin-top:12px;">
-            {% for gid, pct in promo.descontos.items() %}
-            {% set g = games.get(gid) %}
-            {% if g %}
-            <div style="display:flex; align-items:center; justify-content:space-between; background:#1b2838; border:1px solid #2a475e; padding:8px 12px;">
+
+        <div style="display:flex; flex-direction:column; gap:14px;">
+        {% for promo in ativas %}
+        <div style="background:#1b2838; border:1px solid #2a475e; border-left:4px solid #beee11; padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
                 <div>
-                    <div style="font-weight:bold;">{{ g.name }}</div>
-                    <div style="font-size:11px; color:#8f98a0;">{{ g.publisher }} · -{{ pct }}%</div>
+                    <strong style="color:#beee11;">{{ promo.nome }}</strong>
+                    <span style="font-size:11px; padding:2px 8px; margin-left:6px; background:#2a475e; color:#fff; text-transform:uppercase;">
+                        {{ promo.modo }}
+                    </span>
+                    <div style="font-size:12px; color:#8f98a0; margin-top:4px;">
+                        {{ promo.data_inicio }} → {{ promo.data_fim }}
+                    </div>
                 </div>
-                <form method="POST" action="{{ url_for('admin') }}" style="display:inline; margin:0;">
-                    <input type="hidden" name="acao" value="remover_jogo">
+                <form method="POST" action="{{ url_for('admin') }}" style="display:inline; margin:0;"
+                      onsubmit="return confirm('{{ "Remover a promoção inteira do histórico?"|t }}');">
+                    <input type="hidden" name="acao" value="remover_promocao">
                     <input type="hidden" name="promo_id" value="{{ promo.id }}">
-                    <input type="hidden" name="game_id" value="{{ gid }}">
-                    <button class="btn-blue" style="background:#7a3030; color:#ffb3b3; padding:3px 9px; font-size:14px;" title="{{ 'Remover este jogo'|t }}">✕</button>
+                    <button class="btn-blue" style="background:#7a3030; color:#ffb3b3; font-size:11px; padding:4px 10px;">
+                        🗑 {{ "Remover promoção"|t }}
+                    </button>
                 </form>
             </div>
-            {% endif %}
-            {% endfor %}
-        </div>
 
-        <!-- Remoção em lote por publisher -->
-        <div style="margin-top:14px; padding-top:12px; border-top:1px dashed #2a475e;">
-            <span style="font-size:12px; color:#8f98a0; margin-right:8px;">{{ "Remover publisher inteiro:"|t }}</span>
-            {% set publishers_na_promo = [] %}
+            <!-- Cards de cada jogo descontado -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:8px; margin-top:12px;">
+                {% for gid, pct in promo.descontos.items() %}
+                {% set g = games.get(gid) %}
+                {% if g %}
+                <div style="display:flex; align-items:center; justify-content:space-between; background:#171a21; border:1px solid #2a475e; padding:8px 10px;">
+                    <div>
+                        <div style="font-weight:bold; font-size:13px;">{{ g.name }}</div>
+                        <div style="font-size:11px; color:#8f98a0;">{{ g.publisher }} · −{{ pct }}%</div>
+                    </div>
+                    <form method="POST" action="{{ url_for('admin') }}" style="display:inline; margin:0;">
+                        <input type="hidden" name="acao" value="remover_jogo">
+                        <input type="hidden" name="promo_id" value="{{ promo.id }}">
+                        <input type="hidden" name="game_id" value="{{ gid }}">
+                        <button class="btn-blue" style="background:#7a3030; color:#ffb3b3; padding:3px 9px; font-size:14px;" title="{{ 'Remover este jogo'|t }}">✕</button>
+                    </form>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Remoção em lote por publisher (deste card) -->
+            {% set ns = namespace(publishers_no_card=[]) %}
             {% for gid in promo.descontos %}
-                {% if games.get(gid) and games[gid].publisher not in publishers_na_promo %}
-                    {% set _ = publishers_na_promo.append(games[gid].publisher) %}
+                {% if games.get(gid) and games[gid].publisher not in ns.publishers_no_card %}
+                    {% set ns.publishers_no_card = ns.publishers_no_card + [games[gid].publisher] %}
                 {% endif %}
             {% endfor %}
-            {% for pub in publishers_na_promo %}
-            <form method="POST" action="{{ url_for('admin') }}" style="display:inline;">
-                <input type="hidden" name="acao" value="remover_publisher">
-                <input type="hidden" name="promo_id" value="{{ promo.id }}">
-                <input type="hidden" name="publisher" value="{{ pub }}">
-                <button class="btn-blue" style="background:#3a2030; color:#ffb3b3; padding:4px 10px; font-size:12px;">🗑 {{ pub }}</button>
-            </form>
-            {% endfor %}
+            {% if ns.publishers_no_card|length > 1 %}
+            <div style="margin-top:10px; padding-top:10px; border-top:1px dashed #2a475e;">
+                <span style="font-size:11px; color:#8f98a0; margin-right:8px;">{{ "Remover publisher inteiro:"|t }}</span>
+                {% for pub in ns.publishers_no_card %}
+                <form method="POST" action="{{ url_for('admin') }}" style="display:inline;">
+                    <input type="hidden" name="acao" value="remover_publisher">
+                    <input type="hidden" name="promo_id" value="{{ promo.id }}">
+                    <input type="hidden" name="publisher" value="{{ pub }}">
+                    <button class="btn-blue" style="background:#3a2030; color:#ffb3b3; padding:3px 10px; font-size:11px;">🗑 {{ pub }}</button>
+                </form>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
         </div>
     {% else %}
         <p style="color:#8f98a0; margin:0;">{{ "Nenhuma promoção ativa no momento — preços normais na loja."|t }}</p>
@@ -148,11 +170,13 @@
                 </label>
                 <span style="font-size:11px; color:#8f98a0;">{{ "Iniciar agora"|t }}</span>
             </div>
-            <input type="date" name="data_inicio_pub" id="data_inicio_pub" required value="{{ hoje }}" min="{{ hoje }}">
+            <input type="date" name="data_inicio_pub" id="data_inicio_pub"
+                   data-pair-end="data_fim_pub"
+                   required value="{{ hoje }}" min="{{ hoje }}">
         </div>
         <div class="admin-field">
             <label>{{ "Data de término"|t }}</label>
-            <input type="date" name="data_fim_pub" required min="{{ hoje }}">
+            <input type="date" name="data_fim_pub" id="data_fim_pub" required min="{{ hoje }}">
         </div>
         <div style="grid-column:1/-1;">
             <button type="submit" class="btn-green" style="padding: 10px 22px;">
@@ -195,11 +219,13 @@
                     </label>
                     <span style="font-size:11px; color:#8f98a0;">{{ "Iniciar agora"|t }}</span>
                 </div>
-                <input type="date" name="data_inicio" id="data_inicio_principal" required value="{{ hoje }}" min="{{ hoje }}">
+                <input type="date" name="data_inicio" id="data_inicio_principal"
+                       data-pair-end="data_fim_principal"
+                       required value="{{ hoje }}" min="{{ hoje }}">
             </div>
             <div class="admin-field">
                 <label>{{ "Data de término"|t }}</label>
-                <input type="date" name="data_fim" required min="{{ hoje }}">
+                <input type="date" name="data_fim" id="data_fim_principal" required min="{{ hoje }}">
             </div>
         </div>
 
@@ -238,9 +264,10 @@
 <div style="background: rgba(0,0,0,0.20); border:1px solid #2a475e; padding:16px; margin-bottom:30px;">
     <h2 style="margin-top:0;">📚 {{ "Histórico de promoções"|t }} ({{ historico|length }})</h2>
     {% if historico %}
+    {% set ativas_ids = ativas | map(attribute='id') | list %}
     <div style="display:flex; flex-direction:column; gap:12px;">
         {% for h in historico %}
-        {% set status = 'ativa' if promo.id == h.id else ('futura' if h.data_inicio > hoje else 'expirada') %}
+        {% set status = 'ativa' if h.id in ativas_ids else ('futura' if h.data_inicio > hoje else 'expirada') %}
         <div style="background:#1b2838; border:1px solid #2a475e; border-left:4px solid
                     {% if status == 'ativa' %}#beee11{% elif status == 'futura' %}#66c0f4{% else %}#555{% endif %};
                     padding:12px;">
@@ -286,20 +313,43 @@
 </div>
 
 <script>
-    // Sliders "Iniciar agora" → desabilita o input de data e força o valor de hoje
+    // ---- Sincroniza min da data de fim com a data de início ----
+    function syncFimComInicio(inicio) {
+        var fimId = inicio.dataset.pairEnd;
+        if (!fimId) return;
+        var fim = document.getElementById(fimId);
+        if (!fim) return;
+        var novoMin = inicio.value || inicio.min;
+        fim.min = novoMin;
+        // Se o fim ficou anterior ao novo min, puxa para o min para evitar
+        // estado inválido enviado por submit.
+        if (fim.value && fim.value < novoMin) {
+            fim.value = novoMin;
+        }
+    }
+
+    // Liga em todos os pares início→fim do form
+    document.querySelectorAll('input[type="date"][data-pair-end]').forEach(function (inicio) {
+        inicio.addEventListener('change', function () { syncFimComInicio(inicio); });
+        syncFimComInicio(inicio);  // estado inicial
+    });
+
+    // ---- Slider "Iniciar agora" ----
     document.querySelectorAll('.iniciar-agora-toggle').forEach(function (chk) {
         var alvo = document.getElementById(chk.dataset.target);
-        function refletir() {
+        if (!alvo) return;
+        chk.addEventListener('change', function () {
             if (chk.checked) {
                 alvo.dataset.original = alvo.value;
-                alvo.value = "{{ hoje }}";
+                alvo.value    = "{{ hoje }}";
                 alvo.disabled = true;
             } else {
                 alvo.disabled = false;
                 if (alvo.dataset.original) alvo.value = alvo.dataset.original;
             }
-        }
-        chk.addEventListener('change', refletir);
+            // Mudou o início, atualiza o min do fim do mesmo par
+            syncFimComInicio(alvo);
+        });
     });
 </script>
 {% endblock %}

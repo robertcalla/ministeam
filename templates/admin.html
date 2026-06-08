@@ -3,6 +3,41 @@
 {% block title %}{{ "Admin - Promoções"|t }} - Ministeam{% endblock %}
 
 {% block content %}
+<style>
+    /* Slider toggle reutilizável para "Iniciar agora" */
+    .iniciar-agora-switch {
+        position: relative;
+        display: inline-block;
+        width: 46px;
+        height: 24px;
+        cursor: pointer;
+        flex-shrink: 0;
+        vertical-align: middle;
+    }
+    .iniciar-agora-switch input {
+        opacity: 0; width: 0; height: 0;
+    }
+    .iniciar-agora-switch .track {
+        position: absolute; inset: 0;
+        background: #3d5a70;
+        border-radius: 24px;
+        transition: background 0.25s;
+    }
+    .iniciar-agora-switch .thumb {
+        position: absolute; top: 3px; left: 3px;
+        width: 18px; height: 18px;
+        background: #c6d4df;
+        border-radius: 50%;
+        transition: transform 0.25s, background 0.25s;
+    }
+    .iniciar-agora-switch input:checked ~ .track  { background: #5c7e10; }
+    .iniciar-agora-switch input:checked ~ .thumb  { transform: translateX(22px); background: #fff; }
+    .iniciar-agora-label {
+        display: flex; align-items: center; gap: 10px;
+        margin-bottom: 6px; font-size: 13px; color: #c6d4df;
+    }
+</style>
+
 <div style="display:flex; align-items:center; gap:12px; margin-bottom: 6px;">
     <h1 style="margin:0;">🛠 {{ "Painel de Promoções"|t }}</h1>
     <span style="font-size:11px; background:#b52a1c; color:#fff; padding:3px 8px; border-radius:3px;">{{ "ROTA OCULTA /admin"|t }}</span>
@@ -11,101 +46,310 @@
     {{ "Simulação manual de promoções da loja. Esta página só é acessível digitando /admin na URL."|t }}
 </p>
 
-<!-- Estado atual -->
-<div class="admin-status">
-    <strong>{{ "Estado atual:"|t }}</strong>
-    {% if promo.modo == 'nenhum' or not promo.ativo %}
-        <span style="color:#8f98a0;">{{ "Nenhuma promoção ativa — preços normais."|t }}</span>
-    {% elif promo.modo == 'evento' %}
-        <span style="color:#beee11;">{{ "Evento ativo:"|t }} "{{ promo.nome }}"</span>
-        {% if promo.data_fim %}<span style="color:#8f98a0;"> ({{ "até"|t }} {{ promo.data_fim }})</span>{% endif %}
-        — {{ promo.descontos|length }} {{ "jogo(s) em oferta."|t }}
+<!-- ============================================================ -->
+<!-- PROMOÇÕES ATIVAS HOJE (várias podem coexistir)                 -->
+<!-- ============================================================ -->
+<div class="admin-status" style="background: rgba(0,0,0,0.25); border: 1px solid #2a475e; padding: 16px; margin-bottom: 24px;">
+    <h2 style="margin-top:0;">
+        📣
+        {% if ativas|length > 1 %}{{ "Promoções ativas hoje"|t }} ({{ ativas|length }})
+        {% else %}{{ "Promoção ativa hoje"|t }}
+        {% endif %}
+    </h2>
+
+    {% if ativas %}
+        <p style="color:#8f98a0; font-size:12px; margin: 4px 0 14px;">
+            {{ "Se um jogo aparece em mais de uma promoção, o maior desconto é aplicado."|t }}
+        </p>
+
+        <div style="display:flex; flex-direction:column; gap:14px;">
+        {% for promo in ativas %}
+        <div style="background:#1b2838; border:1px solid #2a475e; border-left:4px solid #beee11; padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+                <div>
+                    <strong style="color:#beee11;">{{ promo.nome }}</strong>
+                    <span style="font-size:11px; padding:2px 8px; margin-left:6px; background:#2a475e; color:#fff; text-transform:uppercase;">
+                        {{ promo.modo }}
+                    </span>
+                    <div style="font-size:12px; color:#8f98a0; margin-top:4px;">
+                        {{ promo.data_inicio }} → {{ promo.data_fim }}
+                    </div>
+                </div>
+                <form method="POST" action="{{ url_for('admin') }}" style="display:inline; margin:0;"
+                      onsubmit="return confirm('{{ "Remover a promoção inteira do histórico?"|t }}');">
+                    <input type="hidden" name="acao" value="remover_promocao">
+                    <input type="hidden" name="promo_id" value="{{ promo.id }}">
+                    <button class="btn-blue" style="background:#7a3030; color:#ffb3b3; font-size:11px; padding:4px 10px;">
+                        🗑 {{ "Remover promoção"|t }}
+                    </button>
+                </form>
+            </div>
+
+            <!-- Cards de cada jogo descontado -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:8px; margin-top:12px;">
+                {% for gid, pct in promo.descontos.items() %}
+                {% set g = games.get(gid) %}
+                {% if g %}
+                <div style="display:flex; align-items:center; justify-content:space-between; background:#171a21; border:1px solid #2a475e; padding:8px 10px;">
+                    <div>
+                        <div style="font-weight:bold; font-size:13px;">{{ g.name }}</div>
+                        <div style="font-size:11px; color:#8f98a0;">{{ g.publisher }} · −{{ pct }}%</div>
+                    </div>
+                    <form method="POST" action="{{ url_for('admin') }}" style="display:inline; margin:0;">
+                        <input type="hidden" name="acao" value="remover_jogo">
+                        <input type="hidden" name="promo_id" value="{{ promo.id }}">
+                        <input type="hidden" name="game_id" value="{{ gid }}">
+                        <button class="btn-blue" style="background:#7a3030; color:#ffb3b3; padding:3px 9px; font-size:14px;" title="{{ 'Remover este jogo'|t }}">✕</button>
+                    </form>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Remoção em lote por publisher (deste card) -->
+            {% set ns = namespace(publishers_no_card=[]) %}
+            {% for gid in promo.descontos %}
+                {% if games.get(gid) and games[gid].publisher not in ns.publishers_no_card %}
+                    {% set ns.publishers_no_card = ns.publishers_no_card + [games[gid].publisher] %}
+                {% endif %}
+            {% endfor %}
+            {% if ns.publishers_no_card|length > 1 %}
+            <div style="margin-top:10px; padding-top:10px; border-top:1px dashed #2a475e;">
+                <span style="font-size:11px; color:#8f98a0; margin-right:8px;">{{ "Remover publisher inteiro:"|t }}</span>
+                {% for pub in ns.publishers_no_card %}
+                <form method="POST" action="{{ url_for('admin') }}" style="display:inline;">
+                    <input type="hidden" name="acao" value="remover_publisher">
+                    <input type="hidden" name="promo_id" value="{{ promo.id }}">
+                    <input type="hidden" name="publisher" value="{{ pub }}">
+                    <button class="btn-blue" style="background:#3a2030; color:#ffb3b3; padding:3px 10px; font-size:11px;">🗑 {{ pub }}</button>
+                </form>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        </div>
     {% else %}
-        <span style="color:#beee11;">{{ "Oferta de jogo único ativa."|t }}</span>
+        <p style="color:#8f98a0; margin:0;">{{ "Nenhuma promoção ativa no momento — preços normais na loja."|t }}</p>
     {% endif %}
 </div>
 
-<form action="{{ url_for('admin') }}" method="POST" class="admin-form">
-
-    <!-- Seletor de modo -->
-    <div class="admin-mode">
-        <label class="mode-opt">
-            <input type="radio" name="modo" value="nenhum" onclick="setMode('nenhum')" {% if promo.modo == 'nenhum' %}checked{% endif %}>
-            {{ "Nenhuma (preços normais)"|t }}
-        </label>
-        <label class="mode-opt">
-            <input type="radio" name="modo" value="evento" onclick="setMode('evento')" {% if promo.modo == 'evento' %}checked{% endif %}>
-            {{ "Promoção de Evento"|t }}
-        </label>
-        <label class="mode-opt">
-            <input type="radio" name="modo" value="unico" onclick="setMode('unico')" {% if promo.modo == 'unico' %}checked{% endif %}>
-            {{ "Promoção de Jogo Único"|t }}
-        </label>
-    </div>
-
-    <!-- Seção: Evento -->
-    <div id="section-evento" class="admin-section" style="display:none;">
-        <h3>{{ "Promoção de Evento"|t }}</h3>
+<!-- ============================================================ -->
+<!-- ATALHO: APLICAR DESCONTO A UM PUBLISHER                       -->
+<!-- ============================================================ -->
+<div style="background: rgba(0,0,0,0.20); border:1px solid #2a475e; padding:16px; margin-bottom:24px;">
+    <h2 style="margin-top:0;">🏷️ {{ "Atalho: aplicar a um publisher"|t }}</h2>
+    <p style="color:#8f98a0; font-size:13px;">
+        {{ "Cria uma nova promoção aplicando o mesmo percentual a todos os jogos de um publisher."|t }}
+    </p>
+    <form method="POST" action="{{ url_for('admin') }}" class="admin-form" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;">
+        <input type="hidden" name="acao" value="aplicar_publisher">
         <div class="admin-field">
-            <label>{{ "Nome do evento"|t }}</label>
-            <input type="text" name="nome" placeholder="{{ 'Ex: Promoção de Verão'|t }}"
-                   value="{% if promo.modo == 'evento' %}{{ promo.nome }}{% endif %}">
-        </div>
-        <div class="admin-field">
-            <label>{{ "Data de término (opcional)"|t }}</label>
-            <input type="date" name="data_fim" value="{% if promo.modo == 'evento' and promo.data_fim %}{{ promo.data_fim }}{% endif %}">
-        </div>
-
-        <label style="display:block; margin: 14px 0 8px; color:#66c0f4;">{{ "Desconto por jogo (% — deixe 0 para não descontar):"|t }}</label>
-        <div class="admin-games">
-            {% for id, game in games.items() %}
-            <div class="admin-game-row">
-                <span class="admin-game-name">{{ game.name }} <small style="color:#8f98a0;">(R$ {{ "%.2f"|format(game.price) }})</small></span>
-                <div class="admin-pct">
-                    <input type="number" name="desconto_{{ id }}" min="0" max="100" placeholder="0"
-                           value="{% if promo.modo == 'evento' and promo.descontos.get(id) %}{{ promo.descontos.get(id) }}{% endif %}">
-                    <span>%</span>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-
-    <!-- Seção: Jogo Único -->
-    <div id="section-unico" class="admin-section" style="display:none;">
-        <h3>{{ "Promoção de Jogo Único"|t }}</h3>
-        <div class="admin-field">
-            <label>{{ "Jogo"|t }}</label>
-            <select name="jogo_unico">
-                {% for id, game in games.items() %}
-                <option value="{{ id }}"
-                    {% if promo.modo == 'unico' and promo.descontos.get(id) %}selected{% endif %}>
-                    {{ game.name }} — R$ {{ "%.2f"|format(game.price) }}
-                </option>
+            <label>{{ "Publisher"|t }}</label>
+            <select name="publisher" required>
+                {% for pub, jogos in publishers.items() %}
+                <option value="{{ pub }}">{{ pub }} ({{ jogos|length }} {{ "jogo(s)"|t }})</option>
                 {% endfor %}
             </select>
         </div>
         <div class="admin-field">
-            <label>{{ "Porcentagem de desconto (%)"|t }}</label>
-            <input type="number" name="desconto_unico" min="1" max="100" placeholder="{{ 'Ex: 50'|t }}"
-                   value="{% if promo.modo == 'unico' %}{% for gid, pct in promo.descontos.items() %}{{ pct }}{% endfor %}{% endif %}">
+            <label>{{ "Desconto (%)"|t }}</label>
+            <input type="number" name="pct_publisher" min="1" max="100" placeholder="30" required>
         </div>
-    </div>
+        <div class="admin-field" style="grid-column:1/-1;">
+            <label>{{ "Nome do evento"|t }}</label>
+            <input type="text" name="nome_publisher" placeholder="{{ 'Ex: MINIntendo Direct'|t }}">
+        </div>
+        <div class="admin-field">
+            <div class="iniciar-agora-label">
+                <span>{{ "Data de início"|t }}</span>
+                <label class="iniciar-agora-switch" title="{{ 'Usar a data de hoje'|t }}">
+                    <input type="checkbox" name="iniciar_agora_pub" class="iniciar-agora-toggle" data-target="data_inicio_pub">
+                    <span class="track"></span>
+                    <span class="thumb"></span>
+                </label>
+                <span style="font-size:11px; color:#8f98a0;">{{ "Iniciar agora"|t }}</span>
+            </div>
+            <input type="date" name="data_inicio_pub" id="data_inicio_pub"
+                   data-pair-end="data_fim_pub"
+                   required value="{{ hoje }}" min="{{ hoje }}">
+        </div>
+        <div class="admin-field">
+            <label>{{ "Data de término"|t }}</label>
+            <input type="date" name="data_fim_pub" id="data_fim_pub" required min="{{ hoje }}">
+        </div>
+        <div style="grid-column:1/-1;">
+            <button type="submit" class="btn-green" style="padding: 10px 22px;">
+                ✓ {{ "Aplicar promoção ao publisher"|t }}
+            </button>
+        </div>
+    </form>
+</div>
 
-    <button type="submit" class="btn-green" style="margin-top: 18px; padding: 12px 24px; font-size: 15px;">
-        {{ "Salvar Promoção"|t }}
-    </button>
-</form>
+<!-- ============================================================ -->
+<!-- CRIAR PROMOÇÃO CUSTOMIZADA (seleção livre de jogos)            -->
+<!-- ============================================================ -->
+<div style="background: rgba(0,0,0,0.20); border:1px solid #2a475e; padding:16px; margin-bottom:24px;">
+    <h2 style="margin-top:0;">🎯 {{ "Criar promoção customizada"|t }}</h2>
+    <p style="color:#8f98a0; font-size:13px;">
+        {{ "Informe um percentual para cada jogo que quiser incluir (deixe em branco ou zero para não incluir)."|t }}
+    </p>
+    <form method="POST" action="{{ url_for('admin') }}" class="admin-form">
+        <input type="hidden" name="acao" value="criar">
+
+        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;">
+            <div class="admin-field">
+                <label>{{ "Nome do evento"|t }}</label>
+                <input type="text" name="nome" placeholder="{{ 'Ex: Promoção de Verão'|t }}" required>
+            </div>
+            <div class="admin-field">
+                <label>{{ "Modo"|t }}</label>
+                <select name="modo">
+                    <option value="evento">{{ "Evento (banner na loja)"|t }}</option>
+                    <option value="unico">{{ "Oferta destacada"|t }}</option>
+                </select>
+            </div>
+            <div class="admin-field">
+                <div class="iniciar-agora-label">
+                    <span>{{ "Data de início"|t }}</span>
+                    <label class="iniciar-agora-switch" title="{{ 'Usar a data de hoje'|t }}">
+                        <input type="checkbox" name="iniciar_agora" class="iniciar-agora-toggle" data-target="data_inicio_principal">
+                        <span class="track"></span>
+                        <span class="thumb"></span>
+                    </label>
+                    <span style="font-size:11px; color:#8f98a0;">{{ "Iniciar agora"|t }}</span>
+                </div>
+                <input type="date" name="data_inicio" id="data_inicio_principal"
+                       data-pair-end="data_fim_principal"
+                       required value="{{ hoje }}" min="{{ hoje }}">
+            </div>
+            <div class="admin-field">
+                <label>{{ "Data de término"|t }}</label>
+                <input type="date" name="data_fim" id="data_fim_principal" required min="{{ hoje }}">
+            </div>
+        </div>
+
+        <label style="display:block; margin: 18px 0 8px; color:#66c0f4;">{{ "Desconto por jogo (agrupado por publisher):"|t }}</label>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+            {% for pub, jogos in publishers.items() %}
+            <div style="border:1px solid #2a475e; background:#1b2838; padding:12px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                    <strong style="color:#66c0f4;">🏷️ {{ pub }}</strong>
+                    <span style="font-size:11px; color:#8f98a0;">{{ jogos|length }} {{ "jogo(s)"|t }}</span>
+                </div>
+                <div class="admin-games">
+                    {% for gid, game in jogos %}
+                    <div class="admin-game-row">
+                        <span class="admin-game-name">{{ game.name }} <small style="color:#8f98a0;">(R$ {{ "%.2f"|format(game.price) }})</small></span>
+                        <div class="admin-pct">
+                            <input type="number" name="desconto_{{ gid }}" min="0" max="100" placeholder="0">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn-green" style="margin-top: 18px; padding: 12px 24px; font-size: 15px;">
+            ✓ {{ "Criar promoção"|t }}
+        </button>
+    </form>
+</div>
+
+<!-- ============================================================ -->
+<!-- HISTÓRICO COMPLETO                                            -->
+<!-- ============================================================ -->
+<div style="background: rgba(0,0,0,0.20); border:1px solid #2a475e; padding:16px; margin-bottom:30px;">
+    <h2 style="margin-top:0;">📚 {{ "Histórico de promoções"|t }} ({{ historico|length }})</h2>
+    {% if historico %}
+    {% set ativas_ids = ativas | map(attribute='id') | list %}
+    <div style="display:flex; flex-direction:column; gap:12px;">
+        {% for h in historico %}
+        {% set status = 'ativa' if h.id in ativas_ids else ('futura' if h.data_inicio > hoje else 'expirada') %}
+        <div style="background:#1b2838; border:1px solid #2a475e; border-left:4px solid
+                    {% if status == 'ativa' %}#beee11{% elif status == 'futura' %}#66c0f4{% else %}#555{% endif %};
+                    padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+                <div>
+                    <strong style="font-size:14px;">{{ h.nome }}</strong>
+                    <span style="font-size:11px; padding:2px 8px; margin-left:6px;
+                                 background: {% if status == 'ativa' %}#5c7e10{% elif status == 'futura' %}#1b3a5c{% else %}#3a3a3a{% endif %};
+                                 color:#fff;">
+                        {% if status == 'ativa' %}● {{ "ATIVA"|t }}
+                        {% elif status == 'futura' %}{{ "FUTURA"|t }}
+                        {% else %}{{ "EXPIRADA"|t }}{% endif %}
+                    </span>
+                    <div style="font-size:12px; color:#8f98a0; margin-top:4px;">
+                        {{ h.data_inicio }} → {{ h.data_fim }} · {{ "criada em"|t }} {{ h.criado_em }}
+                    </div>
+                </div>
+                <form method="POST" action="{{ url_for('admin') }}" style="display:inline; margin:0;"
+                      onsubmit="return confirm('{{ "Remover esta promoção do histórico?"|t }}');">
+                    <input type="hidden" name="acao" value="remover_promocao">
+                    <input type="hidden" name="promo_id" value="{{ h.id }}">
+                    <button class="btn-blue" style="background:#7a3030; color:#ffb3b3; font-size:11px; padding:4px 10px;">
+                        🗑 {{ "Remover"|t }}
+                    </button>
+                </form>
+            </div>
+            <div style="margin-top:8px; display:flex; flex-wrap:wrap; gap:6px;">
+                {% for gid, pct in h.descontos.items() %}
+                {% set g = games.get(gid) %}
+                {% if g %}
+                <span style="font-size:11px; background:#2a475e; padding:3px 8px; border-radius:2px;">
+                    {{ g.name }} −{{ pct }}%
+                </span>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p style="color:#8f98a0; margin:0;">{{ "Nenhuma promoção criada ainda."|t }}</p>
+    {% endif %}
+</div>
 
 <script>
-    function setMode(modo) {
-        document.getElementById('section-evento').style.display = (modo === 'evento') ? 'block' : 'none';
-        document.getElementById('section-unico').style.display  = (modo === 'unico')  ? 'block' : 'none';
+    // ---- Sincroniza min da data de fim com a data de início ----
+    function syncFimComInicio(inicio) {
+        var fimId = inicio.dataset.pairEnd;
+        if (!fimId) return;
+        var fim = document.getElementById(fimId);
+        if (!fim) return;
+        var novoMin = inicio.value || inicio.min;
+        fim.min = novoMin;
+        // Se o fim ficou anterior ao novo min, puxa para o min para evitar
+        // estado inválido enviado por submit.
+        if (fim.value && fim.value < novoMin) {
+            fim.value = novoMin;
+        }
     }
-    // Inicializa de acordo com o estado salvo
-    document.addEventListener('DOMContentLoaded', function () {
-        var atual = document.querySelector('input[name="modo"]:checked');
-        setMode(atual ? atual.value : 'nenhum');
+
+    // Liga em todos os pares início→fim do form
+    document.querySelectorAll('input[type="date"][data-pair-end]').forEach(function (inicio) {
+        inicio.addEventListener('change', function () { syncFimComInicio(inicio); });
+        syncFimComInicio(inicio);  // estado inicial
+    });
+
+    // ---- Slider "Iniciar agora" ----
+    document.querySelectorAll('.iniciar-agora-toggle').forEach(function (chk) {
+        var alvo = document.getElementById(chk.dataset.target);
+        if (!alvo) return;
+        chk.addEventListener('change', function () {
+            if (chk.checked) {
+                alvo.dataset.original = alvo.value;
+                alvo.value    = "{{ hoje }}";
+                alvo.disabled = true;
+            } else {
+                alvo.disabled = false;
+                if (alvo.dataset.original) alvo.value = alvo.dataset.original;
+            }
+            // Mudou o início, atualiza o min do fim do mesmo par
+            syncFimComInicio(alvo);
+        });
     });
 </script>
 {% endblock %}

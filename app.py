@@ -104,7 +104,7 @@ GAMES = {
         'id': '1', 'name': 'Aventura Épica', 'price': 150.00, 'age_rating': 10,
         'description': 'Explore masmorras e derrote monstros com amigos nesta jornada incrível.',
         'developer': 'Mythic Forge Studios',
-        'publisher': 'Ministeam Publishing',
+        'publisher': 'MINIntendo',
         'release_date': '15 de março de 2024',
         'genres': ['RPG', 'Ação', 'Aventura', 'Cooperativo'],
         'tags': ['Mundo Aberto', 'Fantasia', 'Multijogador', 'Masmorras', 'História Rica'],
@@ -124,7 +124,7 @@ GAMES = {
         'id': '2', 'name': 'Sobrevivência Sombria', 'price': 90.00, 'age_rating': 18,
         'description': 'Jogo de terror com zumbis. Sobreviva a noites aterrorizantes com recursos escassos.',
         'developer': 'Nightfall Interactive',
-        'publisher': 'Grim Games',
+        'publisher': 'MINIcraft',
         'release_date': '31 de outubro de 2023',
         'genres': ['Terror', 'Sobrevivência', 'Ação', 'Mundo Aberto'],
         'tags': ['Zumbis', 'Survival Horror', 'Crafting', 'Atmosférico', 'Difícil', 'Multijogador'],
@@ -144,7 +144,7 @@ GAMES = {
         'id': '3', 'name': 'Corrida Divertida', 'price': 45.00, 'age_rating': 0,
         'description': 'Corridas para toda a família. Karts coloridos e pistas malucas!',
         'developer': 'Sunny Lab',
-        'publisher': 'Ministeam Publishing',
+        'publisher': 'MINIntendo',
         'release_date': '5 de junho de 2022',
         'genres': ['Corrida', 'Casual', 'Família', 'Arcade'],
         'tags': ['Karts', 'Festa', 'Colorido', 'Multijogador Local', 'Fácil de Aprender'],
@@ -164,7 +164,7 @@ GAMES = {
         'id': '4', 'name': 'Lombriguinha', 'price': 120.00, 'age_rating': 16,
         'description': 'Jogo de combate de guerra com os amigos. Que vença a lombriguinha melhor!',
         'developer': 'Worm Wars Studio',
-        'publisher': 'Ministeam Publishing',
+        'publisher': 'MINIteam67',
         'release_date': '10 de janeiro de 2025',
         'genres': ['Ação', 'Estratégia', 'Multijogador', 'Tático'],
         'tags': ['Combate', 'Guerra', 'Multijogador', 'Estratégico', 'Competitivo', 'Engraçado'],
@@ -195,6 +195,7 @@ CARTEIRAS_FILE  = os.path.join(DATA_DIR, 'carteiras.txt')
 SESSOES_FILE    = os.path.join(DATA_DIR, 'sessoes.txt')
 DESEJOS_FILE     = os.path.join(DATA_DIR, 'desejos.txt')
 PROMOCOES_FILE   = os.path.join(DATA_DIR, 'promocoes.txt')
+HISTORICO_PROMOCOES_FILE = os.path.join(DATA_DIR, 'historico_promocoes.txt')
 COMENTARIOS_FILE = os.path.join(DATA_DIR, 'comentarios.txt')
 AVALIACOES_FILE  = os.path.join(DATA_DIR, 'avaliacoes.txt')
 
@@ -283,6 +284,18 @@ def _garantir_arquivos():
             f.write("# Desconto por jogo: <game_id> | <percentual 0-100>\n")
             f.write("# =============================================================================\n")
             f.write("config | nenhum | Promoção de Evento | none\n")
+
+    if not os.path.exists(HISTORICO_PROMOCOES_FILE):
+        with open(HISTORICO_PROMOCOES_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Histórico de Promoções\n")
+            f.write("# Cada linha é um objeto JSON com uma promoção criada via /admin.\n")
+            f.write("# Campos: id, criado_em, data_inicio, data_fim, modo, nome, descontos\n")
+            f.write("# - modo: evento | unico\n")
+            f.write("# - datas: AAAA-MM-DD\n")
+            f.write("# - descontos: {game_id: percentual_inteiro_0_100}\n")
+            f.write("# A promoção ATIVA é aquela cuja data atual está entre data_inicio e data_fim.\n")
+            f.write("# =============================================================================\n")
 
     if not os.path.exists(COMENTARIOS_FILE):
         with open(COMENTARIOS_FILE, 'w', encoding='utf-8') as f:
@@ -734,63 +747,222 @@ def salvar_desejos_usuario(uid, game_ids):
 
 # ---- FUNÇÕES DE PROMOÇÃO ----
 
-def ler_promocao():
-    """Retorna o estado da promoção: {modo, ativo, nome, data_fim, descontos{gid: pct}}.
+def _data_str_hoje():
+    """Data de hoje em formato AAAA-MM-DD (usada como referência de 'agora')."""
+    return datetime.now().strftime("%Y-%m-%d")
 
-    modo: 'nenhum' (sem promoção) | 'evento' (banner + vários jogos) | 'unico' (um jogo).
-    """
-    _garantir_arquivos()
-    promo = {'modo': 'nenhum', 'nome': 'Promoção de Evento', 'data_fim': None, 'descontos': {}}
+
+def _validar_data_iso(s):
+    """Retorna True se `s` está em formato AAAA-MM-DD e parsa como data válida."""
+    if not s or not isinstance(s, str):
+        return False
     try:
-        with open(PROMOCOES_FILE, 'r', encoding='utf-8') as f:
+        datetime.strptime(s, "%Y-%m-%d")
+        return True
+    except ValueError:
+        return False
+
+
+def ler_historico_promocoes():
+    """Retorna lista de todas as promoções já criadas, em ordem cronológica de criação."""
+    _garantir_arquivos()
+    promocoes = []
+    try:
+        with open(HISTORICO_PROMOCOES_FILE, 'r', encoding='utf-8') as f:
             for linha in f:
                 s = linha.strip()
                 if not s or s.startswith('#'):
                     continue
-                partes = [p.strip() for p in s.split('|')]
-                if partes[0] == 'config':
-                    if len(partes) > 1 and partes[1] in ('nenhum', 'evento', 'unico'):
-                        promo['modo'] = partes[1]
-                    if len(partes) > 2 and partes[2]:
-                        promo['nome'] = partes[2]
-                    if len(partes) > 3 and partes[3] and partes[3] != 'none':
-                        promo['data_fim'] = partes[3]
-                elif len(partes) >= 2:
-                    try:
-                        pct = int(float(partes[1]))
-                        if pct > 0:
-                            promo['descontos'][partes[0]] = max(0, min(100, pct))
-                    except ValueError:
-                        pass
+                try:
+                    promo = json.loads(s)
+                    # Normalizações defensivas: campos opcionais com defaults seguros
+                    promo.setdefault('id', f"promo_{len(promocoes)}")
+                    promo.setdefault('modo', 'evento')
+                    promo.setdefault('nome', 'Promoção')
+                    promo.setdefault('descontos', {})
+                    promo.setdefault('data_inicio', None)
+                    promo.setdefault('data_fim', None)
+                    promo.setdefault('criado_em', '')
+                    promocoes.append(promo)
+                except (json.JSONDecodeError, ValueError):
+                    continue
     except FileNotFoundError:
         pass
-    promo['ativo'] = promo['modo'] != 'nenhum' and bool(promo['descontos'])
-    return promo
+    return promocoes
 
 
-def salvar_promocao(promo):
-    """Sobrescreve o arquivo de promoção com o estado fornecido."""
+def _escrever_historico(promocoes):
+    """Reescreve o arquivo de histórico preservando o cabeçalho."""
     _garantir_arquivos()
-    nome = (promo.get('nome') or 'Promoção de Evento').replace('|', '-')
-    modo = promo.get('modo', 'nenhum')
-    if modo not in ('nenhum', 'evento', 'unico'):
-        modo = 'nenhum'
-    data_fim = promo.get('data_fim') or 'none'
-    with open(PROMOCOES_FILE, 'w', encoding='utf-8') as f:
-        f.write("# =============================================================================\n")
-        f.write("# MINISTEAM - Promoções da Loja (Simulação Manual via /admin)\n")
-        f.write("# Linha de config:   config | <modo: nenhum|evento|unico> | <nome> | <data_fim>\n")
-        f.write("# Desconto por jogo: <game_id> | <percentual 0-100>\n")
-        f.write("# =============================================================================\n")
-        f.write(f"config | {modo} | {nome} | {data_fim}\n")
-        if modo != 'nenhum':
-            for gid, pct in promo.get('descontos', {}).items():
-                try:
-                    pct = int(pct)
-                except (TypeError, ValueError):
-                    continue
-                if pct > 0:
-                    f.write(f"{gid} | {pct}\n")
+    cabecalho = []
+    try:
+        with open(HISTORICO_PROMOCOES_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                if linha.startswith('#'):
+                    cabecalho.append(linha)
+                else:
+                    break
+    except FileNotFoundError:
+        pass
+    with open(HISTORICO_PROMOCOES_FILE, 'w', encoding='utf-8') as f:
+        f.writelines(cabecalho)
+        for p in promocoes:
+            f.write(json.dumps(p, ensure_ascii=False, sort_keys=True) + '\n')
+
+
+def criar_promocao(nome, modo, data_inicio, data_fim, descontos):
+    """Adiciona uma nova promoção ao histórico. Retorna (ok, mensagem).
+
+    `descontos` é dict {game_id: percentual_inteiro_1_a_100}.
+    Datas em formato AAAA-MM-DD. Modo: 'evento' ou 'unico'.
+    """
+    if modo not in ('evento', 'unico'):
+        return False, "Modo inválido (use evento ou unico)."
+    if not _validar_data_iso(data_inicio):
+        return False, "Data de início obrigatória no formato AAAA-MM-DD."
+    if not _validar_data_iso(data_fim):
+        return False, "Data de fim obrigatória no formato AAAA-MM-DD."
+    hoje = _data_str_hoje()
+    if data_inicio < hoje:
+        return False, "Data de início não pode ser anterior a hoje."
+    if data_fim < data_inicio:
+        return False, "Data de fim não pode ser anterior à data de início."
+    descontos_limpos = {}
+    for gid, pct in (descontos or {}).items():
+        try:
+            pct_i = int(pct)
+        except (TypeError, ValueError):
+            continue
+        if str(gid) in GAMES and 0 < pct_i <= 100:
+            descontos_limpos[str(gid)] = pct_i
+    if not descontos_limpos:
+        return False, "Selecione ao menos um jogo com desconto > 0."
+    promo = {
+        'id':          f"promo_{datetime.now().strftime('%Y%m%d%H%M%S%f')}",
+        'criado_em':   datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        'data_inicio': data_inicio,
+        'data_fim':    data_fim,
+        'modo':        modo,
+        'nome':        (nome or 'Promoção').replace('|', '-')[:80],
+        'descontos':   descontos_limpos,
+    }
+    promocoes = ler_historico_promocoes()
+    promocoes.append(promo)
+    _escrever_historico(promocoes)
+    return True, promo
+
+
+def remover_promocao(promo_id):
+    """Remove uma promoção inteira do histórico. Retorna (ok, mensagem)."""
+    promocoes = ler_historico_promocoes()
+    novas = [p for p in promocoes if p.get('id') != promo_id]
+    if len(novas) == len(promocoes):
+        return False, "Promoção não encontrada."
+    _escrever_historico(novas)
+    return True, "Promoção removida do histórico."
+
+
+def remover_desconto_de_promocao(promo_id, game_id):
+    """Remove o desconto de um jogo específico de uma promoção. Se ficar sem
+    nenhum desconto, remove a promoção inteira. Retorna (ok, mensagem)."""
+    game_id  = str(game_id)
+    promocoes = ler_historico_promocoes()
+    alvo = next((p for p in promocoes if p.get('id') == promo_id), None)
+    if not alvo:
+        return False, "Promoção não encontrada."
+    if game_id not in alvo.get('descontos', {}):
+        return False, "Esse jogo não estava na promoção."
+    del alvo['descontos'][game_id]
+    if not alvo['descontos']:
+        promocoes = [p for p in promocoes if p.get('id') != promo_id]
+        _escrever_historico(promocoes)
+        return True, "Último desconto removido; promoção encerrada."
+    _escrever_historico(promocoes)
+    return True, "Desconto do jogo removido da promoção."
+
+
+def remover_publisher_de_promocao(promo_id, publisher):
+    """Remove todos os jogos de um publisher de uma promoção. Retorna (ok, mensagem)."""
+    promocoes = ler_historico_promocoes()
+    alvo = next((p for p in promocoes if p.get('id') == promo_id), None)
+    if not alvo:
+        return False, "Promoção não encontrada."
+    ids_publisher = [gid for gid, g in GAMES.items() if g.get('publisher') == publisher]
+    removidos = [gid for gid in ids_publisher if gid in alvo.get('descontos', {})]
+    if not removidos:
+        return False, "Esse publisher não estava na promoção."
+    for gid in removidos:
+        del alvo['descontos'][gid]
+    if not alvo['descontos']:
+        promocoes = [p for p in promocoes if p.get('id') != promo_id]
+        _escrever_historico(promocoes)
+        return True, f"Todos os jogos da {publisher} removidos; promoção encerrada."
+    _escrever_historico(promocoes)
+    return True, f"Jogos da {publisher} removidos da promoção."
+
+
+def ler_promocoes_ativas(data_ref=None):
+    """Lista TODAS as promoções ativas em `data_ref` (ou hoje), mais recente primeiro.
+
+    Várias promoções podem coexistir — o admin pode ter criado um evento
+    cobrindo MINIntendo e separadamente uma oferta de Lombriguinha; as duas
+    valem ao mesmo tempo. Para descontos, ver `ler_descontos_ativos`.
+    """
+    ref = data_ref or _data_str_hoje()
+    ativas = [
+        p for p in ler_historico_promocoes()
+        if p.get('data_inicio') and p.get('data_fim')
+        and p['data_inicio'] <= ref <= p['data_fim']
+        and p.get('descontos')
+    ]
+    ativas.sort(key=lambda p: p.get('criado_em', ''), reverse=True)
+    return ativas
+
+
+def ler_descontos_ativos(data_ref=None):
+    """Retorna {game_id: maior_desconto} unindo todas as promoções ativas.
+
+    Se um jogo aparece em duas promoções ativas (ex.: 30% via publisher
+    MINIntendo e 50% via oferta avulsa), prevalece o MAIOR — comportamento
+    intuitivo para o usuário final: a melhor oferta é sempre aplicada.
+    """
+    descontos = {}
+    for p in ler_promocoes_ativas(data_ref):
+        for gid, pct in p.get('descontos', {}).items():
+            try:
+                pct_i = int(pct)
+            except (TypeError, ValueError):
+                continue
+            descontos[str(gid)] = max(descontos.get(str(gid), 0), pct_i)
+    return descontos
+
+
+def ler_promocao():
+    """Snapshot agregado para o banner do index e o cálculo de preços.
+
+    - `descontos`: união das promoções ativas (maior % por jogo)
+    - `nome` / `data_fim` / `modo`: vêm da promoção 'evento' mais recente,
+      que é a que merece banner. Se nenhuma ativa for evento, `modo='unico'`
+      e o banner não aparece (a checagem em base.html exige modo evento).
+    """
+    ativas = ler_promocoes_ativas()
+    if not ativas:
+        return {
+            'modo': 'nenhum', 'nome': 'Promoção', 'data_fim': None,
+            'data_inicio': None, 'id': None, 'descontos': {}, 'ativo': False
+        }
+    eventos = [p for p in ativas if p.get('modo') == 'evento']
+    principal = eventos[0] if eventos else ativas[0]
+    fim_mais_distante = max(p['data_fim'] for p in (eventos or ativas))
+    return {
+        'modo':        'evento' if eventos else 'unico',
+        'nome':        principal.get('nome', 'Promoção'),
+        'data_inicio': principal.get('data_inicio'),
+        'data_fim':    fim_mais_distante,
+        'id':          principal.get('id'),
+        'descontos':   ler_descontos_ativos(),
+        'ativo':       True,
+    }
 
 
 def calcular_preco(gid):
@@ -804,6 +976,16 @@ def calcular_preco(gid):
     pct      = promo['descontos'].get(gid, 0) if promo['ativo'] else 0
     final    = round(original * (1 - pct / 100), 2)
     return {'original': original, 'final': final, 'pct': pct, 'on_sale': pct > 0}
+
+
+def agrupar_jogos_por_publisher():
+    """Retorna dict {publisher: [(game_id, game_dict), ...]} ordenado por publisher."""
+    grupos = {}
+    for gid in sorted(GAMES.keys(), key=lambda x: int(x) if x.isdigit() else 999):
+        game = GAMES[gid]
+        pub  = game.get('publisher') or 'Outros'
+        grupos.setdefault(pub, []).append((gid, game))
+    return dict(sorted(grupos.items()))
 
 
 # ---- FUNÇÕES DE COMENTÁRIOS DE PERFIL ----
@@ -2357,55 +2539,83 @@ def family_toggle_offline():
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
-        modo = request.form.get('modo', 'nenhum')
-        if modo not in ('nenhum', 'evento', 'unico'):
-            modo = 'nenhum'
+        acao = request.form.get('acao', '').strip()
 
-        nome      = 'Promoção de Evento'
-        data_fim  = None
-        descontos = {}
-
-        if modo == 'evento':
-            nome     = request.form.get('nome', '').strip() or 'Promoção de Evento'
-            data_fim = request.form.get('data_fim', '').strip() or None
+        if acao == 'criar':
+            nome  = request.form.get('nome', '').strip() or 'Promoção'
+            modo  = request.form.get('modo', 'evento')
+            usar_agora = request.form.get('iniciar_agora') == 'on'
+            data_inicio = _data_str_hoje() if usar_agora else request.form.get('data_inicio', '').strip()
+            data_fim    = request.form.get('data_fim', '').strip()
+            # Coleta descontos do form (cobre tanto seleção customizada quanto evento manual)
+            descontos = {}
             for gid in GAMES:
                 valor = request.form.get(f'desconto_{gid}', '').strip()
-                if valor:
-                    try:
-                        pct = max(0, min(100, int(float(valor))))
-                    except ValueError:
-                        pct = 0
-                    if pct > 0:
-                        descontos[gid] = pct
-            if not descontos:
-                flash('Selecione ao menos um jogo com desconto para ativar o evento.', 'error')
-                return redirect(url_for('admin'))
+                if not valor:
+                    continue
+                try:
+                    pct = int(float(valor))
+                except ValueError:
+                    pct = 0
+                if pct > 0:
+                    descontos[gid] = pct
+            ok, resultado = criar_promocao(nome, modo, data_inicio, data_fim, descontos)
+            flash(resultado if isinstance(resultado, str) else f"Promoção '{resultado['nome']}' criada.",
+                  'sucesso' if ok else 'error')
 
-        elif modo == 'unico':
-            gid_unico = request.form.get('jogo_unico', '').strip()
-            valor     = request.form.get('desconto_unico', '').strip()
-            if gid_unico not in GAMES:
-                flash('Selecione um jogo válido para a promoção única.', 'error')
-                return redirect(url_for('admin'))
+        elif acao == 'aplicar_publisher':
+            # Atalho: criar promoção aplicando o mesmo % a todos os jogos de um publisher
+            publisher = request.form.get('publisher', '').strip()
+            pct_raw   = request.form.get('pct_publisher', '').strip()
+            nome      = request.form.get('nome_publisher', '').strip() or f"Promoção {publisher}"
+            usar_agora  = request.form.get('iniciar_agora_pub') == 'on'
+            data_inicio = _data_str_hoje() if usar_agora else request.form.get('data_inicio_pub', '').strip()
+            data_fim    = request.form.get('data_fim_pub', '').strip()
             try:
-                pct = max(0, min(100, int(float(valor))))
+                pct = int(float(pct_raw))
             except ValueError:
                 pct = 0
-            if pct <= 0:
-                flash('Informe uma porcentagem de desconto válida (1 a 100).', 'error')
-                return redirect(url_for('admin'))
-            nome = f"Oferta: {GAMES[gid_unico]['name']}"
-            descontos[gid_unico] = pct
+            descontos = {gid: pct for gid, g in GAMES.items() if g.get('publisher') == publisher}
+            if not descontos:
+                flash("Publisher sem jogos cadastrados.", 'error')
+            else:
+                ok, resultado = criar_promocao(nome, 'evento', data_inicio, data_fim, descontos)
+                flash(resultado if isinstance(resultado, str) else f"Promoção '{resultado['nome']}' criada para {publisher}.",
+                      'sucesso' if ok else 'error')
 
-        salvar_promocao({'modo': modo, 'nome': nome, 'data_fim': data_fim, 'descontos': descontos})
-        if modo == 'nenhum':
-            flash('Promoções desativadas. A loja está com preços normais.', 'sucesso')
+        elif acao == 'remover_promocao':
+            promo_id = request.form.get('promo_id', '').strip()
+            ok, msg = remover_promocao(promo_id)
+            flash(msg, 'sucesso' if ok else 'error')
+
+        elif acao == 'remover_jogo':
+            promo_id = request.form.get('promo_id', '').strip()
+            game_id  = request.form.get('game_id', '').strip()
+            ok, msg = remover_desconto_de_promocao(promo_id, game_id)
+            flash(msg, 'sucesso' if ok else 'error')
+
+        elif acao == 'remover_publisher':
+            promo_id  = request.form.get('promo_id', '').strip()
+            publisher = request.form.get('publisher', '').strip()
+            ok, msg = remover_publisher_de_promocao(promo_id, publisher)
+            flash(msg, 'sucesso' if ok else 'error')
+
         else:
-            flash('Promoção aplicada com sucesso!', 'sucesso')
+            flash("Ação desconhecida.", 'error')
+
         return redirect(url_for('admin'))
 
-    promo = ler_promocao()
-    return render_template('admin.html', promo=promo, games=GAMES)
+    publishers       = agrupar_jogos_por_publisher()
+    historico        = ler_historico_promocoes()
+    ativas           = ler_promocoes_ativas()
+    hoje             = _data_str_hoje()
+    return render_template(
+        'admin.html',
+        games=GAMES, publishers=publishers,
+        ativas=ativas,                          # todas as promoções ativas hoje
+        historico=list(reversed(historico)),    # mais recentes primeiro
+        hoje=hoje,
+    )
 
 
 # ==============================================================================
@@ -2419,7 +2629,8 @@ def reset_session():
     session.clear()
     for caminho in (MAQUINA_FILE, AMIZADES_FILE, BIBLIOTECA_FILE,
                     FAMILIAS_FILE, CARTEIRAS_FILE, SESSOES_FILE,
-                    DESEJOS_FILE, PROMOCOES_FILE, COMENTARIOS_FILE):
+                    DESEJOS_FILE, PROMOCOES_FILE, HISTORICO_PROMOCOES_FILE,
+                    COMENTARIOS_FILE):
         try:
             if os.path.exists(caminho):
                 os.remove(caminho)

@@ -1,0 +1,9 @@
+# =============================================================================
+# MINISTEAM - Histórico de Promoções
+# Cada linha é um objeto JSON com uma promoção criada via /admin.
+# Campos: id, criado_em, data_inicio, data_fim, modo, nome, descontos
+# - modo: evento | unico
+# - datas: AAAA-MM-DD
+# - descontos: {game_id: percentual_inteiro_0_100}
+# A promoção ATIVA é aquela cuja data atual está entre data_inicio e data_fim.
+# =============================================================================

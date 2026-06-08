@@ -180,7 +180,7 @@ _TOKEN_PATTERN = re.compile(r'__MTSTKN_(\d+)__')
 
 
 def _termos_protegidos_runtime():
-    """Coleta nomes que não devem ser traduzidos: GAMES + usuários conhecidos.
+    """Coleta nomes que não devem ser traduzidos: GAMES + usuários + publishers.
 
     Importação tardia para evitar import circular com app.py.
     """
@@ -190,6 +190,10 @@ def _termos_protegidos_runtime():
         for g in GAMES.values():
             if g.get('name'):
                 termos.add(g['name'])
+            if g.get('publisher'):
+                termos.add(g['publisher'])
+            if g.get('developer'):
+                termos.add(g['developer'])
         for u in ler_usuarios():
             if u.get('nome'):
                 termos.add(u['nome'])

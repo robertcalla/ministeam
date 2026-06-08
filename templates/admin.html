@@ -3,6 +3,41 @@
 {% block title %}{{ "Admin - Promoções"|t }} - Ministeam{% endblock %}
 
 {% block content %}
+<style>
+    /* Slider toggle reutilizável para "Iniciar agora" */
+    .iniciar-agora-switch {
+        position: relative;
+        display: inline-block;
+        width: 46px;
+        height: 24px;
+        cursor: pointer;
+        flex-shrink: 0;
+        vertical-align: middle;
+    }
+    .iniciar-agora-switch input {
+        opacity: 0; width: 0; height: 0;
+    }
+    .iniciar-agora-switch .track {
+        position: absolute; inset: 0;
+        background: #3d5a70;
+        border-radius: 24px;
+        transition: background 0.25s;
+    }
+    .iniciar-agora-switch .thumb {
+        position: absolute; top: 3px; left: 3px;
+        width: 18px; height: 18px;
+        background: #c6d4df;
+        border-radius: 50%;
+        transition: transform 0.25s, background 0.25s;
+    }
+    .iniciar-agora-switch input:checked ~ .track  { background: #5c7e10; }
+    .iniciar-agora-switch input:checked ~ .thumb  { transform: translateX(22px); background: #fff; }
+    .iniciar-agora-label {
+        display: flex; align-items: center; gap: 10px;
+        margin-bottom: 6px; font-size: 13px; color: #c6d4df;
+    }
+</style>
+
 <div style="display:flex; align-items:center; gap:12px; margin-bottom: 6px;">
     <h1 style="margin:0;">🛠 {{ "Painel de Promoções"|t }}</h1>
     <span style="font-size:11px; background:#b52a1c; color:#fff; padding:3px 8px; border-radius:3px;">{{ "ROTA OCULTA /admin"|t }}</span>
@@ -104,15 +139,20 @@
             <input type="text" name="nome_publisher" placeholder="{{ 'Ex: MINIntendo Direct'|t }}">
         </div>
         <div class="admin-field">
-            <label style="display:flex; align-items:center; gap:8px;">
-                <input type="checkbox" name="iniciar_agora_pub" class="iniciar-agora-toggle" data-target="data_inicio_pub">
-                <span>{{ "Iniciar agora"|t }}</span>
-            </label>
-            <input type="date" name="data_inicio_pub" id="data_inicio_pub" required value="{{ hoje }}">
+            <div class="iniciar-agora-label">
+                <span>{{ "Data de início"|t }}</span>
+                <label class="iniciar-agora-switch" title="{{ 'Usar a data de hoje'|t }}">
+                    <input type="checkbox" name="iniciar_agora_pub" class="iniciar-agora-toggle" data-target="data_inicio_pub">
+                    <span class="track"></span>
+                    <span class="thumb"></span>
+                </label>
+                <span style="font-size:11px; color:#8f98a0;">{{ "Iniciar agora"|t }}</span>
+            </div>
+            <input type="date" name="data_inicio_pub" id="data_inicio_pub" required value="{{ hoje }}" min="{{ hoje }}">
         </div>
         <div class="admin-field">
             <label>{{ "Data de término"|t }}</label>
-            <input type="date" name="data_fim_pub" required>
+            <input type="date" name="data_fim_pub" required min="{{ hoje }}">
         </div>
         <div style="grid-column:1/-1;">
             <button type="submit" class="btn-green" style="padding: 10px 22px;">
@@ -146,15 +186,20 @@
                 </select>
             </div>
             <div class="admin-field">
-                <label style="display:flex; align-items:center; gap:8px;">
-                    <input type="checkbox" name="iniciar_agora" class="iniciar-agora-toggle" data-target="data_inicio_principal">
-                    <span>{{ "Iniciar agora"|t }}</span>
-                </label>
-                <input type="date" name="data_inicio" id="data_inicio_principal" required value="{{ hoje }}">
+                <div class="iniciar-agora-label">
+                    <span>{{ "Data de início"|t }}</span>
+                    <label class="iniciar-agora-switch" title="{{ 'Usar a data de hoje'|t }}">
+                        <input type="checkbox" name="iniciar_agora" class="iniciar-agora-toggle" data-target="data_inicio_principal">
+                        <span class="track"></span>
+                        <span class="thumb"></span>
+                    </label>
+                    <span style="font-size:11px; color:#8f98a0;">{{ "Iniciar agora"|t }}</span>
+                </div>
+                <input type="date" name="data_inicio" id="data_inicio_principal" required value="{{ hoje }}" min="{{ hoje }}">
             </div>
             <div class="admin-field">
                 <label>{{ "Data de término"|t }}</label>
-                <input type="date" name="data_fim" required>
+                <input type="date" name="data_fim" required min="{{ hoje }}">
             </div>
         </div>
 

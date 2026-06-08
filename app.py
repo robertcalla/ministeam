@@ -822,6 +822,9 @@ def criar_promocao(nome, modo, data_inicio, data_fim, descontos):
         return False, "Data de início obrigatória no formato AAAA-MM-DD."
     if not _validar_data_iso(data_fim):
         return False, "Data de fim obrigatória no formato AAAA-MM-DD."
+    hoje = _data_str_hoje()
+    if data_inicio < hoje:
+        return False, "Data de início não pode ser anterior a hoje."
     if data_fim < data_inicio:
         return False, "Data de fim não pode ser anterior à data de início."
     descontos_limpos = {}

@@ -2185,3 +2185,167 @@ zh-cn | Encerrar Jogo || 游戏结束
 pl | Encerrar Jogo || Koniec gry
 ko | Encerrar Jogo || 게임 종료
 en | Encerrar Jogo || End Game
+pl | 31 de outubro de 2023 || 31 października 2023 r
+pl | Great horror atmosphere! Found a few system bugs though. || Świetny klimat horroru! Znalazłem jednak kilka błędów systemowych.
+pl | Compra finalizada! (R$ 90.00 da Carteira) || Zakup zakończony! (90,00 R$ z Portfela)
+pl | SESSÃO EM ANDAMENTO || SESJA W TRAKCIE
+pl | Encerrar Jogo || Koniec gry
+ko | gosto de jogos e as vezes jogo. || 나는 게임을 좋아하고 가끔 플레이합니다.
+ko | 31 de outubro de 2023 || 2023년 10월 31일
+ko | Great horror atmosphere! Found a few system bugs though. || 엄청난 공포분위기! 하지만 몇 가지 시스템 버그를 발견했습니다.
+en | Promoção de Teste || Test Promotion
+en | Promoção ativa hoje || Promotion active today
+en | Remover a promoção inteira do histórico? || Remove entire promotion from history?
+en | Remover esta promoção || Remove this promotion
+en | Remover este jogo || Remove this game
+en | Remover publisher inteiro: || Remove entire publisher:
+en | Atalho: aplicar a um publisher || Shortcut: apply to a publisher
+en | Cria uma nova promoção aplicando o mesmo percentual a todos os jogos de um publisher. || Create a new promotion applying the same percentage to all games from a publisher.
+en | Publisher || Publisher
+en | jogo(s) || games)
+en | Desconto (%) || Discount (%)
+en | Ex: MINIntendo Direct || Ex: MINIntendo Direct
+en | Iniciar agora || Start now
+en | Data de término || End date
+en | Aplicar promoção ao publisher || Apply promotion to publisher
+en | Criar promoção customizada || Create custom promotion
+en | Informe um percentual para cada jogo que quiser incluir (deixe em branco ou zero para não incluir). || Enter a percentage for each game you want to include (leave blank or zero to not include).
+en | Modo || Mode
+en | Evento (banner na loja) || Event (in-store banner)
+en | Oferta destacada || Featured offer
+en | Desconto por jogo (agrupado por publisher): || Discount per game (grouped by publisher):
+en | Criar promoção || Create promotion
+en | Histórico de promoções || Promotion history
+en | ATIVA || ACTIVE
+en | criada em || created in
+en | Remover esta promoção do histórico? || Remove this promotion from history?
+en | Publisher sem jogos cadastrados. || Publisher without registered games.
+en | EXPIRADA || EXPIRED
+en | Nenhuma promoção criada ainda. || No promotions created yet.
+en | Ação desconhecida. || Action unknown.
+en | FUTURA || FUTURE
+en | Nenhuma promoção ativa no momento — preços normais na loja. || No active promotions at this time — normal in-store prices.
+de | Publisher sem jogos cadastrados. || Herausgeber ohne registrierte Spiele.
+de | Remover publisher inteiro: || Gesamten Herausgeber entfernen:
+de | Data de término || Enddatum
+de | Remover este jogo || Entfernen Sie dieses Spiel
+de | Ex: MINIntendo Direct || Beispiel: MINIntendo Direkt
+de | jogo(s) || Spiele)
+de | Criar promoção customizada || Erstellen Sie eine individuelle Werbung
+de | Remover esta promoção || Entfernen Sie diese Aktion
+de | Publisher || Herausgeber
+de | Remover esta promoção do histórico? || Diese Aktion aus dem Verlauf entfernen?
+de | EXPIRADA || ABGELAUFEN
+de | Evento (banner na loja) || Veranstaltung (In-Store-Banner)
+de | Histórico de promoções || Promotion-Geschichte
+de | Informe um percentual para cada jogo que quiser incluir (deixe em branco ou zero para não incluir). || Geben Sie einen Prozentsatz für jedes Spiel ein, das Sie einbeziehen möchten (lassen Sie das Feld leer oder null, um es nicht einzubeziehen).
+de | Desconto (%) || Rabatt (%)
+de | criada em || erstellt in
+de | Aplicar promoção ao publisher || Wenden Sie die Werbung beim Verlag an
+de | Cria uma nova promoção aplicando o mesmo percentual a todos os jogos de um publisher. || Erstellen Sie eine neue Aktion, bei der auf alle Spiele eines Herausgebers derselbe Prozentsatz angewendet wird.
+de | Nenhuma promoção criada ainda. || Es wurden noch keine Werbeaktionen erstellt.
+de | Ação desconhecida. || Aktion unbekannt.
+de | FUTURA || ZUKUNFT
+de | Modo || Modus
+de | Criar promoção || Werbung erstellen
+de | Atalho: aplicar a um publisher || Abkürzung: Bewerben Sie sich bei einem Verlag
+de | Iniciar agora || Beginnen Sie jetzt
+de | Oferta destacada || Besonderes Angebot
+de | ATIVA || AKTIV
+de | Promoção ativa hoje || Aktion heute aktiv
+de | Desconto por jogo (agrupado por publisher): || Rabatt pro Spiel (gruppiert nach Herausgeber):
+de | Remover a promoção inteira do histórico? || Gesamte Werbung aus dem Verlauf entfernen?
+de | Nenhuma promoção ativa no momento — preços normais na loja. || Derzeit sind keine Sonderangebote aktiv – normale Ladenpreise.
+zh-cn | Publisher sem jogos cadastrados. || 没有注册游戏的发行商。
+zh-cn | Remover publisher inteiro: || 删除整个发布者：
+zh-cn | Data de término || 结束日期
+zh-cn | Remover este jogo || 删除这个游戏
+zh-cn | Ex: MINIntendo Direct || 例如：MINIntendo 直接
+zh-cn | jogo(s) || 游戏）
+zh-cn | Criar promoção customizada || 创建自定义促销
+zh-cn | Remover esta promoção || 删除此促销活动
+zh-cn | Publisher || 出版商
+zh-cn | Remover esta promoção do histórico? || 从历史记录中删除此促销活动吗？
+zh-cn | EXPIRADA || 已到期
+zh-cn | Evento (banner na loja) || 活动（店内横幅）
+zh-cn | Histórico de promoções || 促销历史
+zh-cn | Informe um percentual para cada jogo que quiser incluir (deixe em branco ou zero para não incluir). || 输入您要包含的每个游戏的百分比（留空或零则不包含）。
+zh-cn | Desconto (%) || 折扣 （％）
+zh-cn | criada em || 创建于
+zh-cn | Aplicar promoção ao publisher || 向发布商申请促销
+zh-cn | Cria uma nova promoção aplicando o mesmo percentual a todos os jogos de um publisher. || 创建一个新的促销活动，对发行商的所有游戏应用相同的百分比。
+zh-cn | Nenhuma promoção criada ainda. || 尚未创建任何促销活动。
+zh-cn | Ação desconhecida. || 行动未知。
+zh-cn | FUTURA || 未来
+zh-cn | Modo || 模式
+zh-cn | Criar promoção || 创建促销
+zh-cn | Atalho: aplicar a um publisher || 快捷方式：向出版商申请
+zh-cn | Iniciar agora || 现在开始
+zh-cn | Oferta destacada || 特色优惠
+zh-cn | ATIVA || 积极的
+zh-cn | Promoção ativa hoje || 今日促销活动
+zh-cn | Desconto por jogo (agrupado por publisher): || 每款游戏折扣（按发行商分组）：
+zh-cn | Remover a promoção inteira do histórico? || 从历史记录中删除整个促销活动？
+zh-cn | Nenhuma promoção ativa no momento — preços normais na loja. || 目前没有积极的促销活动 - 正常店内价格。
+pl | Publisher sem jogos cadastrados. || Wydawca bez zarejestrowanych gier.
+pl | Remover publisher inteiro: || Usuń całego wydawcę:
+pl | Data de término || Data zakończenia
+pl | Remover este jogo || Usuń tę grę
+pl | Ex: MINIntendo Direct || Np.: MINIntendo Bezpośrednio
+pl | jogo(s) || zawody sportowe)
+pl | Criar promoção customizada || Utwórz niestandardową promocję
+pl | Remover esta promoção || Usuń tę promocję
+pl | Publisher || Wydawca
+pl | Remover esta promoção do histórico? || Usunąć tę promocję z historii?
+pl | EXPIRADA || WYGASŁY
+pl | Evento (banner na loja) || Wydarzenie (baner w sklepie)
+pl | Histórico de promoções || Historia promocji
+pl | Informe um percentual para cada jogo que quiser incluir (deixe em branco ou zero para não incluir). || Wprowadź wartość procentową dla każdej gry, którą chcesz uwzględnić (pozostaw puste lub zero, aby nie uwzględniać).
+pl | Desconto (%) || Rabat (%)
+pl | criada em || stworzony w
+pl | Aplicar promoção ao publisher || Zastosuj promocję do wydawcy
+pl | Cria uma nova promoção aplicando o mesmo percentual a todos os jogos de um publisher. || Utwórz nową promocję, stosując ten sam procent do wszystkich gier danego wydawcy.
+pl | Nenhuma promoção criada ainda. || Nie utworzono jeszcze żadnych promocji.
+pl | Ação desconhecida. || Działanie nieznane.
+pl | FUTURA || PRZYSZŁY
+pl | Modo || Tryb
+pl | Criar promoção || Utwórz promocję
+pl | Atalho: aplicar a um publisher || Skrót: złóż wniosek do wydawcy
+pl | Iniciar agora || Zacznij teraz
+pl | Oferta destacada || Wyróżniona oferta
+pl | ATIVA || AKTYWNY
+pl | Promoção ativa hoje || Promocja aktywna dzisiaj
+pl | Desconto por jogo (agrupado por publisher): || Zniżka na grę (pogrupowana według wydawcy):
+pl | Remover a promoção inteira do histórico? || Usunąć całą promocję z historii?
+pl | Nenhuma promoção ativa no momento — preços normais na loja. || W tej chwili brak aktywnych promocji — normalne ceny w sklepie.
+ko | Publisher sem jogos cadastrados. || 등록된 게임이 없는 퍼블리셔입니다.
+ko | Remover publisher inteiro: || 전체 게시자를 삭제합니다.
+ko | Data de término || 종료일
+ko | Remover este jogo || 이 게임을 삭제하세요
+ko | Ex: MINIntendo Direct || 예: MINIntendo 직접
+ko | jogo(s) || 계략)
+ko | Criar promoção customizada || 맞춤 프로모션 만들기
+ko | Remover esta promoção || 이 프로모션 삭제
+ko | Publisher || 발행자
+ko | Remover esta promoção do histórico? || 이 프로모션을 기록에서 삭제하시겠습니까?
+ko | EXPIRADA || 만료됨
+ko | Evento (banner na loja) || 이벤트(매장 배너)
+ko | Histórico de promoções || 프로모션 내역
+ko | Informe um percentual para cada jogo que quiser incluir (deixe em branco ou zero para não incluir). || 포함하려는 각 게임에 대한 백분율을 입력합니다(포함하지 않으려면 비워 두거나 0으로 둡니다).
+ko | Desconto (%) || 할인 (%)
+ko | criada em || 다음에서 생성됨
+ko | Aplicar promoção ao publisher || 게시자에게 프로모션 적용
+ko | Cria uma nova promoção aplicando o mesmo percentual a todos os jogos de um publisher. || 게시자의 모든 게임에 동일한 비율을 적용하는 새 프로모션을 만듭니다.
+ko | Nenhuma promoção criada ainda. || 아직 생성된 프로모션이 없습니다.
+ko | Ação desconhecida. || 활동을 알 수 없습니다.
+ko | FUTURA || 미래
+ko | Modo || 방법
+ko | Criar promoção || 프로모션 만들기
+ko | Atalho: aplicar a um publisher || 단축키: 출판사에 신청
+ko | Iniciar agora || 지금 시작하세요
+ko | Oferta destacada || 추천 제안
+ko | ATIVA || 활동적인
+ko | Promoção ativa hoje || 오늘부터 프로모션 진행 중
+ko | Desconto por jogo (agrupado por publisher): || 게임당 할인(퍼블리셔별로 그룹화):
+ko | Remover a promoção inteira do histórico? || 기록에서 전체 프로모션을 삭제하시겠습니까?
+ko | Nenhuma promoção ativa no momento — preços normais na loja. || 현재 진행 중인 프로모션은 없습니다. 매장 내 정상 가격입니다.

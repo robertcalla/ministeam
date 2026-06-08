@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ "Conquistas"|t }} - {{ game.name }} - Ministeam{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('game', game_id=game.id) }}" style="color:#8f98a0; font-size:13px; text-decoration:none;">
+    ‹ {{ "Voltar ao jogo"|t }}
+</a>
+
+<div style="display:flex; gap:20px; align-items:center; margin: 14px 0 24px;">
+    <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}"
+         alt="{{ game.name }}"
+         style="width:140px; height:78px; object-fit:cover; border:1px solid #2a475e;">
+    <div style="flex:1;">
+        <h1 style="margin: 0;">{{ "Conquistas"|t }} · {{ game.name }}</h1>
+        <div style="color:#8f98a0; font-size:13px; margin-top:4px;">
+            {{ n_desb }} {{ "de"|t }} {{ total }} {{ "desbloqueadas"|t }}
+            · {{ pontos_ganhos }}/{{ pontos_totais }} {{ "pts"|t }}
+        </div>
+        <div style="height:10px; background:#1b2838; border:1px solid #2a475e; margin-top:8px; width: 360px; max-width:100%;">
+            <div style="height:100%; background: linear-gradient(90deg, #5c7e10, #beee11); width: {{ pct }}%;"></div>
+        </div>
+    </div>
+</div>
+
+{% if conquistas %}
+<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:12px;">
+{% for c in conquistas %}
+<div style="background:#1b2838; border:1px solid {% if c.desbloqueada %}#5c7e10{% else %}#2a475e{% endif %};
+            padding:14px; display:flex; gap:14px; align-items:flex-start;
+            {% if not c.desbloqueada %}opacity: 0.75;{% endif %}">
+    <div style="width:56px; height:56px; background:rgba(0,0,0,0.35); border:1px solid #2a475e;
+                display:flex; align-items:center; justify-content:center; font-size:32px; flex-shrink:0;
+                {% if not c.desbloqueada %}filter: grayscale(1); opacity:0.55;{% endif %}">
+        {{ c.icone }}
+    </div>
+    <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <strong style="color: {% if c.desbloqueada %}#beee11{% else %}#c7d5e0{% endif %}; font-size:14px;">
+                {{ c.nome|t }}
+            </strong>
+            <span style="font-size:10px; background:#2a475e; color:#fff; padding:1px 6px; border-radius:2px;">
+                {{ c.pontos }} {{ "pts"|t }}
+            </span>
+        </div>
+        <p style="margin:4px 0 6px; font-size:12px; color:#8f98a0; line-height:1.45;">{{ c.descricao|t }}</p>
+        {% if c.desbloqueada %}
+            <div style="font-size:11px; color:#79a016;">✓ {{ "Desbloqueada em"|t }} {{ c.data }}</div>
+        {% else %}
+            <div style="font-size:11px; color:#8f98a0;">🔒 {{ "Bloqueada"|t }}</div>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+</div>
+{% else %}
+<p style="color:#8f98a0;">{{ "Este jogo ainda não tem conquistas cadastradas."|t }}</p>
+{% endif %}
+{% endblock %}

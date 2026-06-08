@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ "Painel Administrativo"|t }} - Ministeam{% endblock %}
+
+{% block content %}
+<div style="display:flex; align-items:center; gap:12px; margin-bottom: 6px;">
+    <h1 style="margin:0;">🛠 {{ "Painel Administrativo"|t }}</h1>
+    <span style="font-size:11px; background:#b52a1c; color:#fff; padding:3px 8px; border-radius:3px;">{{ "ROTA OCULTA /admin"|t }}</span>
+</div>
+<p style="color:#8f98a0; margin-bottom: 24px;">
+    {{ "Escolha uma das áreas administrativas abaixo."|t }}
+</p>
+
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:18px;">
+    <a href="{{ url_for('admin_promo') }}" style="text-decoration:none;">
+        <div style="background: rgba(0,0,0,0.25); border: 2px solid #2a475e; padding: 24px; transition: border-color 0.2s, background 0.2s;"
+             onmouseover="this.style.borderColor='#66c0f4'; this.style.background='rgba(102, 192, 244, 0.08)';"
+             onmouseout="this.style.borderColor='#2a475e'; this.style.background='rgba(0,0,0,0.25)';">
+            <div style="font-size:36px; margin-bottom:12px;">🏷️</div>
+            <h2 style="margin:0 0 6px; color:#66c0f4;">{{ "Promoções"|t }}</h2>
+            <p style="color:#c7d5e0; font-size:13px; margin-bottom:10px;">
+                {{ "Crie, agende e gerencie promoções da loja por jogo, publisher ou grupo customizado."|t }}
+            </p>
+            <ul style="color:#8f98a0; font-size:12px; padding-left:18px; margin:0; line-height:1.7;">
+                <li>{{ "Ver promoções ativas hoje"|t }}</li>
+                <li>{{ "Atalho por publisher (MINIntendo, MINIcraft, MINIteam67)"|t }}</li>
+                <li>{{ "Histórico completo de promoções"|t }}</li>
+            </ul>
+        </div>
+    </a>
+
+    <a href="{{ url_for('admin_testes') }}" style="text-decoration:none;">
+        <div style="background: rgba(0,0,0,0.25); border: 2px solid #2a475e; padding: 24px; transition: border-color 0.2s, background 0.2s;"
+             onmouseover="this.style.borderColor='#beee11'; this.style.background='rgba(190, 238, 17, 0.06)';"
+             onmouseout="this.style.borderColor='#2a475e'; this.style.background='rgba(0,0,0,0.25)';">
+            <div style="font-size:36px; margin-bottom:12px;">🧪</div>
+            <h2 style="margin:0 0 6px; color:#beee11;">{{ "Testes do sistema"|t }}</h2>
+            <p style="color:#c7d5e0; font-size:13px; margin-bottom:10px;">
+                {{ "Ferramentas para testar funcionalidades sem precisar jogar — começando pelas conquistas."|t }}
+            </p>
+            <ul style="color:#8f98a0; font-size:12px; padding-left:18px; margin:0; line-height:1.7;">
+                <li>{{ "Desbloquear/bloquear conquistas manualmente"|t }}</li>
+                <li>{{ "Ver toast de conquista em ação"|t }}</li>
+                <li>{{ "Resetar progresso por jogo ou completo"|t }}</li>
+            </ul>
+        </div>
+    </a>
+</div>
+{% endblock %}

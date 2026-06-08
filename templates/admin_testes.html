@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ "Admin · Testes"|t }} - Ministeam{% endblock %}
+
+{% block content %}
+<div style="display:flex; align-items:center; gap:12px; margin-bottom: 6px;">
+    <a href="{{ url_for('admin_index') }}" style="color:#8f98a0; text-decoration:none; font-size:13px;">‹ {{ "Voltar ao painel"|t }}</a>
+</div>
+<div style="display:flex; align-items:center; gap:12px; margin: 6px 0 16px;">
+    <h1 style="margin:0;">🧪 {{ "Testes do sistema"|t }}</h1>
+    <span style="font-size:11px; background:#5c7e10; color:#fff; padding:3px 8px; border-radius:3px;">{{ "CONQUISTAS"|t }}</span>
+</div>
+
+<p style="color:#8f98a0; margin-bottom: 18px;">
+    {{ "Desbloqueie, bloqueie ou resete conquistas do seu próprio perfil para validar o sistema visualmente. Ao desbloquear, um toast aparece no canto inferior, igual à Steam."|t }}
+</p>
+
+<!-- Progresso global do admin -->
+<div style="background: rgba(0,0,0,0.25); border:1px solid #2a475e; padding:14px 18px; margin-bottom:22px; display:flex; gap:24px; align-items:center;">
+    <div>
+        <div style="font-size:12px; color:#8f98a0; text-transform:uppercase;">{{ "Progresso total"|t }}</div>
+        <div style="font-size:24px; font-weight:bold; color:#66c0f4;">{{ total_desb }} <span style="color:#8f98a0; font-size:14px; font-weight:normal;">/ {{ total_total }}</span></div>
+    </div>
+    <div style="flex:1; min-width:120px;">
+        {% set pct = ((100 * total_desb / total_total) | round) if total_total else 0 %}
+        <div style="height:10px; background:#1b2838; border:1px solid #2a475e;">
+            <div style="height:100%; background: linear-gradient(90deg, #5c7e10, #beee11); width: {{ pct }}%;"></div>
+        </div>
+        <div style="font-size:11px; color:#8f98a0; margin-top:4px;">{{ pct }}%</div>
+    </div>
+    <form method="POST" action="{{ url_for('admin_testes') }}" style="margin:0;"
+          onsubmit="return confirm('{{ "Apagar TODAS as suas conquistas em todos os jogos?"|t }}');">
+        <input type="hidden" name="acao" value="resetar_tudo">
+        <button class="btn-blue" style="background:#7a3030; color:#ffb3b3; font-size:12px; padding:6px 14px;">
+            🗑 {{ "Resetar tudo"|t }}
+        </button>
+    </form>
+</div>
+
+<!-- Por jogo -->
+<div style="display:flex; flex-direction:column; gap:18px;">
+{% for j in jogos %}
+<div style="background:#1b2838; border:1px solid #2a475e; padding:14px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px;">
+        <div>
+            <h3 style="margin:0; color:#fff;">
+                {{ j.name }}
+                <span style="font-size:12px; color:#8f98a0; font-weight:normal;">· {{ j.publisher }}</span>
+            </h3>
+            <div style="font-size:12px; color:#8f98a0; margin-top:3px;">
+                {{ j.desbloqueadas }} / {{ j.total }} {{ "conquistas desbloqueadas"|t }}
+                {% set pct_j = ((100 * j.desbloqueadas / j.total) | round) if j.total else 0 %}
+                · {{ pct_j }}%
+            </div>
+        </div>
+        <form method="POST" action="{{ url_for('admin_testes') }}" style="margin:0;">
+            <input type="hidden" name="acao" value="resetar_jogo">
+            <input type="hidden" name="game_id" value="{{ j.id }}">
+            <button class="btn-blue" style="background:#3a2030; color:#ffb3b3; font-size:11px; padding:5px 12px;">
+                ↺ {{ "Resetar este jogo"|t }}
+            </button>
+        </form>
+    </div>
+
+    <!-- Lista de conquistas -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:10px;">
+    {% for c in j.conquistas %}
+    <div style="background:#171a21; border:1px solid {% if c.desbloqueada %}#5c7e10{% else %}#2a475e{% endif %};
+                padding:12px; display:flex; gap:12px; align-items:flex-start;
+                {% if not c.desbloqueada %}opacity: 0.78;{% endif %}">
+        <div style="font-size:36px; line-height:1; flex-shrink:0;
+                    {% if not c.desbloqueada %}filter: grayscale(1); opacity: 0.5;{% endif %}">
+            {{ c.icone }}
+        </div>
+        <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <strong style="color: {% if c.desbloqueada %}#beee11{% else %}#c7d5e0{% endif %};">{{ c.nome|t }}</strong>
+                <span style="font-size:10px; background:#2a475e; color:#fff; padding:1px 6px; border-radius:2px;">
+                    {{ c.pontos }} {{ "pts"|t }}
+                </span>
+            </div>
+            <p style="margin:4px 0 8px; font-size:12px; color:#8f98a0;">{{ c.descricao|t }}</p>
+            {% if c.desbloqueada %}
+            <div style="font-size:10px; color:#79a016; margin-bottom:6px;">
+                ✓ {{ "Desbloqueada em"|t }} {{ c.data }}
+            </div>
+            <form method="POST" action="{{ url_for('admin_testes') }}" style="margin:0;">
+                <input type="hidden" name="acao" value="bloquear">
+                <input type="hidden" name="game_id" value="{{ j.id }}">
+                <input type="hidden" name="conquista_id" value="{{ c.id }}">
+                <button class="btn-blue" style="background:#3a2030; color:#ffb3b3; font-size:11px; padding:4px 10px;">
+                    ↺ {{ "Bloquear"|t }}
+                </button>
+            </form>
+            {% else %}
+            <form method="POST" action="{{ url_for('admin_testes') }}" style="margin:0;">
+                <input type="hidden" name="acao" value="desbloquear">
+                <input type="hidden" name="game_id" value="{{ j.id }}">
+                <input type="hidden" name="conquista_id" value="{{ c.id }}">
+                <button class="btn-green" style="font-size:11px; padding:4px 12px;">
+                    🔓 {{ "Desbloquear"|t }}
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+</div>
+{% endfor %}
+</div>
+{% endblock %}

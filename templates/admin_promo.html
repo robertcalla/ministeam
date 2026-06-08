@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ "Admin - Promoções"|t }} - Ministeam{% endblock %}
+{% block title %}{{ "Admin · Promoções"|t }} - Ministeam{% endblock %}
+
 
 {% block content %}
+<div style="display:flex; align-items:center; gap:12px; margin-bottom: 6px;">
+    <a href="{{ url_for('admin_index') }}" style="color:#8f98a0; text-decoration:none; font-size:13px;">‹ {{ "Voltar ao painel"|t }}</a>
+</div>
 <style>
     /* Slider toggle reutilizável para "Iniciar agora" */
     .iniciar-agora-switch {
@@ -75,7 +79,7 @@
                         {{ promo.data_inicio }} → {{ promo.data_fim }}
                     </div>
                 </div>
-                <form method="POST" action="{{ url_for('admin') }}" style="display:inline; margin:0;"
+                <form method="POST" action="{{ url_for('admin_promo') }}" style="display:inline; margin:0;"
                       onsubmit="return confirm('{{ "Remover a promoção inteira do histórico?"|t }}');">
                     <input type="hidden" name="acao" value="remover_promocao">
                     <input type="hidden" name="promo_id" value="{{ promo.id }}">
@@ -95,7 +99,7 @@
                         <div style="font-weight:bold; font-size:13px;">{{ g.name }}</div>
                         <div style="font-size:11px; color:#8f98a0;">{{ g.publisher }} · −{{ pct }}%</div>
                     </div>
-                    <form method="POST" action="{{ url_for('admin') }}" style="display:inline; margin:0;">
+                    <form method="POST" action="{{ url_for('admin_promo') }}" style="display:inline; margin:0;">
                         <input type="hidden" name="acao" value="remover_jogo">
                         <input type="hidden" name="promo_id" value="{{ promo.id }}">
                         <input type="hidden" name="game_id" value="{{ gid }}">
@@ -117,7 +121,7 @@
             <div style="margin-top:10px; padding-top:10px; border-top:1px dashed #2a475e;">
                 <span style="font-size:11px; color:#8f98a0; margin-right:8px;">{{ "Remover publisher inteiro:"|t }}</span>
                 {% for pub in ns.publishers_no_card %}
-                <form method="POST" action="{{ url_for('admin') }}" style="display:inline;">
+                <form method="POST" action="{{ url_for('admin_promo') }}" style="display:inline;">
                     <input type="hidden" name="acao" value="remover_publisher">
                     <input type="hidden" name="promo_id" value="{{ promo.id }}">
                     <input type="hidden" name="publisher" value="{{ pub }}">
@@ -142,7 +146,7 @@
     <p style="color:#8f98a0; font-size:13px;">
         {{ "Cria uma nova promoção aplicando o mesmo percentual a todos os jogos de um publisher."|t }}
     </p>
-    <form method="POST" action="{{ url_for('admin') }}" class="admin-form" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;">
+    <form method="POST" action="{{ url_for('admin_promo') }}" class="admin-form" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;">
         <input type="hidden" name="acao" value="aplicar_publisher">
         <div class="admin-field">
             <label>{{ "Publisher"|t }}</label>
@@ -194,7 +198,7 @@
     <p style="color:#8f98a0; font-size:13px;">
         {{ "Informe um percentual para cada jogo que quiser incluir (deixe em branco ou zero para não incluir)."|t }}
     </p>
-    <form method="POST" action="{{ url_for('admin') }}" class="admin-form">
+    <form method="POST" action="{{ url_for('admin_promo') }}" class="admin-form">
         <input type="hidden" name="acao" value="criar">
 
         <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;">
@@ -285,7 +289,7 @@
                         {{ h.data_inicio }} → {{ h.data_fim }} · {{ "criada em"|t }} {{ h.criado_em }}
                     </div>
                 </div>
-                <form method="POST" action="{{ url_for('admin') }}" style="display:inline; margin:0;"
+                <form method="POST" action="{{ url_for('admin_promo') }}" style="display:inline; margin:0;"
                       onsubmit="return confirm('{{ "Remover esta promoção do histórico?"|t }}');">
                     <input type="hidden" name="acao" value="remover_promocao">
                     <input type="hidden" name="promo_id" value="{{ h.id }}">

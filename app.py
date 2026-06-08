@@ -119,6 +119,13 @@ GAMES = {
         'languages': ['Português', 'Inglês', 'Espanhol', 'Francês', 'Alemão'],
         'req_minimo': 'SO: Windows 10 64-bit · CPU: Intel i5-4460 · RAM: 8 GB · GPU: GTX 760 · 40 GB',
         'req_recomendado': 'SO: Windows 11 64-bit · CPU: Intel i7-9700 · RAM: 16 GB · GPU: RTX 2060 · 40 GB SSD',
+        'conquistas': [
+            {'id': 'epica_inicio',    'nome': 'Primeiros Passos',         'descricao': 'Inicie sua jornada épica no mundo de fantasia.', 'icone': '🗡️', 'pontos': 10},
+            {'id': 'epica_masmorra',  'nome': 'Caçador de Masmorras',     'descricao': 'Complete sua primeira masmorra sozinho ou com amigos.', 'icone': '🏰', 'pontos': 25},
+            {'id': 'epica_chefe',     'nome': 'Caça ao Dragão',           'descricao': 'Derrote o chefe principal da campanha.', 'icone': '🐉', 'pontos': 50},
+            {'id': 'epica_nivel',     'nome': 'Herói Lendário',           'descricao': 'Atinja o nível máximo com qualquer personagem.', 'icone': '⚔️', 'pontos': 75},
+            {'id': 'epica_coop',      'nome': 'Companheiros de Aventura', 'descricao': 'Jogue cooperativo com 3 amigos em uma mesma sessão.', 'icone': '🤝', 'pontos': 30},
+        ],
     },
     '2': {
         'id': '2', 'name': 'Sobrevivência Sombria', 'price': 90.00, 'age_rating': 18,
@@ -139,6 +146,13 @@ GAMES = {
         'languages': ['Português', 'Inglês', 'Espanhol', 'Russo', 'Japonês'],
         'req_minimo': 'SO: Windows 10 64-bit · CPU: Ryzen 3 1200 · RAM: 8 GB · GPU: GTX 1050 Ti · 50 GB',
         'req_recomendado': 'SO: Windows 11 64-bit · CPU: Ryzen 5 5600 · RAM: 16 GB · GPU: RTX 3060 · 50 GB SSD',
+        'conquistas': [
+            {'id': 'sombria_primeira_noite', 'nome': 'Primeira Noite',    'descricao': 'Sobreviva à sua primeira noite na cidade infestada.', 'icone': '🌙', 'pontos': 10},
+            {'id': 'sombria_zumbis',         'nome': 'Caçador de Mortos', 'descricao': 'Elimine 100 zumbis em qualquer modo de jogo.', 'icone': '🧟', 'pontos': 25},
+            {'id': 'sombria_base',           'nome': 'Lar, Doce Bunker',  'descricao': 'Construa uma base completa com todos os módulos.', 'icone': '🏚️', 'pontos': 30},
+            {'id': 'sombria_30dias',         'nome': 'Resistência',       'descricao': 'Sobreviva 30 dias consecutivos no modo sandbox.', 'icone': '📅', 'pontos': 50},
+            {'id': 'sombria_fim',            'nome': 'O Amanhecer',       'descricao': 'Complete a campanha principal em qualquer dificuldade.', 'icone': '🌅', 'pontos': 100},
+        ],
     },
     '3': {
         'id': '3', 'name': 'Corrida Divertida', 'price': 45.00, 'age_rating': 0,
@@ -159,6 +173,13 @@ GAMES = {
         'languages': ['Português', 'Inglês', 'Espanhol', 'Italiano'],
         'req_minimo': 'SO: Windows 10 64-bit · CPU: Intel i3-6100 · RAM: 4 GB · GPU: GTX 650 · 15 GB',
         'req_recomendado': 'SO: Windows 10 64-bit · CPU: Intel i5-7400 · RAM: 8 GB · GPU: GTX 1050 · 15 GB SSD',
+        'conquistas': [
+            {'id': 'corrida_vitoria',  'nome': 'Pé na Tábua',        'descricao': 'Vença sua primeira corrida em qualquer pista.', 'icone': '🏁', 'pontos': 10},
+            {'id': 'corrida_10',       'nome': 'Velocidade Pura',    'descricao': 'Vença 10 corridas no modo arcade.', 'icone': '💨', 'pontos': 25},
+            {'id': 'corrida_dividida', 'nome': 'Festa em Família',   'descricao': 'Jogue uma corrida em tela dividida com pelo menos 2 amigos.', 'icone': '🎉', 'pontos': 15},
+            {'id': 'corrida_atalhos',  'nome': 'Caçador de Atalhos', 'descricao': 'Encontre todos os atalhos secretos das pistas.', 'icone': '🔍', 'pontos': 40},
+            {'id': 'corrida_campeao',  'nome': 'Campeão Absoluto',   'descricao': 'Vença todos os campeonatos do modo carreira.', 'icone': '🏆', 'pontos': 100},
+        ],
     },
     '4': {
         'id': '4', 'name': 'Lombriguinha', 'price': 120.00, 'age_rating': 16,
@@ -179,6 +200,13 @@ GAMES = {
         'languages': ['Português', 'Inglês', 'Espanhol', 'Francês'],
         'req_minimo': 'SO: Windows 10 64-bit · CPU: Intel i3-7100 · RAM: 4 GB · GPU: GTX 750 · 10 GB',
         'req_recomendado': 'SO: Windows 11 64-bit · CPU: Intel i5-9400 · RAM: 8 GB · GPU: GTX 1060 · 10 GB SSD',
+        'conquistas': [
+            {'id': 'lombri_primeira',  'nome': 'Primeira Lombriga',       'descricao': 'Vença sua primeira batalha online ou local.', 'icone': '🪱', 'pontos': 10},
+            {'id': 'lombri_25',        'nome': 'Comandante Veterano',     'descricao': 'Vença 25 batalhas em qualquer modo.', 'icone': '🎖️', 'pontos': 30},
+            {'id': 'lombri_perfeito',  'nome': 'Sem Baixas',              'descricao': 'Vença uma batalha sem perder nenhuma lombriga.', 'icone': '💯', 'pontos': 40},
+            {'id': 'lombri_arsenal',   'nome': 'Mestre do Arsenal',       'descricao': 'Use todos os tipos de arma do jogo ao menos uma vez.', 'icone': '💣', 'pontos': 35},
+            {'id': 'lombri_imperador', 'nome': 'Imperador das Lombrigas', 'descricao': 'Conquiste todos os territórios do modo campanha.', 'icone': '👑', 'pontos': 100},
+        ],
     }
 }
 
@@ -197,6 +225,7 @@ DESEJOS_FILE     = os.path.join(DATA_DIR, 'desejos.txt')
 PROMOCOES_FILE   = os.path.join(DATA_DIR, 'promocoes.txt')
 HISTORICO_PROMOCOES_FILE = os.path.join(DATA_DIR, 'historico_promocoes.txt')
 COMENTARIOS_FILE = os.path.join(DATA_DIR, 'comentarios.txt')
+CONQUISTAS_USUARIOS_FILE = os.path.join(DATA_DIR, 'conquistas_usuarios.txt')
 AVALIACOES_FILE  = os.path.join(DATA_DIR, 'avaliacoes.txt')
 
 CARTEIRA_INICIAL = 100.00
@@ -302,6 +331,14 @@ def _garantir_arquivos():
             f.write("# =============================================================================\n")
             f.write("# MINISTEAM - Comentários nos Perfis dos Usuários\n")
             f.write("# Formato: perfil_id | autor_id | data | texto\n")
+            f.write("# =============================================================================\n")
+
+    if not os.path.exists(CONQUISTAS_USUARIOS_FILE):
+        with open(CONQUISTAS_USUARIOS_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Conquistas desbloqueadas pelos usuários\n")
+            f.write("# Formato: user_id | game_id | conquista_id | data_iso\n")
+            f.write("# A definição das conquistas (nome, descrição, pontos) vive em GAMES no app.py.\n")
             f.write("# =============================================================================\n")
 
     if not os.path.exists(AVALIACOES_FILE):
@@ -1186,6 +1223,175 @@ def votar_avaliacao(game_id, autor_id_alvo, votante_id, vote_type):
     return True, msg, "sucesso"
 
 
+# ---- FUNÇÕES DE CONQUISTAS ----
+#
+# A definição (catálogo) de cada conquista mora em GAMES[<gid>]['conquistas']
+# para ficar perto do jogo a que pertence. Aqui só lidamos com o REGISTRO
+# de quem desbloqueou o quê e quando (data/conquistas_usuarios.txt).
+
+def conquistas_do_jogo(game_id):
+    """Retorna a lista de conquistas definidas para o jogo (ou lista vazia)."""
+    game = GAMES.get(str(game_id))
+    if not game:
+        return []
+    return list(game.get('conquistas', []))
+
+
+def conquista_por_id(game_id, conquista_id):
+    """Busca uma conquista específica em um jogo."""
+    for c in conquistas_do_jogo(game_id):
+        if c.get('id') == conquista_id:
+            return c
+    return None
+
+
+def _ler_registros_conquistas():
+    """Lê o arquivo bruto de desbloqueios. Lista de dicts {user_id, game_id, conquista_id, data}."""
+    _garantir_arquivos()
+    registros = []
+    try:
+        with open(CONQUISTAS_USUARIOS_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s or s.startswith('#'):
+                    continue
+                partes = [p.strip() for p in s.split('|')]
+                if len(partes) < 4:
+                    continue
+                registros.append({
+                    'user_id':      partes[0],
+                    'game_id':      partes[1],
+                    'conquista_id': partes[2],
+                    'data':         partes[3],
+                })
+    except FileNotFoundError:
+        pass
+    return registros
+
+
+def _escrever_registros_conquistas(registros):
+    """Reescreve o arquivo preservando o cabeçalho."""
+    _garantir_arquivos()
+    cabecalho = []
+    try:
+        with open(CONQUISTAS_USUARIOS_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                if linha.startswith('#'):
+                    cabecalho.append(linha)
+                else:
+                    break
+    except FileNotFoundError:
+        pass
+    with open(CONQUISTAS_USUARIOS_FILE, 'w', encoding='utf-8') as f:
+        f.writelines(cabecalho)
+        for r in registros:
+            f.write(f"{r['user_id']} | {r['game_id']} | {r['conquista_id']} | {r['data']}\n")
+
+
+def conquistas_desbloqueadas_do_usuario(user_id, game_id=None):
+    """Retorna dict {(game_id, conquista_id): data_iso}. Filtra por jogo se informado."""
+    user_id = str(user_id)
+    fora = {}
+    for r in _ler_registros_conquistas():
+        if r['user_id'] != user_id:
+            continue
+        if game_id is not None and r['game_id'] != str(game_id):
+            continue
+        fora[(r['game_id'], r['conquista_id'])] = r['data']
+    return fora
+
+
+def desbloquear_conquista(user_id, game_id, conquista_id):
+    """Desbloqueia uma conquista. Retorna (ok, mensagem, conquista_dict|None).
+
+    Idempotente: se já estava desbloqueada, devolve ok=False (sem duplicar).
+    """
+    user_id      = str(user_id)
+    game_id      = str(game_id)
+    conquista_id = str(conquista_id)
+    conquista = conquista_por_id(game_id, conquista_id)
+    if not conquista:
+        return False, "Conquista não encontrada para este jogo.", None
+    registros = _ler_registros_conquistas()
+    for r in registros:
+        if r['user_id'] == user_id and r['game_id'] == game_id and r['conquista_id'] == conquista_id:
+            return False, "Conquista já estava desbloqueada.", conquista
+    registros.append({
+        'user_id':      user_id,
+        'game_id':      game_id,
+        'conquista_id': conquista_id,
+        'data':         datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+    })
+    _escrever_registros_conquistas(registros)
+    return True, "Conquista desbloqueada!", conquista
+
+
+def bloquear_conquista(user_id, game_id, conquista_id):
+    """Remove o desbloqueio de uma conquista específica."""
+    user_id      = str(user_id)
+    game_id      = str(game_id)
+    conquista_id = str(conquista_id)
+    registros = _ler_registros_conquistas()
+    novos = [r for r in registros
+             if not (r['user_id'] == user_id and r['game_id'] == game_id
+                     and r['conquista_id'] == conquista_id)]
+    if len(novos) == len(registros):
+        return False, "Conquista não estava desbloqueada."
+    _escrever_registros_conquistas(novos)
+    return True, "Conquista bloqueada (desfeita)."
+
+
+def resetar_conquistas_usuario(user_id, game_id=None):
+    """Apaga TODAS as conquistas do usuário (ou só de um jogo se informado)."""
+    user_id = str(user_id)
+    registros = _ler_registros_conquistas()
+    if game_id is None:
+        novos = [r for r in registros if r['user_id'] != user_id]
+    else:
+        gid = str(game_id)
+        novos = [r for r in registros
+                 if not (r['user_id'] == user_id and r['game_id'] == gid)]
+    removidos = len(registros) - len(novos)
+    _escrever_registros_conquistas(novos)
+    return removidos
+
+
+def progresso_conquistas(user_id, game_id):
+    """Retorna (desbloqueadas, total, pct, pontos_ganhos, pontos_totais)."""
+    desbloq = conquistas_desbloqueadas_do_usuario(user_id, game_id)
+    todas   = conquistas_do_jogo(game_id)
+    total   = len(todas)
+    desbloq_ids = {cid for (_, cid) in desbloq.keys()}
+    n_desbloq = sum(1 for c in todas if c.get('id') in desbloq_ids)
+    pontos_totais = sum(int(c.get('pontos', 0)) for c in todas)
+    pontos_ganhos = sum(int(c.get('pontos', 0)) for c in todas if c.get('id') in desbloq_ids)
+    pct = round(100 * n_desbloq / total) if total else 0
+    return n_desbloq, total, pct, pontos_ganhos, pontos_totais
+
+
+def conquistas_recentes_do_usuario(user_id, limite=5):
+    """Últimas N conquistas desbloqueadas pelo usuário, mais recentes primeiro.
+
+    Cada item é enriquecido com a definição (nome, ícone, pontos) e o nome do jogo.
+    """
+    user_id = str(user_id)
+    regs = [r for r in _ler_registros_conquistas() if r['user_id'] == user_id]
+    regs.sort(key=lambda r: r['data'], reverse=True)
+    resultado = []
+    for r in regs[:limite]:
+        c = conquista_por_id(r['game_id'], r['conquista_id'])
+        if not c:
+            continue
+        game = GAMES.get(r['game_id'])
+        resultado.append({
+            **c,
+            'game_id':   r['game_id'],
+            'game_name': game['name'] if game else r['game_id'],
+            'data':      r['data'],
+        })
+    return resultado
+
+
 # ---- HORAS JOGADAS (SIMULAÇÃO ESTÁVEL POR USUÁRIO+JOGO) ----
 
 def horas_jogadas(uid, gid):
@@ -1687,6 +1893,11 @@ def perfil(user_id):
     if bio_traduzir_flag and bio_pode_traduzir:
         bio_traduzida = i18n.traduzir(bio_texto, idioma_leitor, bio_idioma_origem)
 
+    # Showcase de conquistas: total e últimas 5 desbloqueadas
+    todas_desbloq = conquistas_desbloqueadas_do_usuario(uid)
+    conq_total_desb = len(todas_desbloq)
+    conq_recentes   = conquistas_recentes_do_usuario(uid, limite=5)
+
     return render_template('perfil.html',
                            perfil_user=usuario,
                            is_self=is_self,
@@ -1699,6 +1910,8 @@ def perfil(user_id):
                            comentarios=comentarios,
                            trocas_restantes=trocas_restantes,
                            limite_trocas=LIMITE_TROCAS_USERNAME,
+                           conq_total_desb=conq_total_desb,
+                           conq_recentes=conq_recentes,
                            bio_idioma_origem=bio_idioma_origem,
                            bio_idioma_nome=i18n.nome_idioma(bio_idioma_origem),
                            bio_bandeira=i18n.bandeira(bio_idioma_origem),
@@ -1857,10 +2070,18 @@ def game(game_id):
 
     filtered_reviews = sorted(filtered_reviews, key=lambda x: x.get('votos_uteis', 0), reverse=True)
 
+    # Progresso de conquistas (mostra X/Y na barra lateral). Se o usuário não
+    # estiver logado, devolve zeros — a página segue funcionando sem login.
+    if session.get('user_id'):
+        conq_desb, conq_total, conq_pct, _, _ = progresso_conquistas(session['user_id'], game_id)
+    else:
+        conq_desb, conq_total, conq_pct = 0, len(conquistas_do_jogo(game_id)), 0
+
     return render_template('game.html', game=game_data, show_modal=show_modal,
                            na_wishlist=na_wishlist,
                            reviews=filtered_reviews,
-                           selected_lang=selected_lang)
+                           selected_lang=selected_lang,
+                           conq_desb=conq_desb, conq_total=conq_total, conq_pct=conq_pct)
 
 @app.route('/update_profile', methods=['POST'])
 def update_profile():
@@ -1926,6 +2147,29 @@ def add_to_cart(game_id):
     session['cart'].append(cart_item)
     session.modified = True
     return redirect(url_for('game', game_id=game_id, added=1))
+
+
+@app.route('/game/<game_id>/conquistas')
+def conquistas_jogo(game_id):
+    """Página pública de conquistas do jogo para o usuário atual."""
+    game = GAMES.get(game_id)
+    if not game:
+        return i18n.traduzir("Jogo não encontrado", _idioma_usuario(), i18n.IDIOMA_PADRAO), 404
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+    desbloqueadas = conquistas_desbloqueadas_do_usuario(user_id, game_id)
+    itens = []
+    for c in conquistas_do_jogo(game_id):
+        key = (str(game_id), c['id'])
+        itens.append({**c, 'desbloqueada': key in desbloqueadas, 'data': desbloqueadas.get(key)})
+    n_desb, total, pct, pontos_ganhos, pontos_totais = progresso_conquistas(user_id, game_id)
+    return render_template(
+        'conquistas_jogo.html',
+        game=game, conquistas=itens,
+        n_desb=n_desb, total=total, pct=pct,
+        pontos_ganhos=pontos_ganhos, pontos_totais=pontos_totais,
+    )
 
 
 @app.route('/game/<game_id>/review', methods=['POST'])
@@ -2536,8 +2780,14 @@ def family_toggle_offline():
 # Acessível somente digitando /admin na URL (não há botões para chegar aqui).
 # ==============================================================================
 
-@app.route('/admin', methods=['GET', 'POST'])
-def admin():
+@app.route('/admin')
+def admin_index():
+    """Landing do painel administrativo com dois caminhos: promoções e testes."""
+    return render_template('admin_index.html')
+
+
+@app.route('/admin/promo', methods=['GET', 'POST'])
+def admin_promo():
     if request.method == 'POST':
         acao = request.form.get('acao', '').strip()
 
@@ -2603,18 +2853,103 @@ def admin():
         else:
             flash("Ação desconhecida.", 'error')
 
-        return redirect(url_for('admin'))
+        return redirect(url_for('admin_promo'))
 
     publishers       = agrupar_jogos_por_publisher()
     historico        = ler_historico_promocoes()
     ativas           = ler_promocoes_ativas()
     hoje             = _data_str_hoje()
     return render_template(
-        'admin.html',
+        'admin_promo.html',
         games=GAMES, publishers=publishers,
         ativas=ativas,                          # todas as promoções ativas hoje
         historico=list(reversed(historico)),    # mais recentes primeiro
         hoje=hoje,
+    )
+
+
+@app.route('/admin/testes', methods=['GET', 'POST'])
+def admin_testes():
+    """Painel de testes. Por enquanto, exclusivamente para conquistas.
+
+    Toda ação atua sobre o usuário atualmente logado — testando como ele
+    veria o sistema em uso real. Não há sudo/impersonação aqui para manter
+    o escopo simples.
+    """
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        acao = request.form.get('acao', '').strip()
+        gid  = request.form.get('game_id', '').strip()
+        cid  = request.form.get('conquista_id', '').strip()
+
+        if acao == 'desbloquear':
+            ok, msg, conquista = desbloquear_conquista(user_id, gid, cid)
+            if ok and conquista:
+                # Sinaliza pro template do toast (categoria especial 'conquista')
+                payload = json.dumps({
+                    'nome':      conquista['nome'],
+                    'descricao': conquista['descricao'],
+                    'icone':     conquista['icone'],
+                    'pontos':    conquista['pontos'],
+                })
+                flash(payload, 'conquista')
+            else:
+                flash(msg, 'sucesso' if ok else 'error')
+
+        elif acao == 'bloquear':
+            ok, msg = bloquear_conquista(user_id, gid, cid)
+            flash(msg, 'sucesso' if ok else 'error')
+
+        elif acao == 'resetar_jogo':
+            n = resetar_conquistas_usuario(user_id, gid)
+            flash(f"{n} conquista(s) removida(s) deste jogo.", 'sucesso')
+
+        elif acao == 'resetar_tudo':
+            n = resetar_conquistas_usuario(user_id)
+            flash(f"{n} conquista(s) removida(s) de todos os jogos.", 'sucesso')
+
+        else:
+            flash("Ação desconhecida.", 'error')
+
+        return redirect(url_for('admin_testes'))
+
+    # GET: monta visão por jogo com lista de conquistas e estado de cada uma
+    desbloqueadas = conquistas_desbloqueadas_do_usuario(user_id)
+    jogos = []
+    total_desb = 0
+    total_total = 0
+    for gid in sorted(GAMES.keys(), key=lambda x: int(x) if x.isdigit() else 999):
+        game = GAMES[gid]
+        conquistas = conquistas_do_jogo(gid)
+        if not conquistas:
+            continue
+        itens = []
+        for c in conquistas:
+            unlock_key = (gid, c['id'])
+            itens.append({
+                **c,
+                'desbloqueada': unlock_key in desbloqueadas,
+                'data':         desbloqueadas.get(unlock_key),
+            })
+        n_desb = sum(1 for i in itens if i['desbloqueada'])
+        total_desb  += n_desb
+        total_total += len(itens)
+        jogos.append({
+            'id':           gid,
+            'name':         game['name'],
+            'publisher':    game.get('publisher', ''),
+            'conquistas':   itens,
+            'desbloqueadas': n_desb,
+            'total':        len(itens),
+        })
+    return render_template(
+        'admin_testes.html',
+        jogos=jogos,
+        total_desb=total_desb,
+        total_total=total_total,
     )
 
 
@@ -2630,7 +2965,7 @@ def reset_session():
     for caminho in (MAQUINA_FILE, AMIZADES_FILE, BIBLIOTECA_FILE,
                     FAMILIAS_FILE, CARTEIRAS_FILE, SESSOES_FILE,
                     DESEJOS_FILE, PROMOCOES_FILE, HISTORICO_PROMOCOES_FILE,
-                    COMENTARIOS_FILE):
+                    COMENTARIOS_FILE, CONQUISTAS_USUARIOS_FILE):
         try:
             if os.path.exists(caminho):
                 os.remove(caminho)

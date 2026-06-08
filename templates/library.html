@@ -1,159 +1,684 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ "Minha Biblioteca"|t }} - Ministeam{% endblock %}
+{% block title %}{{ "Biblioteca"|t }} - Ministeam{% endblock %}
 
 {% block content %}
-<h1>{{ "Minha Biblioteca de Jogos"|t }}</h1>
+<style>
+    /* ============== LAYOUT GERAL (Steam-like) ============== */
+    .lib-shell {
+        display: grid;
+        grid-template-columns: 296px 1fr;
+        gap: 0;
+        background: #15161A;
+        min-height: 720px;
+        margin: 0 -16px;
+    }
+    @media (max-width: 920px) { .lib-shell { grid-template-columns: 1fr; } }
 
-<!-- Cabeçalho com contagem e slider -->
-<div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
-    <p style="color: #8f98a0; margin: 0;">
-        {{ "Exibindo"|t }} <span id="gameCount">{{ games|length }}</span> {{ "jogo(s)."|t }}
-    </p>
+    /* ---------- COLUNA ESQUERDA ---------- */
+    .lib-side {
+        background: #1D1F23;
+        border-right: 1px solid #0d0e10;
+        padding: 0;
+        font-family: "Motiva Sans", Arial, sans-serif;
+        color: #b8bcc1;
+    }
+    .lib-nav {
+        display: flex; align-items: center; gap: 6px;
+        padding: 10px 10px;
+        border-bottom: 1px solid #0d0e10;
+    }
+    .lib-nav-btn {
+        flex: 1;
+        background: rgba(255,255,255,0.06);
+        color: #ccd6e0;
+        font-size: 13px;
+        padding: 6px 10px;
+        cursor: default;
+    }
+    .lib-nav-icon {
+        width: 30px; height: 30px;
+        background: rgba(255,255,255,0.05);
+        display: flex; align-items: center; justify-content: center;
+        color: #8f98a0; font-size: 14px;
+        cursor: default;
+    }
+    .lib-dropdown {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 10px 14px;
+        background: rgba(0,0,0,0.25);
+        border-bottom: 1px solid #0d0e10;
+        font-size: 12px;
+        color: #b8bcc1;
+        cursor: default;
+    }
+    .lib-dropdown .arrow { color: #8f98a0; }
 
-    {% if tem_familia %}
-    <div style="display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.25); border: 1px solid #3d5a70; border-radius: 8px; padding: 8px 14px;">
-        <span id="labelTodos" style="color: #c6d4df; font-size: 13px; font-weight: 600;">{{ "Todos os Jogos"|t }}</span>
+    .lib-search-row {
+        display: flex; gap: 6px;
+        padding: 8px 10px;
+        background: rgba(0,0,0,0.12);
+        border-bottom: 1px solid #0d0e10;
+        position: relative;
+    }
+    .lib-search {
+        flex: 1;
+        background: #15161A;
+        border: 1px solid #0d0e10;
+        color: #c7d5e0;
+        padding: 5px 28px 5px 26px;
+        font-size: 12px;
+        outline: none;
+    }
+    .lib-search-row::before {
+        content: "🔍";
+        position: absolute;
+        left: 18px; top: 50%; transform: translateY(-50%);
+        font-size: 10px; opacity: 0.6;
+    }
+    .lib-filter-btn {
+        position: relative;
+        background: #15161A;
+        border: 1px solid #0d0e10;
+        color: #b8bcc1;
+        padding: 5px 10px;
+        font-size: 11px;
+        cursor: pointer;
+        display: flex; align-items: center; gap: 4px;
+    }
+    .lib-filter-btn:hover { background: #1f2126; color: #fff; }
+    .lib-filter-btn.has-filters { color: #66c0f4; border-color: #316398; }
+    .lib-filter-count {
+        background: #66c0f4; color: #0e1e2f;
+        font-weight: bold;
+        padding: 0 5px; border-radius: 8px; font-size: 10px;
+    }
 
-        <!-- Slider toggle -->
-        <label style="position: relative; display: inline-block; width: 46px; height: 24px; cursor: pointer; flex-shrink: 0;">
-            <input type="checkbox" id="familyToggle" style="opacity: 0; width: 0; height: 0;">
-            <span id="sliderTrack" style="
-                position: absolute; inset: 0;
-                background: #3d5a70;
-                border-radius: 24px;
-                transition: background 0.25s;
-            "></span>
-            <span id="sliderThumb" style="
-                position: absolute; top: 3px; left: 3px;
-                width: 18px; height: 18px;
-                background: #c6d4df;
-                border-radius: 50%;
-                transition: transform 0.25s, background 0.25s;
-            "></span>
-        </label>
+    .lib-filter-panel {
+        position: absolute;
+        right: 10px; top: 100%; margin-top: 4px;
+        width: 240px;
+        background: #1A1C20;
+        border: 1px solid #0d0e10;
+        box-shadow: 0 8px 22px rgba(0,0,0,0.6);
+        z-index: 50;
+        padding: 12px;
+        display: none;
+    }
+    .lib-filter-panel.open { display: block; }
+    .lib-filter-panel h4 {
+        font-size: 10px; color: #66c0f4;
+        text-transform: uppercase; letter-spacing: 1.2px;
+        margin: 10px 0 6px;
+    }
+    .lib-filter-panel h4:first-child { margin-top: 0; }
+    .lib-filter-panel label {
+        display: flex; align-items: center; gap: 6px;
+        font-size: 12px; color: #b8bcc1;
+        padding: 3px 0;
+        cursor: pointer;
+    }
+    .lib-filter-panel label:hover { color: #fff; }
+    .lib-filter-panel input[type="checkbox"] { accent-color: #66c0f4; }
+    .lib-filter-clear {
+        margin-top: 12px;
+        width: 100%;
+        background: transparent;
+        border: 1px solid #316398;
+        color: #66c0f4;
+        font-size: 11px;
+        padding: 5px;
+        cursor: pointer;
+    }
+    .lib-filter-clear:hover { background: rgba(102,192,244,0.08); }
 
-        <span id="labelFamilia" style="color: #8f98a0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 5px;">
-            <svg width="14" height="14" viewBox="0 0 20 20" fill="#4b9cd3" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm-7 13c0-3.314 3.134-6 7-6s7 2.686 7 6H3z"/>
-            </svg>
-            {{ "Família Steam"|t }}
-        </span>
-    </div>
-    {% endif %}
-</div>
+    .lib-section-head {
+        padding: 10px 14px 6px;
+        font-size: 11px; color: #6f7780;
+        text-transform: uppercase; letter-spacing: 1px;
+        display: flex; align-items: center; gap: 6px;
+    }
+    .lib-list { padding: 0 4px 16px; }
+    .lib-item {
+        display: flex; align-items: center; gap: 8px;
+        padding: 5px 10px;
+        text-decoration: none;
+        color: #b8bcc1;
+        font-size: 13px;
+        margin: 1px 0;
+        position: relative;
+    }
+    .lib-item:hover { background: rgba(255,255,255,0.04); color: #fff; }
+    .lib-item.selected {
+        background: linear-gradient(90deg, #316398 0%, #2a4f7a 100%);
+        color: #fff;
+    }
+    .lib-item.selected::before {
+        content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+        background: #66c0f4;
+    }
+    .lib-item img {
+        width: 22px; height: 22px; object-fit: cover;
+        background: #0d0e10;
+        flex-shrink: 0;
+    }
+    .lib-item-name {
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        flex: 1;
+    }
+    .lib-item-meta {
+        font-size: 10px; color: #8f98a0;
+        text-transform: uppercase; letter-spacing: 0.5px;
+        flex-shrink: 0;
+    }
+    .lib-item.selected .lib-item-meta { color: #c7d5e0; }
+    .lib-item-playing {
+        width: 6px; height: 6px;
+        background: #79a016;
+        border-radius: 50%;
+        animation: pulse 1.5s infinite;
+        flex-shrink: 0;
+    }
+    @keyframes pulse { 50% { opacity: 0.4; } }
 
-<!-- Grid de jogos -->
-<div class="game-grid" id="gameGrid">
-    {% if games %}
-        {% for id, game in games.items() %}
-        <div class="game-card"
-             data-familia="{{ 'true' if id in ids_familia_pool else 'false' }}"
-             style="cursor: default;">
-            <img src="{{ url_for('static', filename='images/jogo' ~ game.id ~ '.jpg') }}" alt="{{ game.name }}">
+    .lib-counter {
+        font-size: 11px; color: #6f7780;
+        padding: 0 14px 8px;
+    }
 
-            {% if id in ids_familia_pool %}
-            <div style="
-                position: absolute; top: 8px; right: 8px;
-                background: rgba(75, 156, 211, 0.85);
-                color: #fff; font-size: 10px; font-weight: 700;
-                padding: 3px 7px; border-radius: 4px;
-                letter-spacing: 0.5px; text-transform: uppercase;
-            ">{{ "Família"|t }}</div>
-            {% endif %}
+    /* ---------- COLUNA DIREITA ---------- */
+    .lib-main { padding: 0; }
+    .lib-hero-wrap {
+        position: relative;
+        height: 260px;
+        background: #0d0e10;
+        overflow: hidden;
+    }
+    .lib-hero-img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        opacity: 0.85;
+        transform: scale(1.05);
+        filter: saturate(1.05);
+    }
+    .lib-hero-fade {
+        position: absolute; inset: 0;
+        background: linear-gradient(180deg, rgba(15, 21, 30, 0) 30%, #15161A 100%);
+    }
+    .lib-hero-title {
+        position: absolute; left: 22px; bottom: 14px;
+        font-size: 36px; font-weight: 300;
+        color: #fff;
+        text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+        margin: 0;
+    }
+    .lib-hero-pub {
+        position: absolute; left: 24px; bottom: 6px;
+        font-size: 11px;
+        color: #c7d5e0; opacity: 0.85;
+        text-transform: uppercase; letter-spacing: 1px;
+    }
 
-            <div class="game-info">
-                <h3>{{ game.name }}</h3>
-                {% if game.age_rating > 0 %}
-                <p style="font-size: 11px; color: #8f98a0; margin-top: 2px;">
-                    {{ "Classificação:"|t }} +{{ game.age_rating }} {{ "anos"|t }}
-                </p>
+    .lib-actions-bar {
+        display: flex; align-items: center; gap: 14px;
+        padding: 16px 24px;
+        background: #15161A;
+        flex-wrap: wrap;
+    }
+    .lib-play-btn {
+        background: linear-gradient(135deg, #5c7e10 0%, #79a016 100%);
+        color: #fff;
+        text-decoration: none;
+        padding: 12px 36px 12px 28px;
+        font-size: 18px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        cursor: pointer;
+        display: inline-flex; align-items: center; gap: 12px;
+    }
+    .lib-play-btn:hover { filter: brightness(1.15); }
+    .lib-play-btn .play-arrow { font-size: 22px; }
+    .lib-play-btn.encerrar {
+        background: linear-gradient(135deg, #b52a1c 0%, #d23527 100%);
+    }
+
+    .lib-status-strip {
+        display: flex; gap: 26px; flex-wrap: wrap;
+        flex: 1; min-width: 320px;
+    }
+    .lib-status {
+        display: flex; align-items: center; gap: 10px;
+        color: #c7d5e0;
+    }
+    .lib-status-icon {
+        font-size: 22px;
+        color: #66c0f4;
+        opacity: 0.85;
+    }
+    .lib-status-label {
+        font-size: 10px; color: #66c0f4;
+        text-transform: uppercase; letter-spacing: 1px;
+    }
+    .lib-status-val {
+        font-size: 13px; color: #fff; font-weight: bold;
+        margin-top: 1px;
+    }
+    .lib-status-sub {
+        font-size: 11px; color: #8f98a0;
+    }
+
+    .lib-tabs {
+        display: flex; gap: 1px;
+        background: #0d0e10;
+        padding: 0 24px;
+        border-bottom: 1px solid #0d0e10;
+    }
+    .lib-tab {
+        padding: 10px 14px;
+        color: #8f98a0;
+        font-size: 12px;
+        text-decoration: none;
+        background: #1A1C20;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .lib-tab.active { background: #15161A; color: #fff; box-shadow: inset 0 -2px 0 #66c0f4; }
+    .lib-tab:hover { color: #fff; }
+
+    .lib-content {
+        display: grid;
+        grid-template-columns: 1fr 280px;
+        gap: 22px;
+        padding: 22px 24px;
+        background: #15161A;
+    }
+    @media (max-width: 860px) { .lib-content { grid-template-columns: 1fr; } }
+
+    .lib-block {
+        background: #1A1C20;
+        border: 1px solid #0d0e10;
+    }
+    .lib-block-head {
+        padding: 10px 14px;
+        font-size: 11px; color: #66c0f4;
+        text-transform: uppercase; letter-spacing: 1.2px;
+        border-bottom: 1px solid #0d0e10;
+    }
+    .lib-block-body { padding: 14px; }
+
+    .lib-news {
+        display: flex; gap: 14px; align-items: flex-start;
+    }
+    .lib-news img {
+        width: 110px; height: 62px; object-fit: cover; flex-shrink: 0;
+    }
+    .lib-news-meta { font-size: 10px; color: #8f98a0; text-transform: uppercase; letter-spacing: 1px; }
+    .lib-news-title { font-size: 14px; color: #fff; margin-top: 4px; font-weight: bold; }
+    .lib-news-body { font-size: 12px; color: #c7d5e0; margin-top: 6px; line-height: 1.4; }
+
+    .lib-activity-item {
+        display: flex; gap: 10px; align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #0d0e10;
+        font-size: 12px; color: #c7d5e0;
+    }
+    .lib-activity-item:last-child { border-bottom: none; }
+    .lib-activity-icon {
+        font-size: 22px; flex-shrink: 0;
+        width: 32px; text-align: center;
+    }
+    .lib-activity-when { color: #6f7780; font-size: 10px; }
+
+    /* Sidebar do conteúdo (amigos + conquistas) */
+    .friend-list-mini { display: flex; flex-direction: column; gap: 4px; }
+    .friend-list-mini a {
+        display: flex; align-items: center; gap: 8px;
+        padding: 5px 6px;
+        color: #c7d5e0; text-decoration: none;
+        font-size: 12px;
+    }
+    .friend-list-mini a:hover { background: rgba(102,192,244,0.06); }
+    .friend-list-mini img { width: 26px; height: 26px; object-fit: cover; }
+    .friend-list-mini .dot {
+        width: 6px; height: 6px; background: #79a016; border-radius: 50%;
+        margin-left: auto; animation: pulse 1.5s infinite;
+    }
+    .friend-list-mini .empty { color: #6f7780; font-size: 12px; }
+
+    .conq-bar {
+        height: 6px; background: #0d0e10;
+        margin: 6px 0 12px;
+    }
+    .conq-bar > div {
+        height: 100%;
+        background: linear-gradient(90deg, #5c7e10, #beee11);
+    }
+    .conq-mini-list { display: flex; flex-direction: column; gap: 4px; }
+
+    .lib-empty {
+        background: #1A1C20; padding: 60px 30px; text-align: center; color: #8f98a0;
+    }
+</style>
+
+{% if games %}
+<div class="lib-shell">
+    <!-- ====================== ESQUERDA ====================== -->
+    <aside class="lib-side">
+        <div class="lib-nav">
+            <div class="lib-nav-btn">{{ "Página inicial"|t }}</div>
+            <div class="lib-nav-icon" title="{{ 'Grade'|t }}">⊞</div>
+        </div>
+        <div class="lib-dropdown">
+            <span>{{ "Jogos e Softwares"|t }}</span><span class="arrow">▼</span>
+        </div>
+
+        <div class="lib-search-row">
+            <input type="search" class="lib-search" id="libSearch"
+                   placeholder="{{ 'Buscar'|t }}">
+            <button type="button" class="lib-filter-btn" id="filterToggle">
+                ⏚ <span>{{ "Filtros"|t }}</span>
+                <span class="lib-filter-count" id="filterCount" style="display:none;">0</span>
+            </button>
+            <div class="lib-filter-panel" id="filterPanel">
+                <h4>{{ "Acesso"|t }}</h4>
+                {% if tem_familia %}
+                <label><input type="checkbox" class="f-flag" data-flag="familia"> 🏠 {{ "Família Steam"|t }}</label>
                 {% endif %}
-                {% if id in ids_familia_pool %}
-                <p style="font-size: 11px; color: #4b9cd3; margin-top: 2px;">
-                    {{ "Via Família Steam"|t }}
-                </p>
-                {% else %}
-                <p style="font-size: 11px; color: #79a016; margin-top: 2px;">
-                    {{ "Comprado por você"|t }}
-                </p>
-                {% endif %}
-                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
-                    {% if session['active_game'] == id %}
-                        <span style="color: #79a016; font-size: 12px; font-weight: bold; animation: blink 1s infinite; text-align: center;">● {{ "Executando..."|t }}</span>
-                        <a href="{{ url_for('stop_game') }}" class="btn-blue" style="background: #b52a1c; color: white; text-align: center; text-decoration: none; padding: 8px; border-radius: 2px;">{{ "Encerrar Jogo"|t }}</a>
-                    {% else %}
-                        <a href="{{ url_for('play_game', game_id=id) }}?src=library" class="btn-green" style="text-align: center; text-decoration: none; padding: 8px; border-radius: 2px; font-weight: bold;">{{ "Jogar"|t }}</a>
+                <label><input type="checkbox" class="f-flag" data-flag="execucao"> ● {{ "Em execução agora"|t }}</label>
+
+                <h4>{{ "Publisher"|t }}</h4>
+                {% set pubs = [] %}
+                {% for gid in ids_ordenados %}
+                    {% if games[gid].publisher and games[gid].publisher not in pubs %}
+                        {% set _ = pubs.append(games[gid].publisher) %}
                     {% endif %}
-                    <a href="{{ url_for('game', game_id=game.id) }}" class="btn-blue"
-                       style="text-align: center; text-decoration: none; font-size: 13px; padding: 8px; border-radius: 2px;">
-                        {{ "Ir para a Loja"|t }}
-                    </a>
-                </div>
+                {% endfor %}
+                {% for pub in pubs %}
+                <label><input type="checkbox" class="f-pub" value="{{ pub }}"> {{ pub }}</label>
+                {% endfor %}
+
+                <h4>{{ "Classificação"|t }}</h4>
+                <label><input type="checkbox" class="f-age" value="0"> {{ "Livre"|t }}</label>
+                <label><input type="checkbox" class="f-age" value="10"> +10</label>
+                <label><input type="checkbox" class="f-age" value="16"> +16</label>
+                <label><input type="checkbox" class="f-age" value="18"> +18</label>
+
+                <button type="button" class="lib-filter-clear" id="filterClear">{{ "Limpar filtros"|t }}</button>
             </div>
         </div>
-        {% endfor %}
-    {% else %}
-        <div id="emptyMsg" style="grid-column: 1/-1; background: rgba(0,0,0,0.2); padding: 40px; text-align: center;">
-            <p style="margin-bottom: 20px; color: #8f98a0;">{{ "Nenhum jogo disponível na sua biblioteca."|t }}</p>
-            <a href="{{ url_for('index') }}" class="btn-blue">{{ "Ir para a Loja"|t }}</a>
-        </div>
-    {% endif %}
-</div>
 
-<!-- Mensagem quando filtro de família não tem jogos visíveis -->
-<div id="familyEmptyMsg" style="display: none; background: rgba(0,0,0,0.2); padding: 40px; text-align: center; margin-top: 10px; border-radius: 4px;">
-    <p style="color: #8f98a0; margin-bottom: 12px;">{{ "Nenhum jogo da Família Steam disponível para você no momento."|t }}</p>
-    <a href="{{ url_for('family') }}" class="btn-blue">{{ "Ver Família"|t }}</a>
+        <div class="lib-section-head">
+            <span class="arrow">▼</span> {{ "Todos"|t }} <span id="visivelCounter">({{ games|length }})</span>
+        </div>
+        <div class="lib-list" id="libList">
+            {% for gid in ids_ordenados %}
+            {% set g = games[gid] %}
+            {% set is_fam = gid in ids_familia_pool %}
+            <a href="{{ url_for('library', selected=gid) }}"
+               class="lib-item {% if selecionado and selecionado.id == gid %}selected{% endif %}"
+               data-name="{{ g.name|lower }}"
+               data-publisher="{{ g.publisher }}"
+               data-age="{{ g.age_rating }}"
+               data-familia="{{ '1' if is_fam else '0' }}"
+               data-execucao="{{ '1' if session['active_game'] == gid else '0' }}">
+                <img src="{{ url_for('static', filename='images/jogo' ~ g.id ~ '.jpg') }}" alt="">
+                <span class="lib-item-name">{{ g.name }}</span>
+                {% if session['active_game'] == gid %}
+                <span class="lib-item-playing" title="{{ 'Em execução'|t }}"></span>
+                {% elif is_fam %}
+                <span class="lib-item-meta">{{ "FAM"|t }}</span>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </aside>
+
+    <!-- ====================== DIREITA ====================== -->
+    <section class="lib-main">
+        {% if selecionado %}
+            {% set s = selecionado %}
+            <!-- HERO -->
+            <div class="lib-hero-wrap">
+                <img src="{{ url_for('static', filename='images/jogo' ~ s.id ~ '.jpg') }}" alt="{{ s.game.name }}" class="lib-hero-img">
+                <div class="lib-hero-fade"></div>
+                <div class="lib-hero-pub">{{ s.game.publisher }}{% if s.is_familia %} · 🏠 {{ "Via Família Steam"|t }}{% endif %}</div>
+                <h1 class="lib-hero-title">{{ s.game.name }}</h1>
+            </div>
+
+            <!-- AÇÕES + STATUS -->
+            <div class="lib-actions-bar">
+                {% if s.jogando_agora %}
+                    <a href="{{ url_for('stop_game') }}" class="lib-play-btn encerrar">
+                        <span class="play-arrow">■</span>
+                        {{ "Encerrar"|t }}
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('play_game', game_id=s.id) }}?src=library" class="lib-play-btn">
+                        <span class="play-arrow">▶</span>
+                        {{ "Jogar"|t }}
+                    </a>
+                {% endif %}
+
+                <div class="lib-status-strip">
+                    <div class="lib-status">
+                        <div class="lib-status-icon">☁</div>
+                        <div>
+                            <div class="lib-status-label">{{ "Estado da nuvem"|t }}</div>
+                            <div class="lib-status-val">{{ "Sincronizado"|t }}</div>
+                        </div>
+                    </div>
+                    <div class="lib-status">
+                        <div class="lib-status-icon">🕐</div>
+                        <div>
+                            <div class="lib-status-label">{{ "Tempo de jogo"|t }}</div>
+                            <div class="lib-status-val">{{ "%.1f"|format(s.horas) }} {{ "horas"|t }}</div>
+                        </div>
+                    </div>
+                    <div class="lib-status">
+                        <div class="lib-status-icon">🏆</div>
+                        <div>
+                            <div class="lib-status-label">{{ "Conquistas"|t }}</div>
+                            <div class="lib-status-val">{{ s.conq_desb }} / {{ s.conq_total }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABS -->
+            <div class="lib-tabs">
+                <div class="lib-tab active">{{ "Visão geral"|t }}</div>
+                <a href="{{ url_for('game', game_id=s.id) }}" class="lib-tab">{{ "Página na loja"|t }}</a>
+                <a href="{{ url_for('conquistas_jogo', game_id=s.id) }}" class="lib-tab">{{ "Conquistas"|t }}</a>
+            </div>
+
+            <!-- CONTEÚDO PRINCIPAL + SIDEBAR -->
+            <div class="lib-content">
+                <div>
+                    <!-- DESTAQUE -->
+                    <div class="lib-block">
+                        <div class="lib-block-head">{{ "Destaque"|t }}</div>
+                        <div class="lib-block-body">
+                            <div class="lib-news">
+                                <img src="{{ url_for('static', filename='images/jogo' ~ s.id ~ '.jpg') }}" alt="">
+                                <div>
+                                    <div class="lib-news-meta">{{ "Notícias"|t }} · {{ s.game.release_date }}</div>
+                                    <div class="lib-news-title">{{ s.game.name }}</div>
+                                    <p class="lib-news-body">{{ s.game.description|t }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ATIVIDADE -->
+                    <div class="lib-block" style="margin-top: 14px;">
+                        <div class="lib-block-head">{{ "Atividade"|t }}</div>
+                        <div class="lib-block-body">
+                            {% if s.conq_desb > 0 %}
+                            <div class="lib-activity-item">
+                                <div class="lib-activity-icon">🏆</div>
+                                <div style="flex:1;">
+                                    {{ "Você desbloqueou"|t }} <strong>{{ s.conq_desb }}</strong> {{ "de"|t }} {{ s.conq_total }} {{ "conquistas"|t }}
+                                    <div class="lib-activity-when">{{ s.conq_pct }}% {{ "completo"|t }} · {{ s.conq_pts_ganhos }}/{{ s.conq_pts_totais }} {{ "pts"|t }}</div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if s.horas > 0 %}
+                            <div class="lib-activity-item">
+                                <div class="lib-activity-icon">🕐</div>
+                                <div style="flex:1;">
+                                    {{ "Tempo de jogo acumulado"|t }}: <strong>{{ "%.1f"|format(s.horas) }} {{ "horas"|t }}</strong>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if not s.conq_desb and not s.horas %}
+                            <div style="color:#6f7780; font-size:12px; padding:6px 0;">
+                                {{ "Nenhuma atividade recente. Clique em Jogar para começar."|t }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SIDEBAR DA DIREITA -->
+                <div style="display:flex; flex-direction:column; gap:14px;">
+                    <!-- AMIGOS QUE JOGAM -->
+                    <div class="lib-block">
+                        <div class="lib-block-head">{{ "Amigos que jogam"|t }}</div>
+                        <div class="lib-block-body">
+                            {% if s.amigos_jogando %}
+                            <div style="font-size:11px; color:#8f98a0; margin-bottom:6px;">
+                                {{ s.amigos_jogando|length }} {{ "amigo(s) em jogo"|t }}
+                            </div>
+                            {% endif %}
+                            {% if s.amigos_donos %}
+                            <div class="friend-list-mini">
+                                {% for a in s.amigos_donos %}
+                                <a href="{{ url_for('perfil', user_id=a.id) }}">
+                                    <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="">
+                                    <span>{{ a.nome }}</span>
+                                    {% if a.jogando_agora %}<span class="dot"></span>{% endif %}
+                                </a>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="empty" style="color:#6f7780; font-size:12px;">{{ "Nenhum amigo possui este jogo."|t }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- CONQUISTAS COMPACTO -->
+                    <div class="lib-block">
+                        <div class="lib-block-head">{{ "Conquistas"|t }}</div>
+                        <div class="lib-block-body">
+                            <div style="font-size:13px; color:#fff;">
+                                <strong>{{ s.conq_desb }}/{{ s.conq_total }}</strong>
+                                <span style="color:#8f98a0; font-size:12px;">{{ "alcançadas"|t }} ({{ s.conq_pct }}%)</span>
+                            </div>
+                            <div class="conq-bar"><div style="width: {{ s.conq_pct }}%;"></div></div>
+                            <a href="{{ url_for('conquistas_jogo', game_id=s.id) }}"
+                               style="font-size:11px; color:#66c0f4; text-decoration:none;">
+                                {{ "Ver todas as conquistas"|t }} ›
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="lib-empty">
+                <p>{{ "Selecione um jogo na lista ao lado."|t }}</p>
+            </div>
+        {% endif %}
+    </section>
 </div>
+{% else %}
+<div class="lib-empty" style="margin-top:30px;">
+    <p style="margin-bottom: 14px;">{{ "Nenhum jogo disponível na sua biblioteca."|t }}</p>
+    <a href="{{ url_for('index') }}" class="btn-blue">{{ "Ir para a Loja"|t }}</a>
+</div>
+{% endif %}
 
 <script>
-(function () {
-    var toggle      = document.getElementById('familyToggle');
-    var track       = document.getElementById('sliderTrack');
-    var thumb       = document.getElementById('sliderThumb');
-    var labelTodos  = document.getElementById('labelTodos');
-    var labelFam    = document.getElementById('labelFamilia');
-    var countEl     = document.getElementById('gameCount');
-    var familyEmpty = document.getElementById('familyEmptyMsg');
+    // ============ FILTRO ============
+    var search       = document.getElementById('libSearch');
+    var list         = document.getElementById('libList');
+    var counter      = document.getElementById('visivelCounter');
+    var filterBtn    = document.getElementById('filterToggle');
+    var filterPanel  = document.getElementById('filterPanel');
+    var filterCount  = document.getElementById('filterCount');
+    var filterClear  = document.getElementById('filterClear');
 
-    if (!toggle) return; // sem família, nada a fazer
+    function recolherFiltros() {
+        var pubs   = Array.from(document.querySelectorAll('.f-pub:checked')).map(function(c){ return c.value; });
+        var ages   = Array.from(document.querySelectorAll('.f-age:checked')).map(function(c){ return c.value; });
+        var flags  = Array.from(document.querySelectorAll('.f-flag:checked')).map(function(c){ return c.dataset.flag; });
+        return { pubs: pubs, ages: ages, flags: flags };
+    }
 
-    function updateCount() {
-        var visible = document.querySelectorAll('#gameGrid .game-card:not([style*="display: none"])').length;
-        countEl.textContent = visible;
-        if (familyEmpty) {
-            familyEmpty.style.display = (visible === 0 && toggle.checked) ? 'block' : 'none';
+    function refiltrar() {
+        if (!list) return;
+        var query = (search && search.value || '').toLowerCase().trim();
+        var f = recolherFiltros();
+        var totalAtivo = f.pubs.length + f.ages.length + f.flags.length;
+        var itens = list.querySelectorAll('.lib-item');
+        var visiveis = 0;
+        itens.forEach(function (el) {
+            var nome    = el.dataset.name || '';
+            var pub     = el.dataset.publisher || '';
+            var age     = el.dataset.age || '0';
+            var ehFam   = el.dataset.familia === '1';
+            var ehExec  = el.dataset.execucao === '1';
+
+            var matchNome  = !query || nome.indexOf(query) !== -1;
+            var matchPub   = f.pubs.length === 0 || f.pubs.indexOf(pub) !== -1;
+            var matchAge   = f.ages.length === 0 || f.ages.indexOf(age) !== -1;
+            var matchFlag  = true;
+            if (f.flags.indexOf('familia')  !== -1 && !ehFam)  matchFlag = false;
+            if (f.flags.indexOf('execucao') !== -1 && !ehExec) matchFlag = false;
+
+            var show = matchNome && matchPub && matchAge && matchFlag;
+            el.style.display = show ? '' : 'none';
+            if (show) visiveis++;
+        });
+        if (counter) counter.textContent = '(' + visiveis + ')';
+        if (filterCount) {
+            if (totalAtivo > 0) {
+                filterCount.textContent = totalAtivo;
+                filterCount.style.display = '';
+                filterBtn.classList.add('has-filters');
+            } else {
+                filterCount.style.display = 'none';
+                filterBtn.classList.remove('has-filters');
+            }
         }
     }
 
-    toggle.addEventListener('change', function () {
-        var cards = document.querySelectorAll('#gameGrid .game-card');
-
-        if (this.checked) {
-            track.style.background = '#4b9cd3';
-            thumb.style.transform  = 'translateX(22px)';
-            thumb.style.background = '#fff';
-            if (labelTodos) labelTodos.style.color = '#8f98a0';
-            if (labelFam)   labelFam.style.color   = '#c6d4df';
-
-            cards.forEach(function (card) {
-                card.style.display = card.dataset.familia === 'true' ? '' : 'none';
-            });
-        } else {
-            track.style.background = '#3d5a70';
-            thumb.style.transform  = 'translateX(0)';
-            thumb.style.background = '#c6d4df';
-            if (labelTodos) labelTodos.style.color = '#c6d4df';
-            if (labelFam)   labelFam.style.color   = '#8f98a0';
-
-            cards.forEach(function (card) {
-                card.style.display = '';
-            });
-        }
-        updateCount();
+    if (search) search.addEventListener('input', refiltrar);
+    document.querySelectorAll('.f-pub, .f-age, .f-flag').forEach(function(chk){
+        chk.addEventListener('change', refiltrar);
     });
-    // SHIFT + TAB fora do jogo: Se houver jogo ativo, retorna imediatamente para ele!
+    if (filterBtn) {
+        filterBtn.addEventListener('click', function(e){
+            e.stopPropagation();
+            filterPanel.classList.toggle('open');
+        });
+    }
+    if (filterPanel) {
+        filterPanel.addEventListener('click', function(e){ e.stopPropagation(); });
+    }
+    document.addEventListener('click', function(){
+        if (filterPanel) filterPanel.classList.remove('open');
+    });
+    if (filterClear) {
+        filterClear.addEventListener('click', function(){
+            document.querySelectorAll('.f-pub, .f-age, .f-flag').forEach(function(c){ c.checked = false; });
+            if (search) search.value = '';
+            refiltrar();
+        });
+    }
+
+    // SHIFT+TAB volta ao jogo ativo
     document.addEventListener('keydown', function(event) {
         if (event.shiftKey && event.key === 'Tab') {
             event.preventDefault();
@@ -162,7 +687,5 @@
             {% endif %}
         }
     });
-})();
-
 </script>
 {% endblock %}

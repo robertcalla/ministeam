@@ -70,6 +70,49 @@
             0% { transform: scale(0.9); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
+
+        /* Toast de conquista (mesmo padrão visual do base.html) */
+        #conquista-toast-stack {
+            position: fixed; bottom: 22px; right: 22px;
+            display: flex; flex-direction: column-reverse; gap: 10px;
+            z-index: 99999; pointer-events: none;
+        }
+        .conquista-toast {
+            pointer-events: auto;
+            width: 340px;
+            background: linear-gradient(135deg, #1f3a52 0%, #0d1a26 100%);
+            border: 1px solid #66c0f4;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.55), 0 0 0 1px rgba(102,192,244,0.18) inset;
+            padding: 12px 14px;
+            display: flex; gap: 12px; align-items: center;
+            transform: translateX(120%); opacity: 0;
+            transition: transform 0.45s cubic-bezier(.2,.7,.2,1), opacity 0.45s ease;
+        }
+        .conquista-toast.show { transform: translateX(0); opacity: 1; }
+        .conquista-toast.hide { transform: translateX(120%); opacity: 0; }
+        .conquista-toast .icone {
+            width: 54px; height: 54px; background: rgba(0,0,0,0.4);
+            border: 1px solid #2a475e;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px; flex-shrink: 0;
+        }
+        .conquista-toast .corpo { min-width: 0; flex: 1; }
+        .conquista-toast .label {
+            font-size: 10px; color: #66c0f4;
+            text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold;
+        }
+        .conquista-toast .nome {
+            color: #fff; font-size: 14px; font-weight: bold; margin-top: 2px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .conquista-toast .descricao {
+            color: #c7d5e0; font-size: 11px; margin-top: 3px; line-height: 1.35;
+            max-height: 30px; overflow: hidden;
+        }
+        .conquista-toast .pontos {
+            margin-left: 8px; font-size: 10px; background: #2a475e;
+            color: #fff; padding: 1px 7px; border-radius: 2px; flex-shrink: 0;
+        }
     </style>
 </head>
 <body>
@@ -82,11 +125,19 @@
             <div class="overlay">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                   {% if messages %}
+                    {% set toasts_conquista = [] %}
                     {% for category, message in messages %}
+                        {% if category == 'conquista' %}
+                            {% set _ = toasts_conquista.append(message) %}
+                        {% else %}
                         <div style="background: rgba(92, 126, 16, 0.8); padding: 10px 20px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #79a016;">
                             {{ message|t }}
                         </div>
+                        {% endif %}
                     {% endfor %}
+                    {% if toasts_conquista %}
+                    <div id="conquista-toasts" data-toasts='{{ toasts_conquista|tojson }}' style="display:none;"></div>
+                    {% endif %}
                   {% endif %}
                 {% endwith %}
 
@@ -107,6 +158,43 @@
                 window.location.href = "{{ url_for(src) }}";
             }
         });
+
+        // Toast de conquista (igual ao base.html, mas standalone)
+        (function () {
+            var holder = document.getElementById('conquista-toasts');
+            if (!holder) return;
+            var raw = holder.getAttribute('data-toasts') || '[]';
+            var lista;
+            try { lista = JSON.parse(raw); } catch (e) { return; }
+            var stack = document.createElement('div');
+            stack.id = 'conquista-toast-stack';
+            document.body.appendChild(stack);
+            var labelDesbloqueada = {{ "Conquista desbloqueada"|t|tojson }};
+            lista.forEach(function (item, idx) {
+                var dados;
+                try { dados = JSON.parse(item); } catch (e) { return; }
+                var toast = document.createElement('div');
+                toast.className = 'conquista-toast';
+                toast.innerHTML =
+                    '<div class="icone">' + (dados.icone || '⭐') + '</div>' +
+                    '<div class="corpo">' +
+                        '<div style="display:flex; align-items:center;">' +
+                            '<div class="label">' + labelDesbloqueada + '</div>' +
+                            '<div class="pontos">+' + (dados.pontos || 0) + '</div>' +
+                        '</div>' +
+                        '<div class="nome">' + (dados.nome || '') + '</div>' +
+                        '<div class="descricao">' + (dados.descricao || '') + '</div>' +
+                    '</div>';
+                stack.appendChild(toast);
+                setTimeout(function () { toast.classList.add('show'); }, 200 + idx * 250);
+                setTimeout(function () {
+                    toast.classList.remove('show');
+                    toast.classList.add('hide');
+                    setTimeout(function () { toast.remove(); }, 500);
+                }, 6000 + idx * 250);
+            });
+            holder.remove();
+        })();
     </script>
 </body>
 </html>

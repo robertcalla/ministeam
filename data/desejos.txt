@@ -3,3 +3,4 @@
 # Formato: user_id | game_id1,game_id2,...
 # Exemplo: 1 | 2,3  (usuário 1 deseja os jogos 2 e 3)
 # =============================================================================
+1 | 

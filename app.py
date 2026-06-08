@@ -2299,11 +2299,58 @@ def library():
 
     tem_familia = bool(session.get('family'))
 
+    # Detalhes do jogo selecionado (Steam-style: lista à esquerda, painel à direita).
+    # Aceita ?selected=<id>; cai no primeiro jogo se inválido ou ausente.
+    ids_ordenados = sorted(jogos_disponiveis.keys(),
+                           key=lambda x: jogos_disponiveis[x]['name'].lower())
+    selected_id = request.args.get('selected', '').strip()
+    if selected_id not in jogos_disponiveis:
+        selected_id = ids_ordenados[0] if ids_ordenados else None
+
+    selecionado = None
+    if selected_id:
+        game = jogos_disponiveis[selected_id]
+        # Amigos que possuem este jogo (própria biblioteca deles ou via família deles)
+        amigos_donos = []
+        amigos_jogando_agora = []
+        sessoes = ler_sessoes_jogo()
+        sessoes_por_user = {s['user_id']: s for s in sessoes}
+        for amigo in get_amigos_usuario(uid):
+            aid = amigo['id']
+            bib_amigo = ler_biblioteca_usuario(aid)
+            possui = selected_id in bib_amigo
+            sess_amigo = sessoes_por_user.get(aid)
+            jogando_agora = bool(sess_amigo and sess_amigo['game_id'] == selected_id)
+            if possui or jogando_agora:
+                amigos_donos.append({**amigo, 'jogando_agora': jogando_agora})
+                if jogando_agora:
+                    amigos_jogando_agora.append(amigo)
+
+        n_desb, total_conq, pct_conq, pts_ganhos, pts_totais = progresso_conquistas(uid, selected_id)
+        horas = horas_jogadas(uid, selected_id) if selected_id in minha_biblioteca else 0.0
+
+        selecionado = {
+            'id':              selected_id,
+            'game':            game,
+            'is_familia':      selected_id in ids_familia_pool,
+            'horas':           horas,
+            'amigos_donos':    amigos_donos,
+            'amigos_jogando':  amigos_jogando_agora,
+            'conq_desb':       n_desb,
+            'conq_total':      total_conq,
+            'conq_pct':        pct_conq,
+            'conq_pts_ganhos': pts_ganhos,
+            'conq_pts_totais': pts_totais,
+            'jogando_agora':   session.get('active_game') == selected_id,
+        }
+
     return render_template('library.html',
                            games=jogos_disponiveis,
+                           ids_ordenados=ids_ordenados,
                            ids_familia_pool=ids_familia_pool,
                            ids_minha_biblioteca=ids_minha_biblioteca,
-                           tem_familia=tem_familia)
+                           tem_familia=tem_familia,
+                           selecionado=selecionado)
 
 
 # ==============================================================================
@@ -2732,6 +2779,24 @@ def play_game(game_id):
     session['active_game'] = game_id
     session['show_pe01_for'] = None
     session.modified = True
+
+    # Conquista "primeira vez" do jogo. Desbloqueia a primeira conquista
+    # cadastrada (sempre algo do tipo "Primeiros Passos") se o usuário ainda
+    # não tiver. desbloquear_conquista é idempotente, então rodar várias
+    # vezes não duplica nem regrava — só na primeira de fato.
+    conqs = conquistas_do_jogo(game_id)
+    if conqs:
+        ok_unlock, _msg, conquista = desbloquear_conquista(
+            session['user_id'], game_id, conqs[0]['id']
+        )
+        if ok_unlock and conquista:
+            flash(json.dumps({
+                'nome':      conquista['nome'],
+                'descricao': conquista['descricao'],
+                'icone':     conquista['icone'],
+                'pontos':    conquista['pontos'],
+            }), 'conquista')
+
     return render_template('playing.html', game=game_data, src=session.get('game_source', 'library'))
 
 

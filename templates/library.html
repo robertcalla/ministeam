@@ -3,163 +3,174 @@
 {% block title %}{{ "Biblioteca"|t }} - Ministeam{% endblock %}
 
 {% block content %}
+{# Override do .container do base.html para a library ocupar toda a tela. #}
 <style>
-    /* ============== LAYOUT GERAL (Steam-like) ============== */
+    main.container {
+        max-width: none !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    body { background: #1B2838; }
+    .flash-messages { padding: 12px 18px; }
+
+    /* ============= SHELL: SIDEBAR + MAIN ============= */
     .lib-shell {
         display: grid;
         grid-template-columns: 296px 1fr;
-        gap: 0;
-        background: #15161A;
-        min-height: 720px;
-        margin: 0 -16px;
+        min-height: calc(100vh - 60px);
+        background: #1B2838;
+        font-family: "Motiva Sans", Arial, sans-serif;
     }
     @media (max-width: 920px) { .lib-shell { grid-template-columns: 1fr; } }
 
-    /* ---------- COLUNA ESQUERDA ---------- */
+    /* ============= SIDEBAR ============= */
     .lib-side {
-        background: #1D1F23;
-        border-right: 1px solid #0d0e10;
-        padding: 0;
-        font-family: "Motiva Sans", Arial, sans-serif;
-        color: #b8bcc1;
+        background: #181A20;
+        border-right: 1px solid #0F1014;
+        color: #B8BCC1;
+        position: sticky; top: 0;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+        display: flex; flex-direction: column;
     }
-    .lib-nav {
-        display: flex; align-items: center; gap: 6px;
-        padding: 10px 10px;
-        border-bottom: 1px solid #0d0e10;
+    .lib-nav-top {
+        display: flex; align-items: center; gap: 4px;
+        padding: 8px;
+        border-bottom: 1px solid #0F1014;
     }
-    .lib-nav-btn {
+    .lib-nav-home {
         flex: 1;
-        background: rgba(255,255,255,0.06);
-        color: #ccd6e0;
-        font-size: 13px;
-        padding: 6px 10px;
-        cursor: default;
+        background: rgba(255,255,255,0.05);
+        color: #C7D5E0;
+        font-size: 12px;
+        padding: 7px 10px;
+        display: flex; align-items: center; gap: 8px;
     }
+    .lib-nav-home::before { content: "⌂"; font-size: 14px; opacity: 0.7; }
     .lib-nav-icon {
-        width: 30px; height: 30px;
+        width: 32px; height: 32px;
         background: rgba(255,255,255,0.05);
         display: flex; align-items: center; justify-content: center;
-        color: #8f98a0; font-size: 14px;
-        cursor: default;
+        font-size: 13px; color: #8F98A0;
     }
-    .lib-dropdown {
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 10px 14px;
-        background: rgba(0,0,0,0.25);
-        border-bottom: 1px solid #0d0e10;
-        font-size: 12px;
-        color: #b8bcc1;
-        cursor: default;
-    }
-    .lib-dropdown .arrow { color: #8f98a0; }
 
+    .lib-cat-dropdown {
+        padding: 8px 12px;
+        background: rgba(0,0,0,0.2);
+        border-bottom: 1px solid #0F1014;
+        display: flex; align-items: center; justify-content: space-between;
+        font-size: 12px;
+    }
+    .lib-cat-dropdown .lab { color: #B8BCC1; }
+    .lib-cat-dropdown .controls { display: flex; gap: 4px; color: #67707A; font-size: 13px; }
+
+    /* search + filter */
     .lib-search-row {
-        display: flex; gap: 6px;
-        padding: 8px 10px;
-        background: rgba(0,0,0,0.12);
-        border-bottom: 1px solid #0d0e10;
         position: relative;
+        display: flex; gap: 6px; align-items: center;
+        padding: 6px 8px;
+        background: rgba(0,0,0,0.15);
+        border-bottom: 1px solid #0F1014;
     }
     .lib-search {
         flex: 1;
-        background: #15161A;
-        border: 1px solid #0d0e10;
-        color: #c7d5e0;
-        padding: 5px 28px 5px 26px;
+        background: #0E141B;
+        border: 1px solid #0F1014;
+        color: #C7D5E0;
+        padding: 5px 8px 5px 26px;
         font-size: 12px;
         outline: none;
     }
     .lib-search-row::before {
         content: "🔍";
         position: absolute;
-        left: 18px; top: 50%; transform: translateY(-50%);
-        font-size: 10px; opacity: 0.6;
+        left: 16px; top: 50%; transform: translateY(-50%);
+        font-size: 10px; opacity: 0.55; pointer-events: none;
     }
     .lib-filter-btn {
         position: relative;
-        background: #15161A;
-        border: 1px solid #0d0e10;
-        color: #b8bcc1;
-        padding: 5px 10px;
+        background: #0E141B;
+        border: 1px solid #0F1014;
+        color: #B8BCC1;
+        padding: 5px 9px;
         font-size: 11px;
         cursor: pointer;
-        display: flex; align-items: center; gap: 4px;
+        display: flex; align-items: center; gap: 5px;
     }
-    .lib-filter-btn:hover { background: #1f2126; color: #fff; }
-    .lib-filter-btn.has-filters { color: #66c0f4; border-color: #316398; }
+    .lib-filter-btn:hover { background: #1A222D; color: #FFF; }
+    .lib-filter-btn.has-filters { color: #66C0F4; border-color: #316398; }
     .lib-filter-count {
-        background: #66c0f4; color: #0e1e2f;
-        font-weight: bold;
-        padding: 0 5px; border-radius: 8px; font-size: 10px;
+        background: #66C0F4; color: #0E1E2F;
+        font-weight: bold; padding: 0 5px; border-radius: 8px; font-size: 10px;
     }
 
     .lib-filter-panel {
         position: absolute;
-        right: 10px; top: 100%; margin-top: 4px;
-        width: 240px;
-        background: #1A1C20;
-        border: 1px solid #0d0e10;
-        box-shadow: 0 8px 22px rgba(0,0,0,0.6);
+        right: 8px; top: 100%; margin-top: 4px;
+        width: 248px;
+        background: #181A20;
+        border: 1px solid #0F1014;
+        box-shadow: 0 8px 22px rgba(0,0,0,0.7);
         z-index: 50;
         padding: 12px;
         display: none;
     }
     .lib-filter-panel.open { display: block; }
     .lib-filter-panel h4 {
-        font-size: 10px; color: #66c0f4;
+        font-size: 10px; color: #66C0F4;
         text-transform: uppercase; letter-spacing: 1.2px;
-        margin: 10px 0 6px;
+        margin: 10px 0 5px;
     }
     .lib-filter-panel h4:first-child { margin-top: 0; }
     .lib-filter-panel label {
-        display: flex; align-items: center; gap: 6px;
-        font-size: 12px; color: #b8bcc1;
-        padding: 3px 0;
-        cursor: pointer;
+        display: flex; align-items: center; gap: 7px;
+        font-size: 12px; color: #B8BCC1;
+        padding: 3px 0; cursor: pointer;
     }
-    .lib-filter-panel label:hover { color: #fff; }
-    .lib-filter-panel input[type="checkbox"] { accent-color: #66c0f4; }
+    .lib-filter-panel label:hover { color: #FFF; }
+    .lib-filter-panel input[type="checkbox"] { accent-color: #66C0F4; }
     .lib-filter-clear {
-        margin-top: 12px;
-        width: 100%;
+        margin-top: 12px; width: 100%;
         background: transparent;
         border: 1px solid #316398;
-        color: #66c0f4;
+        color: #66C0F4;
         font-size: 11px;
         padding: 5px;
         cursor: pointer;
     }
     .lib-filter-clear:hover { background: rgba(102,192,244,0.08); }
 
-    .lib-section-head {
-        padding: 10px 14px 6px;
-        font-size: 11px; color: #6f7780;
+    /* TODOS header (expansível) */
+    .lib-all-head {
+        padding: 8px 12px 4px;
+        font-size: 11px; color: #67707A;
         text-transform: uppercase; letter-spacing: 1px;
-        display: flex; align-items: center; gap: 6px;
+        display: flex; align-items: center; gap: 4px;
+        cursor: default;
     }
-    .lib-list { padding: 0 4px 16px; }
+    .lib-all-head .caret { color: #67707A; font-size: 10px; }
+
+    .lib-list { flex: 1; padding: 0 4px 14px; }
     .lib-item {
         display: flex; align-items: center; gap: 8px;
-        padding: 5px 10px;
+        padding: 3px 10px;
         text-decoration: none;
-        color: #b8bcc1;
+        color: #B8BCC1;
         font-size: 13px;
         margin: 1px 0;
         position: relative;
+        min-height: 28px;
     }
-    .lib-item:hover { background: rgba(255,255,255,0.04); color: #fff; }
+    .lib-item:hover { background: rgba(255,255,255,0.04); color: #FFF; }
     .lib-item.selected {
-        background: linear-gradient(90deg, #316398 0%, #2a4f7a 100%);
-        color: #fff;
-    }
-    .lib-item.selected::before {
-        content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
-        background: #66c0f4;
+        background: linear-gradient(90deg, #4480AC 0%, #2E4D6B 100%);
+        color: #FFF;
     }
     .lib-item img {
-        width: 22px; height: 22px; object-fit: cover;
-        background: #0d0e10;
+        width: 20px; height: 20px;
+        object-fit: cover;
+        background: #0F1014;
         flex-shrink: 0;
     }
     .lib-item-name {
@@ -167,218 +178,323 @@
         flex: 1;
     }
     .lib-item-meta {
-        font-size: 10px; color: #8f98a0;
+        font-size: 10px; color: #67707A;
         text-transform: uppercase; letter-spacing: 0.5px;
         flex-shrink: 0;
     }
-    .lib-item.selected .lib-item-meta { color: #c7d5e0; }
+    .lib-item.selected .lib-item-meta { color: #C7D5E0; }
     .lib-item-playing {
-        width: 6px; height: 6px;
-        background: #79a016;
-        border-radius: 50%;
+        width: 7px; height: 7px;
+        background: #79A016; border-radius: 50%;
         animation: pulse 1.5s infinite;
         flex-shrink: 0;
     }
-    @keyframes pulse { 50% { opacity: 0.4; } }
+    @keyframes pulse { 50% { opacity: 0.35; } }
 
-    .lib-counter {
-        font-size: 11px; color: #6f7780;
-        padding: 0 14px 8px;
+    .lib-add-game {
+        padding: 10px 12px;
+        font-size: 12px;
+        color: #67707A;
+        border-top: 1px solid #0F1014;
+        background: rgba(0,0,0,0.15);
     }
 
-    /* ---------- COLUNA DIREITA ---------- */
-    .lib-main { padding: 0; }
-    .lib-hero-wrap {
+    /* ============= MAIN ============= */
+    .lib-main {
+        background: #1B2838;
+        min-width: 0;
+    }
+    .lib-hero {
         position: relative;
-        height: 260px;
-        background: #0d0e10;
+        height: 320px;
+        background: #0F1014;
         overflow: hidden;
     }
     .lib-hero-img {
         width: 100%; height: 100%;
         object-fit: cover;
         opacity: 0.85;
-        transform: scale(1.05);
-        filter: saturate(1.05);
+        transform: scale(1.02);
     }
     .lib-hero-fade {
         position: absolute; inset: 0;
-        background: linear-gradient(180deg, rgba(15, 21, 30, 0) 30%, #15161A 100%);
+        background: linear-gradient(180deg, rgba(27, 40, 56, 0) 35%, #1B2838 100%);
     }
-    .lib-hero-title {
-        position: absolute; left: 22px; bottom: 14px;
-        font-size: 36px; font-weight: 300;
-        color: #fff;
-        text-shadow: 0 2px 6px rgba(0,0,0,0.7);
-        margin: 0;
+    .lib-hero-info {
+        position: absolute; bottom: 14px; left: 28px; right: 28px;
+        z-index: 2;
     }
-    .lib-hero-pub {
-        position: absolute; left: 24px; bottom: 6px;
+    .lib-hero-info .pub {
+        color: #C7D5E0; opacity: 0.85;
         font-size: 11px;
-        color: #c7d5e0; opacity: 0.85;
         text-transform: uppercase; letter-spacing: 1px;
+        margin-bottom: 4px;
+    }
+    .lib-hero-info h1 {
+        margin: 0;
+        font-size: 44px; font-weight: 200;
+        color: #FFF;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.75);
+        letter-spacing: -0.5px;
     }
 
-    .lib-actions-bar {
-        display: flex; align-items: center; gap: 14px;
-        padding: 16px 24px;
-        background: #15161A;
-        flex-wrap: wrap;
+    /* Linha de ações com JOGAR + status icons */
+    .lib-actions {
+        display: flex; align-items: center; gap: 0;
+        background: linear-gradient(180deg, #1B2838 0%, #0E141B 100%);
+        padding: 18px 28px;
+        border-bottom: 1px solid #0F1014;
     }
-    .lib-play-btn {
-        background: linear-gradient(135deg, #5c7e10 0%, #79a016 100%);
-        color: #fff;
+    .lib-play {
+        background: linear-gradient(135deg, #5BA32B 0%, #4C8C1E 100%);
+        color: #FFF;
         text-decoration: none;
-        padding: 12px 36px 12px 28px;
+        padding: 12px 34px 12px 22px;
         font-size: 18px;
         font-weight: bold;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 0.8px;
+        display: flex; align-items: center; gap: 12px;
         position: relative;
-        cursor: pointer;
-        display: inline-flex; align-items: center; gap: 12px;
+        border-right: 1px solid rgba(0,0,0,0.3);
     }
-    .lib-play-btn:hover { filter: brightness(1.15); }
-    .lib-play-btn .play-arrow { font-size: 22px; }
-    .lib-play-btn.encerrar {
+    .lib-play:hover { filter: brightness(1.12); }
+    .lib-play .triangle { font-size: 20px; }
+    .lib-play.encerrar {
+        background: linear-gradient(135deg, #b52a1c 0%, #d23527 100%);
+    }
+    .lib-play-arrow {
+        background: linear-gradient(135deg, #5BA32B 0%, #4C8C1E 100%);
+        padding: 12px 14px;
+        color: #FFF;
+        font-size: 12px;
+        cursor: default;
+        margin-right: 24px;
+    }
+    .lib-play.encerrar + .lib-play-arrow {
         background: linear-gradient(135deg, #b52a1c 0%, #d23527 100%);
     }
 
     .lib-status-strip {
-        display: flex; gap: 26px; flex-wrap: wrap;
-        flex: 1; min-width: 320px;
+        display: flex; align-items: center;
+        gap: 0;
+        flex: 1;
     }
     .lib-status {
-        display: flex; align-items: center; gap: 10px;
-        color: #c7d5e0;
+        display: flex; align-items: center; gap: 12px;
+        padding: 0 22px;
+        position: relative;
+    }
+    .lib-status + .lib-status::before {
+        content: "";
+        position: absolute; left: 0; top: 8px; bottom: 8px;
+        width: 1px;
+        background: rgba(255,255,255,0.07);
     }
     .lib-status-icon {
         font-size: 22px;
-        color: #66c0f4;
-        opacity: 0.85;
+        color: #8F98A0;
+        opacity: 0.9;
+        line-height: 1;
     }
     .lib-status-label {
-        font-size: 10px; color: #66c0f4;
+        font-size: 10px; color: #67707A;
         text-transform: uppercase; letter-spacing: 1px;
+        font-weight: bold;
     }
     .lib-status-val {
-        font-size: 13px; color: #fff; font-weight: bold;
+        font-size: 14px; color: #FFF; font-weight: bold;
         margin-top: 1px;
     }
-    .lib-status-sub {
-        font-size: 11px; color: #8f98a0;
+    .lib-status-progress {
+        margin-top: 4px;
+        height: 4px; width: 90px;
+        background: rgba(255,255,255,0.08);
+    }
+    .lib-status-progress > div {
+        height: 100%;
+        background: linear-gradient(90deg, #5C7E10, #79A016);
     }
 
+    .lib-icons-right {
+        display: flex; gap: 10px;
+        margin-left: auto;
+        color: #67707A; font-size: 16px;
+    }
+    .lib-icons-right span { cursor: default; }
+
+    /* TABS */
     .lib-tabs {
-        display: flex; gap: 1px;
-        background: #0d0e10;
-        padding: 0 24px;
-        border-bottom: 1px solid #0d0e10;
+        display: flex; align-items: stretch;
+        background: #1B2838;
+        padding: 0 28px;
+        border-bottom: 1px solid #0F1014;
     }
     .lib-tab {
-        padding: 10px 14px;
-        color: #8f98a0;
+        padding: 12px 18px;
+        color: #8F98A0;
         font-size: 12px;
         text-decoration: none;
-        background: #1A1C20;
+        font-weight: bold;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        border-bottom: 2px solid transparent;
     }
-    .lib-tab.active { background: #15161A; color: #fff; box-shadow: inset 0 -2px 0 #66c0f4; }
-    .lib-tab:hover { color: #fff; }
+    .lib-tab.active {
+        color: #FFF;
+        border-bottom-color: #66C0F4;
+    }
+    .lib-tab:hover { color: #FFF; }
 
+    /* CONTEÚDO 2 COLUNAS */
     .lib-content {
         display: grid;
-        grid-template-columns: 1fr 280px;
-        gap: 22px;
-        padding: 22px 24px;
-        background: #15161A;
+        grid-template-columns: 1fr 320px;
+        gap: 24px;
+        padding: 24px 28px;
+        background: #1B2838;
     }
-    @media (max-width: 860px) { .lib-content { grid-template-columns: 1fr; } }
+    @media (max-width: 980px) { .lib-content { grid-template-columns: 1fr; } }
 
-    .lib-block {
-        background: #1A1C20;
-        border: 1px solid #0d0e10;
+    .lib-section-title {
+        font-size: 12px; color: #8F98A0;
+        text-transform: uppercase; letter-spacing: 1.5px;
+        font-weight: bold;
+        margin: 0 0 12px;
     }
-    .lib-block-head {
-        padding: 10px 14px;
-        font-size: 11px; color: #66c0f4;
-        text-transform: uppercase; letter-spacing: 1.2px;
-        border-bottom: 1px solid #0d0e10;
+
+    .lib-card {
+        background: rgba(0,0,0,0.18);
+        border: 1px solid rgba(0,0,0,0.5);
+        padding: 0;
+        margin-bottom: 18px;
     }
-    .lib-block-body { padding: 14px; }
+    .lib-card-pad { padding: 16px 18px; }
 
     .lib-news {
-        display: flex; gap: 14px; align-items: flex-start;
+        display: flex; gap: 16px; align-items: flex-start;
+        padding: 16px;
     }
     .lib-news img {
-        width: 110px; height: 62px; object-fit: cover; flex-shrink: 0;
+        width: 134px; height: 75px;
+        object-fit: cover;
+        background: #0F1014;
+        flex-shrink: 0;
     }
-    .lib-news-meta { font-size: 10px; color: #8f98a0; text-transform: uppercase; letter-spacing: 1px; }
-    .lib-news-title { font-size: 14px; color: #fff; margin-top: 4px; font-weight: bold; }
-    .lib-news-body { font-size: 12px; color: #c7d5e0; margin-top: 6px; line-height: 1.4; }
+    .lib-news .meta { font-size: 11px; color: #67707A; text-transform: uppercase; letter-spacing: 1px; }
+    .lib-news .ttl { font-size: 15px; color: #FFF; font-weight: bold; margin: 4px 0 6px; }
+    .lib-news .body { font-size: 12px; color: #B8BCC1; line-height: 1.45; }
 
-    .lib-activity-item {
-        display: flex; gap: 10px; align-items: center;
-        padding: 8px 0;
-        border-bottom: 1px solid #0d0e10;
-        font-size: 12px; color: #c7d5e0;
+    .lib-activity-input {
+        padding: 14px 16px;
+        background: rgba(0,0,0,0.18);
+        border: 1px solid rgba(0,0,0,0.5);
+        color: #67707A; font-size: 12px;
+        cursor: default;
+        margin-bottom: 14px;
     }
-    .lib-activity-item:last-child { border-bottom: none; }
-    .lib-activity-icon {
-        font-size: 22px; flex-shrink: 0;
-        width: 32px; text-align: center;
+    .lib-activity-date {
+        font-size: 12px; color: #8F98A0;
+        text-transform: uppercase; letter-spacing: 1px;
+        margin: 18px 0 8px;
     }
-    .lib-activity-when { color: #6f7780; font-size: 10px; }
+    .lib-activity {
+        display: flex; gap: 12px;
+        padding: 12px 14px;
+        background: rgba(0,0,0,0.18);
+        border: 1px solid rgba(0,0,0,0.5);
+        margin-bottom: 6px;
+    }
+    .lib-activity .av {
+        width: 38px; height: 38px;
+        background: #0F1014;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+    .lib-activity .text { font-size: 12px; color: #C7D5E0; line-height: 1.45; }
+    .lib-activity .text strong { color: #FFF; }
 
-    /* Sidebar do conteúdo (amigos + conquistas) */
-    .friend-list-mini { display: flex; flex-direction: column; gap: 4px; }
-    .friend-list-mini a {
-        display: flex; align-items: center; gap: 8px;
-        padding: 5px 6px;
-        color: #c7d5e0; text-decoration: none;
-        font-size: 12px;
+    /* sidebar direita */
+    .lib-aside-block { margin-bottom: 22px; }
+    .lib-aside-block .head {
+        font-size: 11px; color: #8F98A0;
+        text-transform: uppercase; letter-spacing: 1.5px;
+        font-weight: bold;
+        margin: 0 0 10px;
     }
-    .friend-list-mini a:hover { background: rgba(102,192,244,0.06); }
-    .friend-list-mini img { width: 26px; height: 26px; object-fit: cover; }
-    .friend-list-mini .dot {
-        width: 6px; height: 6px; background: #79a016; border-radius: 50%;
-        margin-left: auto; animation: pulse 1.5s infinite;
+    .friend-row {
+        display: flex; align-items: center; gap: 10px;
+        padding: 8px 10px;
+        background: rgba(0,0,0,0.18);
+        border: 1px solid rgba(0,0,0,0.5);
+        color: #C7D5E0;
+        text-decoration: none;
+        margin-bottom: 6px;
     }
-    .friend-list-mini .empty { color: #6f7780; font-size: 12px; }
+    .friend-row:hover { background: rgba(0,0,0,0.3); }
+    .friend-row img { width: 32px; height: 32px; object-fit: cover; }
+    .friend-row .nm { font-size: 13px; color: #FFF; line-height: 1.15; }
+    .friend-row .sub { font-size: 10px; color: #67707A; }
+    .friend-row .badge-on {
+        margin-left: auto;
+        background: rgba(121,160,22,0.15);
+        color: #79A016;
+        font-size: 10px;
+        padding: 2px 7px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .friend-empty { font-size: 12px; color: #67707A; padding: 4px 0; }
+    .friend-link-all { font-size: 11px; color: #66C0F4; margin-top: 8px; display: inline-block; text-decoration: none; }
 
+    .conq-summary {
+        font-size: 12px; color: #C7D5E0;
+        margin-bottom: 8px;
+    }
+    .conq-summary strong { color: #FFF; font-size: 13px; }
     .conq-bar {
-        height: 6px; background: #0d0e10;
-        margin: 6px 0 12px;
+        height: 6px; background: rgba(0,0,0,0.4);
     }
     .conq-bar > div {
         height: 100%;
-        background: linear-gradient(90deg, #5c7e10, #beee11);
+        background: linear-gradient(90deg, #5C7E10, #beee11);
     }
-    .conq-mini-list { display: flex; flex-direction: column; gap: 4px; }
+    .conq-recent {
+        display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap;
+    }
+    .conq-recent .ic {
+        width: 36px; height: 36px;
+        background: rgba(0,0,0,0.3);
+        border: 1px solid rgba(102,192,244,0.2);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 20px;
+    }
+    .conq-recent .ic.locked { opacity: 0.35; filter: grayscale(1); }
 
     .lib-empty {
-        background: #1A1C20; padding: 60px 30px; text-align: center; color: #8f98a0;
+        background: rgba(0,0,0,0.2); padding: 60px 30px;
+        text-align: center; color: #8F98A0;
     }
 </style>
 
 {% if games %}
 <div class="lib-shell">
-    <!-- ====================== ESQUERDA ====================== -->
+    <!-- =================== SIDEBAR =================== -->
     <aside class="lib-side">
-        <div class="lib-nav">
-            <div class="lib-nav-btn">{{ "Página inicial"|t }}</div>
+        <div class="lib-nav-top">
+            <div class="lib-nav-home">{{ "Página inicial"|t }}</div>
             <div class="lib-nav-icon" title="{{ 'Grade'|t }}">⊞</div>
         </div>
-        <div class="lib-dropdown">
-            <span>{{ "Jogos e Softwares"|t }}</span><span class="arrow">▼</span>
+        <div class="lib-cat-dropdown">
+            <span class="lab">{{ "Jogos e Softwares"|t }}</span>
+            <span class="controls">▾ ⌖ ⊟</span>
         </div>
 
         <div class="lib-search-row">
-            <input type="search" class="lib-search" id="libSearch"
-                   placeholder="{{ 'Buscar'|t }}">
-            <button type="button" class="lib-filter-btn" id="filterToggle">
-                ⏚ <span>{{ "Filtros"|t }}</span>
+            <input type="search" class="lib-search" id="libSearch" placeholder="{{ 'Buscar'|t }}">
+            <button type="button" class="lib-filter-btn" id="filterToggle" title="{{ 'Filtros'|t }}">
+                ⏚
                 <span class="lib-filter-count" id="filterCount" style="display:none;">0</span>
             </button>
             <div class="lib-filter-panel" id="filterPanel">
@@ -389,13 +505,13 @@
                 <label><input type="checkbox" class="f-flag" data-flag="execucao"> ● {{ "Em execução agora"|t }}</label>
 
                 <h4>{{ "Publisher"|t }}</h4>
-                {% set pubs = [] %}
+                {% set ns = namespace(pubs=[]) %}
                 {% for gid in ids_ordenados %}
-                    {% if games[gid].publisher and games[gid].publisher not in pubs %}
-                        {% set _ = pubs.append(games[gid].publisher) %}
+                    {% if games[gid].publisher and games[gid].publisher not in ns.pubs %}
+                        {% set ns.pubs = ns.pubs + [games[gid].publisher] %}
                     {% endif %}
                 {% endfor %}
-                {% for pub in pubs %}
+                {% for pub in ns.pubs %}
                 <label><input type="checkbox" class="f-pub" value="{{ pub }}"> {{ pub }}</label>
                 {% endfor %}
 
@@ -409,9 +525,11 @@
             </div>
         </div>
 
-        <div class="lib-section-head">
-            <span class="arrow">▼</span> {{ "Todos"|t }} <span id="visivelCounter">({{ games|length }})</span>
+        <div class="lib-all-head">
+            <span class="caret">▾</span> {{ "Todos"|t }}
+            <span id="visivelCounter" style="color:#67707A;">({{ games|length }})</span>
         </div>
+
         <div class="lib-list" id="libList">
             {% for gid in ids_ordenados %}
             {% set g = games[gid] %}
@@ -433,32 +551,35 @@
             </a>
             {% endfor %}
         </div>
+        <div class="lib-add-game">＋ {{ "Adicionar jogo"|t }}</div>
     </aside>
 
-    <!-- ====================== DIREITA ====================== -->
+    <!-- =================== MAIN =================== -->
     <section class="lib-main">
         {% if selecionado %}
             {% set s = selecionado %}
             <!-- HERO -->
-            <div class="lib-hero-wrap">
+            <div class="lib-hero">
                 <img src="{{ url_for('static', filename='images/jogo' ~ s.id ~ '.jpg') }}" alt="{{ s.game.name }}" class="lib-hero-img">
                 <div class="lib-hero-fade"></div>
-                <div class="lib-hero-pub">{{ s.game.publisher }}{% if s.is_familia %} · 🏠 {{ "Via Família Steam"|t }}{% endif %}</div>
-                <h1 class="lib-hero-title">{{ s.game.name }}</h1>
+                <div class="lib-hero-info">
+                    <div class="pub">{{ s.game.publisher }}{% if s.is_familia %} · {{ "Via Família Steam"|t }}{% endif %}</div>
+                    <h1>{{ s.game.name }}</h1>
+                </div>
             </div>
 
             <!-- AÇÕES + STATUS -->
-            <div class="lib-actions-bar">
+            <div class="lib-actions">
                 {% if s.jogando_agora %}
-                    <a href="{{ url_for('stop_game') }}" class="lib-play-btn encerrar">
-                        <span class="play-arrow">■</span>
-                        {{ "Encerrar"|t }}
-                    </a>
+                <a href="{{ url_for('stop_game') }}" class="lib-play encerrar">
+                    <span class="triangle">■</span> {{ "Encerrar"|t }}
+                </a>
+                <span class="lib-play-arrow">▾</span>
                 {% else %}
-                    <a href="{{ url_for('play_game', game_id=s.id) }}?src=library" class="lib-play-btn">
-                        <span class="play-arrow">▶</span>
-                        {{ "Jogar"|t }}
-                    </a>
+                <a href="{{ url_for('play_game', game_id=s.id) }}?src=library" class="lib-play">
+                    <span class="triangle">▶</span> {{ "Jogar"|t }}
+                </a>
+                <span class="lib-play-arrow">▾</span>
                 {% endif %}
 
                 <div class="lib-status-strip">
@@ -467,6 +588,13 @@
                         <div>
                             <div class="lib-status-label">{{ "Estado da nuvem"|t }}</div>
                             <div class="lib-status-val">{{ "Sincronizado"|t }}</div>
+                        </div>
+                    </div>
+                    <div class="lib-status">
+                        <div class="lib-status-icon">📅</div>
+                        <div>
+                            <div class="lib-status-label">{{ "Última sessão"|t }}</div>
+                            <div class="lib-status-val">{% if s.horas > 0 %}{{ "recente"|t }}{% else %}—{% endif %}</div>
                         </div>
                     </div>
                     <div class="lib-status">
@@ -480,9 +608,16 @@
                         <div class="lib-status-icon">🏆</div>
                         <div>
                             <div class="lib-status-label">{{ "Conquistas"|t }}</div>
-                            <div class="lib-status-val">{{ s.conq_desb }} / {{ s.conq_total }}</div>
+                            <div class="lib-status-val">{{ s.conq_desb }}/{{ s.conq_total }}</div>
+                            <div class="lib-status-progress"><div style="width:{{ s.conq_pct }}%;"></div></div>
                         </div>
                     </div>
+                </div>
+
+                <div class="lib-icons-right">
+                    <span title="{{ 'Configurações'|t }}">⚙</span>
+                    <span title="{{ 'Informações'|t }}">ⓘ</span>
+                    <span title="{{ 'Favoritos'|t }}">♡</span>
                 </div>
             </div>
 
@@ -493,107 +628,118 @@
                 <a href="{{ url_for('conquistas_jogo', game_id=s.id) }}" class="lib-tab">{{ "Conquistas"|t }}</a>
             </div>
 
-            <!-- CONTEÚDO PRINCIPAL + SIDEBAR -->
+            <!-- CONTEÚDO -->
             <div class="lib-content">
+                <!-- COLUNA PRINCIPAL: DESTAQUE + ATIVIDADE -->
                 <div>
-                    <!-- DESTAQUE -->
-                    <div class="lib-block">
-                        <div class="lib-block-head">{{ "Destaque"|t }}</div>
-                        <div class="lib-block-body">
-                            <div class="lib-news">
-                                <img src="{{ url_for('static', filename='images/jogo' ~ s.id ~ '.jpg') }}" alt="">
-                                <div>
-                                    <div class="lib-news-meta">{{ "Notícias"|t }} · {{ s.game.release_date }}</div>
-                                    <div class="lib-news-title">{{ s.game.name }}</div>
-                                    <p class="lib-news-body">{{ s.game.description|t }}</p>
-                                </div>
+                    <h3 class="lib-section-title">{{ "Destaque"|t }}</h3>
+                    <div class="lib-card">
+                        <div class="lib-news">
+                            <img src="{{ url_for('static', filename='images/jogo' ~ s.id ~ '.jpg') }}" alt="">
+                            <div>
+                                <div class="meta">{{ "Notícias"|t }} · {{ s.game.release_date }}</div>
+                                <div class="ttl">{{ s.game.name }}</div>
+                                <div class="body">{{ s.game.description|t }}</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- ATIVIDADE -->
-                    <div class="lib-block" style="margin-top: 14px;">
-                        <div class="lib-block-head">{{ "Atividade"|t }}</div>
-                        <div class="lib-block-body">
-                            {% if s.conq_desb > 0 %}
-                            <div class="lib-activity-item">
-                                <div class="lib-activity-icon">🏆</div>
-                                <div style="flex:1;">
-                                    {{ "Você desbloqueou"|t }} <strong>{{ s.conq_desb }}</strong> {{ "de"|t }} {{ s.conq_total }} {{ "conquistas"|t }}
-                                    <div class="lib-activity-when">{{ s.conq_pct }}% {{ "completo"|t }} · {{ s.conq_pts_ganhos }}/{{ s.conq_pts_totais }} {{ "pts"|t }}</div>
-                                </div>
-                            </div>
-                            {% endif %}
-                            {% if s.horas > 0 %}
-                            <div class="lib-activity-item">
-                                <div class="lib-activity-icon">🕐</div>
-                                <div style="flex:1;">
-                                    {{ "Tempo de jogo acumulado"|t }}: <strong>{{ "%.1f"|format(s.horas) }} {{ "horas"|t }}</strong>
-                                </div>
-                            </div>
-                            {% endif %}
-                            {% if not s.conq_desb and not s.horas %}
-                            <div style="color:#6f7780; font-size:12px; padding:6px 0;">
-                                {{ "Nenhuma atividade recente. Clique em Jogar para começar."|t }}
-                            </div>
-                            {% endif %}
+                    <h3 class="lib-section-title">{{ "Atividade"|t }}</h3>
+                    <div class="lib-activity-input">{{ "Diga algo sobre o jogo aos seus amigos..."|t }}</div>
+
+                    {% if s.conq_desb > 0 or s.horas > 0 %}
+                    <div class="lib-activity-date">{{ "Recente"|t }}</div>
+                    {% if s.conq_desb > 0 %}
+                    <div class="lib-activity">
+                        <div class="av">🏆</div>
+                        <div class="text">
+                            <strong>{{ session['user_profile']['name'] }}</strong>
+                            {{ "desbloqueou"|t }} <strong>{{ s.conq_desb }}</strong> {{ "de"|t }} {{ s.conq_total }} {{ "conquistas"|t }} · {{ s.conq_pts_ganhos }}/{{ s.conq_pts_totais }} {{ "pts"|t }}
                         </div>
                     </div>
+                    {% endif %}
+                    {% if s.horas > 0 %}
+                    <div class="lib-activity">
+                        <div class="av">🕐</div>
+                        <div class="text">
+                            <strong>{{ "%.1f"|format(s.horas) }} {{ "horas"|t }}</strong>
+                            {{ "acumuladas em"|t }} <strong>{{ s.game.name }}</strong>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <div class="lib-activity">
+                        <div class="av">🎮</div>
+                        <div class="text">
+                            {{ "Nenhuma atividade ainda. Pressione"|t }} <strong>{{ "JOGAR"|t }}</strong> {{ "para começar."|t }}
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
 
-                <!-- SIDEBAR DA DIREITA -->
-                <div style="display:flex; flex-direction:column; gap:14px;">
+                <!-- COLUNA DIREITA: AMIGOS + CONQUISTAS -->
+                <aside>
                     <!-- AMIGOS QUE JOGAM -->
-                    <div class="lib-block">
-                        <div class="lib-block-head">{{ "Amigos que jogam"|t }}</div>
-                        <div class="lib-block-body">
-                            {% if s.amigos_jogando %}
-                            <div style="font-size:11px; color:#8f98a0; margin-bottom:6px;">
-                                {{ s.amigos_jogando|length }} {{ "amigo(s) em jogo"|t }}
-                            </div>
-                            {% endif %}
-                            {% if s.amigos_donos %}
-                            <div class="friend-list-mini">
-                                {% for a in s.amigos_donos %}
-                                <a href="{{ url_for('perfil', user_id=a.id) }}">
-                                    <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="">
-                                    <span>{{ a.nome }}</span>
-                                    {% if a.jogando_agora %}<span class="dot"></span>{% endif %}
-                                </a>
-                                {% endfor %}
-                            </div>
-                            {% else %}
-                            <div class="empty" style="color:#6f7780; font-size:12px;">{{ "Nenhum amigo possui este jogo."|t }}</div>
-                            {% endif %}
+                    <div class="lib-aside-block">
+                        <h3 class="head">{{ "Amigos que jogam"|t }}</h3>
+                        {% if s.amigos_jogando %}
+                        <div style="font-size:11px; color:#8F98A0; margin-bottom:8px;">
+                            {{ s.amigos_jogando|length }} {{ "amigo(s) jogando agora"|t }}
                         </div>
+                        {% endif %}
+
+                        {% if s.amigos_donos %}
+                        {% for a in s.amigos_donos %}
+                        <a href="{{ url_for('perfil', user_id=a.id) }}" class="friend-row">
+                            <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="">
+                            <div style="flex:1; min-width:0;">
+                                <div class="nm">{{ a.nome }}</div>
+                                <div class="sub">@{{ a.username }}</div>
+                            </div>
+                            {% if a.jogando_agora %}
+                            <span class="badge-on">{{ "Em jogo"|t }}</span>
+                            {% endif %}
+                        </a>
+                        {% endfor %}
+                        <a href="{{ url_for('amigos') }}" class="friend-link-all">{{ "Ver atividade de amigos"|t }} ›</a>
+                        {% else %}
+                        <div class="friend-empty">{{ "Nenhum amigo possui este jogo ainda."|t }}</div>
+                        {% endif %}
                     </div>
 
-                    <!-- CONQUISTAS COMPACTO -->
-                    <div class="lib-block">
-                        <div class="lib-block-head">{{ "Conquistas"|t }}</div>
-                        <div class="lib-block-body">
-                            <div style="font-size:13px; color:#fff;">
-                                <strong>{{ s.conq_desb }}/{{ s.conq_total }}</strong>
-                                <span style="color:#8f98a0; font-size:12px;">{{ "alcançadas"|t }} ({{ s.conq_pct }}%)</span>
-                            </div>
-                            <div class="conq-bar"><div style="width: {{ s.conq_pct }}%;"></div></div>
-                            <a href="{{ url_for('conquistas_jogo', game_id=s.id) }}"
-                               style="font-size:11px; color:#66c0f4; text-decoration:none;">
-                                {{ "Ver todas as conquistas"|t }} ›
-                            </a>
+                    <!-- CONQUISTAS -->
+                    <div class="lib-aside-block">
+                        <h3 class="head">{{ "Conquistas"|t }}</h3>
+                        <div class="conq-summary">
+                            <strong>{{ s.conq_desb }}/{{ s.conq_total }}</strong>
+                            {{ "alcançadas"|t }} ({{ s.conq_pct }}%)
                         </div>
+                        <div class="conq-bar"><div style="width:{{ s.conq_pct }}%;"></div></div>
+
+                        {% if s.game.conquistas %}
+                        <div class="conq-recent">
+                            {% for c in s.game.conquistas[:5] %}
+                            {% set desbloqueada = false %}
+                            {# Marca como desbloqueada se a contagem geral indica progresso  #}
+                            <div class="ic {% if loop.index > s.conq_desb %}locked{% endif %}" title="{{ c.nome }}">
+                                {{ c.icone }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <a href="{{ url_for('conquistas_jogo', game_id=s.id) }}" class="friend-link-all">
+                            {{ "Ver todas as conquistas"|t }} ›
+                        </a>
                     </div>
-                </div>
+                </aside>
             </div>
         {% else %}
-            <div class="lib-empty">
-                <p>{{ "Selecione um jogo na lista ao lado."|t }}</p>
-            </div>
+            <div class="lib-empty">{{ "Selecione um jogo na lista ao lado."|t }}</div>
         {% endif %}
     </section>
 </div>
 {% else %}
-<div class="lib-empty" style="margin-top:30px;">
+<div class="lib-empty" style="margin: 60px auto; max-width: 480px;">
     <p style="margin-bottom: 14px;">{{ "Nenhum jogo disponível na sua biblioteca."|t }}</p>
     <a href="{{ url_for('index') }}" class="btn-blue">{{ "Ir para a Loja"|t }}</a>
 </div>
@@ -609,42 +755,34 @@
     var filterCount  = document.getElementById('filterCount');
     var filterClear  = document.getElementById('filterClear');
 
-    function recolherFiltros() {
-        var pubs   = Array.from(document.querySelectorAll('.f-pub:checked')).map(function(c){ return c.value; });
-        var ages   = Array.from(document.querySelectorAll('.f-age:checked')).map(function(c){ return c.value; });
-        var flags  = Array.from(document.querySelectorAll('.f-flag:checked')).map(function(c){ return c.dataset.flag; });
-        return { pubs: pubs, ages: ages, flags: flags };
+    function coletarFiltros() {
+        return {
+            pubs:  Array.from(document.querySelectorAll('.f-pub:checked')).map(function(c){ return c.value; }),
+            ages:  Array.from(document.querySelectorAll('.f-age:checked')).map(function(c){ return c.value; }),
+            flags: Array.from(document.querySelectorAll('.f-flag:checked')).map(function(c){ return c.dataset.flag; })
+        };
     }
 
     function refiltrar() {
         if (!list) return;
         var query = (search && search.value || '').toLowerCase().trim();
-        var f = recolherFiltros();
-        var totalAtivo = f.pubs.length + f.ages.length + f.flags.length;
-        var itens = list.querySelectorAll('.lib-item');
+        var f = coletarFiltros();
+        var ativos = f.pubs.length + f.ages.length + f.flags.length;
         var visiveis = 0;
-        itens.forEach(function (el) {
-            var nome    = el.dataset.name || '';
-            var pub     = el.dataset.publisher || '';
-            var age     = el.dataset.age || '0';
-            var ehFam   = el.dataset.familia === '1';
-            var ehExec  = el.dataset.execucao === '1';
-
-            var matchNome  = !query || nome.indexOf(query) !== -1;
-            var matchPub   = f.pubs.length === 0 || f.pubs.indexOf(pub) !== -1;
-            var matchAge   = f.ages.length === 0 || f.ages.indexOf(age) !== -1;
-            var matchFlag  = true;
-            if (f.flags.indexOf('familia')  !== -1 && !ehFam)  matchFlag = false;
-            if (f.flags.indexOf('execucao') !== -1 && !ehExec) matchFlag = false;
-
-            var show = matchNome && matchPub && matchAge && matchFlag;
+        list.querySelectorAll('.lib-item').forEach(function (el) {
+            var matchNome  = !query || (el.dataset.name || '').indexOf(query) !== -1;
+            var matchPub   = f.pubs.length === 0 || f.pubs.indexOf(el.dataset.publisher) !== -1;
+            var matchAge   = f.ages.length === 0 || f.ages.indexOf(el.dataset.age) !== -1;
+            var matchFam   = f.flags.indexOf('familia')  === -1 || el.dataset.familia  === '1';
+            var matchExec  = f.flags.indexOf('execucao') === -1 || el.dataset.execucao === '1';
+            var show = matchNome && matchPub && matchAge && matchFam && matchExec;
             el.style.display = show ? '' : 'none';
             if (show) visiveis++;
         });
         if (counter) counter.textContent = '(' + visiveis + ')';
         if (filterCount) {
-            if (totalAtivo > 0) {
-                filterCount.textContent = totalAtivo;
+            if (ativos > 0) {
+                filterCount.textContent = ativos;
                 filterCount.style.display = '';
                 filterBtn.classList.add('has-filters');
             } else {
@@ -658,25 +796,19 @@
     document.querySelectorAll('.f-pub, .f-age, .f-flag').forEach(function(chk){
         chk.addEventListener('change', refiltrar);
     });
-    if (filterBtn) {
-        filterBtn.addEventListener('click', function(e){
-            e.stopPropagation();
-            filterPanel.classList.toggle('open');
-        });
-    }
-    if (filterPanel) {
-        filterPanel.addEventListener('click', function(e){ e.stopPropagation(); });
-    }
+    if (filterBtn) filterBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        filterPanel.classList.toggle('open');
+    });
+    if (filterPanel) filterPanel.addEventListener('click', function(e){ e.stopPropagation(); });
     document.addEventListener('click', function(){
         if (filterPanel) filterPanel.classList.remove('open');
     });
-    if (filterClear) {
-        filterClear.addEventListener('click', function(){
-            document.querySelectorAll('.f-pub, .f-age, .f-flag').forEach(function(c){ c.checked = false; });
-            if (search) search.value = '';
-            refiltrar();
-        });
-    }
+    if (filterClear) filterClear.addEventListener('click', function(){
+        document.querySelectorAll('.f-pub, .f-age, .f-flag').forEach(function(c){ c.checked = false; });
+        if (search) search.value = '';
+        refiltrar();
+    });
 
     // SHIFT+TAB volta ao jogo ativo
     document.addEventListener('keydown', function(event) {

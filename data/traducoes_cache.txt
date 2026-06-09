@@ -2349,3 +2349,293 @@ ko | Promoção ativa hoje || 오늘부터 프로모션 진행 중
 ko | Desconto por jogo (agrupado por publisher): || 게임당 할인(퍼블리셔별로 그룹화):
 ko | Remover a promoção inteira do histórico? || 기록에서 전체 프로모션을 삭제하시겠습니까?
 ko | Nenhuma promoção ativa no momento — preços normais na loja. || 현재 진행 중인 프로모션은 없습니다. 매장 내 정상 가격입니다.
+en | Crie, agende e gerencie promoções da loja por jogo, publisher ou grupo customizado. || Create, schedule and manage store promotions by game, publisher or custom group.
+en | Ver toast de conquista em ação || See achievement toast in action
+en | Conquistas || Achievements
+en | Escolha uma das áreas administrativas abaixo. || Choose one of the administrative areas below.
+en | Ferramentas para testar funcionalidades sem precisar jogar — começando pelas conquistas. || Tools to test features without having to play — starting with achievements.
+en | Ver todas || See all
+en | Admin · Promoções || Admin · Promotions
+en | Tempo de jogo || Game time
+en | desbloqueadas || unlocked
+en | Conquista desbloqueada || Achievement unlocked
+en | tem este jogo || have this game
+en | Em jogo || At stake
+en | Voltar ao jogo || Return to game
+en | Histórico completo de promoções || Complete promotion history
+en | simulação local || local simulation
+en | Se um jogo aparece em mais de uma promoção, o maior desconto é aplicado. || If a game appears in more than one promotion, the largest discount is applied.
+en | Buscar na biblioteca... || Search the library...
+en | Data de início || Start date
+en | Usar a data de hoje || Use today's date
+en | Estado da nuvem || Cloud State
+en | Painel Administrativo || Administrative Panel
+en | Este jogo ainda não tem conquistas cadastradas. || This game does not have any achievements registered yet.
+en | Amigos que jogam || Friends who play
+en | Desbloquear/bloquear conquistas manualmente || Manually unlock/lock achievements
+en | Atalho por publisher (MINIntendo, MINIcraft, MINIteam67) || Shortcut by publisher (MINIntendo, MINIcraft, MINIteam67)
+en | exibidos || displayed
+en | Progresso total || Full progress
+en | Bloqueada || Blocked
+en | conquistas desbloqueadas || achievements unlocked
+en | horas acumuladas || accumulated hours
+en | Promoções || Promotions
+en | Desbloqueie, bloqueie ou resete conquistas do seu próprio perfil para validar o sistema visualmente. Ao desbloquear, um toast aparece no canto inferior, igual à Steam. || Unlock, lock or reset achievements from your own profile to visually validate the system. When unlocking, a toast appears in the bottom corner, just like Steam.
+en | pts || pts
+en | Nenhuma conquista desbloqueada ainda. || No achievements unlocked yet.
+en | FAM || FAM
+en | Apagar TODAS as suas conquistas em todos os jogos? || Erase ALL your achievements in all games?
+en | Admin · Testes || Admin · Tests
+en | Desbloquear || Unlock
+en | Sincronizado || Synced
+en | CONQUISTAS || ACHIEVEMENTS
+en | Resetar tudo || Reset all
+en | de || of
+en | Remover promoção || Remove promotion
+en | Promoções ativas hoje || Promotions active today
+en | Voltar ao painel || Return to dashboard
+en | 'exibidos' || 'displayed'
+en | Resetar progresso por jogo ou completo || Reset progress per game or complete
+en | Ver promoções ativas hoje || View active promotions today
+en | Selecione um jogo na lista ao lado. || Select a game from the list below.
+en | Apenas Família Steam || Steam Family Only
+en | Classificação || Classification
+en | Desbloqueada em || Unlocked in
+en | Em execução || Running
+en | Nenhum amigo possui este jogo ainda. || No friends own this game yet.
+en | Testes do sistema || System Tests
+en | Resetar este jogo || Reset this game
+en | Página na loja || In-store page
+en | Bloquear || Block
+de | Crie, agende e gerencie promoções da loja por jogo, publisher ou grupo customizado. || Erstellen, planen und verwalten Sie Store-Aktionen nach Spiel, Herausgeber oder benutzerdefinierter Gruppe.
+de | Ver toast de conquista em ação || Erleben Sie Erfolgstoast in Aktion
+de | Conquistas || Erfolge
+de | Escolha uma das áreas administrativas abaixo. || Wählen Sie unten einen der Verwaltungsbereiche aus.
+de | Ferramentas para testar funcionalidades sem precisar jogar — começando pelas conquistas. || Tools zum Testen von Funktionen, ohne spielen zu müssen – beginnend mit Erfolgen.
+de | Ver todas || Alle anzeigen
+de | Admin · Promoções || Admin · Werbeaktionen
+de | Tempo de jogo || Spielzeit
+de | desbloqueadas || entsperrt
+de | Conquista desbloqueada || Erfolg freigeschaltet
+de | tem este jogo || Habe dieses Spiel
+de | Em jogo || Auf dem Spiel
+de | Voltar ao jogo || Zurück zum Spiel
+de | Histórico completo de promoções || Komplette Promotion-Historie
+de | simulação local || lokale Simulation
+de | Se um jogo aparece em mais de uma promoção, o maior desconto é aplicado. || Wenn ein Spiel in mehr als einer Aktion erscheint, wird der größte Rabatt gewährt.
+de | Buscar na biblioteca... || Durchsuchen Sie die Bibliothek...
+de | Data de início || Startdatum
+de | Usar a data de hoje || Verwenden Sie das heutige Datum
+de | Estado da nuvem || Wolkenzustand
+de | Painel Administrativo || Verwaltungsbereich
+de | Este jogo ainda não tem conquistas cadastradas. || Für dieses Spiel sind noch keine Erfolge registriert.
+de | Amigos que jogam || Freunde, die spielen
+de | Desbloquear/bloquear conquistas manualmente || Erfolge manuell freischalten/sperren
+de | Atalho por publisher (MINIntendo, MINIcraft, MINIteam67) || Verknüpfung nach Herausgeber (MINIntendo, MINIcraft, MINIteam67)
+de | exibidos || angezeigt
+de | Progresso total || Voller Fortschritt
+de | Bloqueada || Blockiert
+de | conquistas desbloqueadas || Erfolge freigeschaltet
+de | horas acumuladas || angesammelte Stunden
+de | Promoções || Werbeaktionen
+de | Desbloqueie, bloqueie ou resete conquistas do seu próprio perfil para validar o sistema visualmente. Ao desbloquear, um toast aparece no canto inferior, igual à Steam. || Entsperren, sperren oder setzen Sie Erfolge in Ihrem eigenen Profil zurück, um das System visuell zu validieren. Beim Entsperren erscheint in der unteren Ecke ein Toast, genau wie bei Steam.
+de | pts || Punkte
+de | Nenhuma conquista desbloqueada ainda. || Noch keine Erfolge freigeschaltet.
+de | FAM || FAM
+de | Apagar TODAS as suas conquistas em todos os jogos? || ALLE deine Erfolge in allen Spielen löschen?
+de | Admin · Testes || Admin · Tests
+de | Desbloquear || Entsperren
+de | Sincronizado || Synchronisiert
+de | CONQUISTAS || ERFOLGE
+de | Resetar tudo || Alles zurücksetzen
+de | de || von
+de | Remover promoção || Werbung entfernen
+de | Promoções ativas hoje || Heute aktive Werbeaktionen
+de | Voltar ao painel || Zurück zum Dashboard
+de | 'exibidos' || 'angezeigt'
+de | Resetar progresso por jogo ou completo || Setzen Sie den Fortschritt pro Spiel zurück oder schließen Sie es ab
+de | Ver promoções ativas hoje || Sehen Sie sich noch heute aktive Werbeaktionen an
+de | Selecione um jogo na lista ao lado. || Wählen Sie ein Spiel aus der Liste unten aus.
+de | Apenas Família Steam || Nur Steam-Familie
+de | Classificação || Einstufung
+de | Desbloqueada em || Entsperrt in
+de | Em execução || Läuft
+de | Nenhum amigo possui este jogo ainda. || Noch besitzen keine Freunde dieses Spiel.
+de | Testes do sistema || Systemtests
+de | Resetar este jogo || Setzen Sie dieses Spiel zurück
+de | Página na loja || In-Store-Seite
+de | Bloquear || Block
+zh-cn | Crie, agende e gerencie promoções da loja por jogo, publisher ou grupo customizado. || 按游戏、发行商或自定义组创建、安排和管理商店促销活动。
+zh-cn | Ver toast de conquista em ação || 查看实际的成就祝酒
+zh-cn | Conquistas || 成就
+zh-cn | Escolha uma das áreas administrativas abaixo. || 选择以下行政区域之一。
+zh-cn | Ferramentas para testar funcionalidades sem precisar jogar — começando pelas conquistas. || 无需玩游戏即可测试功能的工具——从成就开始。
+zh-cn | Ver todas || 查看全部
+zh-cn | Admin · Promoções || 管理员 · 促销
+zh-cn | Tempo de jogo || 比赛时间
+zh-cn | desbloqueadas || 解锁
+zh-cn | Conquista desbloqueada || 成就已解锁
+zh-cn | tem este jogo || 有这个游戏
+zh-cn | Em jogo || 危在旦夕
+zh-cn | Voltar ao jogo || 返回游戏
+zh-cn | Histórico completo de promoções || 完整的促销历史
+zh-cn | simulação local || 局部模拟
+zh-cn | Se um jogo aparece em mais de uma promoção, o maior desconto é aplicado. || 如果一款游戏出现在多个促销活动中，则应用最大的折扣。
+zh-cn | Buscar na biblioteca... || 搜索图书馆...
+zh-cn | Data de início || 开始日期
+zh-cn | Usar a data de hoje || 使用今天的日期
+zh-cn | Estado da nuvem || 云状态
+zh-cn | Painel Administrativo || 行政小组
+zh-cn | Este jogo ainda não tem conquistas cadastradas. || 该游戏尚未注册任何成就。
+zh-cn | Amigos que jogam || 玩的朋友
+zh-cn | Desbloquear/bloquear conquistas manualmente || 手动解锁/锁定成就
+zh-cn | Atalho por publisher (MINIntendo, MINIcraft, MINIteam67) || 发布者的快捷方式（MINIntendo、MINIcraft、MINIteam67）
+zh-cn | exibidos || 显示的
+zh-cn | Progresso total || 全面进展
+zh-cn | Bloqueada || 被阻止
+zh-cn | conquistas desbloqueadas || 解锁成就
+zh-cn | horas acumuladas || 累计小时数
+zh-cn | Promoções || 促销活动
+zh-cn | Desbloqueie, bloqueie ou resete conquistas do seu próprio perfil para validar o sistema visualmente. Ao desbloquear, um toast aparece no canto inferior, igual à Steam. || 从您自己的个人资料中解锁、锁定或重置成就，以直观地验证系统。解锁时，底部角落会出现一个吐司，就像Steam一样。
+zh-cn | pts || 分
+zh-cn | Nenhuma conquista desbloqueada ainda. || 尚未解锁任何成就。
+zh-cn | FAM || FAM
+zh-cn | Apagar TODAS as suas conquistas em todos os jogos? || 删除所有游戏中的所有成就？
+zh-cn | Admin · Testes || 管理·测试
+zh-cn | Desbloquear || 开锁
+zh-cn | Sincronizado || 已同步
+zh-cn | CONQUISTAS || 成就
+zh-cn | Resetar tudo || 全部重置
+zh-cn | de || 的
+zh-cn | Remover promoção || 删除促销
+zh-cn | Promoções ativas hoje || 今日促销活动
+zh-cn | Voltar ao painel || 返回仪表板
+zh-cn | 'exibidos' || “显示”
+zh-cn | Resetar progresso por jogo ou completo || 重置每场比赛的进度或完成
+zh-cn | Ver promoções ativas hoje || 查看今天的活动促销活动
+zh-cn | Selecione um jogo na lista ao lado. || 从下面的列表中选择一个游戏。
+zh-cn | Apenas Família Steam || 仅限 Steam 家庭
+zh-cn | Classificação || 分类
+zh-cn | Desbloqueada em || 解锁于
+zh-cn | Em execução || 跑步
+zh-cn | Nenhum amigo possui este jogo ainda. || 还没有朋友拥有这个游戏。
+zh-cn | Testes do sistema || 系统测试
+zh-cn | Resetar este jogo || 重置此游戏
+zh-cn | Página na loja || 店内页面
+zh-cn | Bloquear || 堵塞
+pl | Crie, agende e gerencie promoções da loja por jogo, publisher ou grupo customizado. || Twórz, planuj i zarządzaj promocjami w sklepie według gier, wydawcy lub grup niestandardowych.
+pl | Ver toast de conquista em ação || Zobacz toast za osiągnięcia w akcji
+pl | Conquistas || Osiągnięcia
+pl | Escolha uma das áreas administrativas abaixo. || Wybierz jeden z poniższych obszarów administracyjnych.
+pl | Ferramentas para testar funcionalidades sem precisar jogar — começando pelas conquistas. || Narzędzia do testowania funkcji bez konieczności grania — począwszy od osiągnięć.
+pl | Ver todas || Zobacz wszystko
+pl | Admin · Promoções || Administrator · Promocje
+pl | Tempo de jogo || Czas gry
+pl | desbloqueadas || odblokowany
+pl | Conquista desbloqueada || Osiągnięcie odblokowane
+pl | tem este jogo || mieć tę grę
+pl | Em jogo || Stawką
+pl | Voltar ao jogo || Wróć do gry
+pl | Histórico completo de promoções || Pełna historia promocji
+pl | simulação local || symulacja lokalna
+pl | Se um jogo aparece em mais de uma promoção, o maior desconto é aplicado. || Jeśli gra pojawi się w więcej niż jednej promocji, zostanie zastosowany największy rabat.
+pl | Buscar na biblioteca... || Przeszukaj bibliotekę...
+pl | Data de início || Data rozpoczęcia
+pl | Usar a data de hoje || Użyj dzisiejszej daty
+pl | Estado da nuvem || Stan Chmury
+pl | Painel Administrativo || Panel administracyjny
+pl | Este jogo ainda não tem conquistas cadastradas. || Ta gra nie ma jeszcze zarejestrowanych żadnych osiągnięć.
+pl | Amigos que jogam || Przyjaciele, którzy grają
+pl | Desbloquear/bloquear conquistas manualmente || Ręcznie odblokuj/zablokuj osiągnięcia
+pl | Atalho por publisher (MINIntendo, MINIcraft, MINIteam67) || Skrót według wydawcy (MINIntendo, MINIcraft, MINIteam67)
+pl | exibidos || wystawiany
+pl | Progresso total || Pełny postęp
+pl | Bloqueada || Zablokowany
+pl | conquistas desbloqueadas || odblokowane osiągnięcia
+pl | horas acumuladas || zgromadzonych godzin
+pl | Promoções || Promocje
+pl | Desbloqueie, bloqueie ou resete conquistas do seu próprio perfil para validar o sistema visualmente. Ao desbloquear, um toast aparece no canto inferior, igual à Steam. || Odblokuj, zablokuj lub zresetuj osiągnięcia ze swojego profilu, aby wizualnie sprawdzić system. Po odblokowaniu w dolnym rogu pojawia się toast, podobnie jak Steam.
+pl | pts || pkt
+pl | Nenhuma conquista desbloqueada ainda. || Nie odblokowano jeszcze żadnych osiągnięć.
+pl | FAM || FAM
+pl | Apagar TODAS as suas conquistas em todos os jogos? || Usunąć WSZYSTKIE osiągnięcia we wszystkich grach?
+pl | Admin · Testes || Administrator · Testy
+pl | Desbloquear || Odblokować
+pl | Sincronizado || Zsynchronizowane
+pl | CONQUISTAS || OSIĄGNIĘCIA
+pl | Resetar tudo || Zresetuj wszystko
+pl | de || z
+pl | Remover promoção || Usuń promocję
+pl | Promoções ativas hoje || Promocje aktywne dzisiaj
+pl | Voltar ao painel || Wróć do pulpitu nawigacyjnego
+pl | 'exibidos' || 'wystawiany'
+pl | Resetar progresso por jogo ou completo || Zresetuj postęp w grze lub ukończ
+pl | Ver promoções ativas hoje || Zobacz aktywne promocje już dziś
+pl | Selecione um jogo na lista ao lado. || Wybierz grę z poniższej listy.
+pl | Apenas Família Steam || Tylko rodzina Steam
+pl | Classificação || Klasyfikacja
+pl | Desbloqueada em || Odblokowany
+pl | Em execução || Działanie
+pl | Nenhum amigo possui este jogo ainda. || Żaden z znajomych nie posiada jeszcze tej gry.
+pl | Testes do sistema || Testy systemu
+pl | Resetar este jogo || Zresetuj tę grę
+pl | Página na loja || Strona w sklepie
+pl | Bloquear || Blok
+ko | Crie, agende e gerencie promoções da loja por jogo, publisher ou grupo customizado. || 게임, 퍼블리셔 또는 사용자 지정 그룹별로 매장 프로모션을 생성, 예약 및 관리합니다.
+ko | Ver toast de conquista em ação || 실제 성과 토스트 보기
+ko | Conquistas || 업적
+ko | Escolha uma das áreas administrativas abaixo. || 아래 행정구역 중 하나를 선택하세요.
+ko | Ferramentas para testar funcionalidades sem precisar jogar — começando pelas conquistas. || 플레이하지 않고도 기능을 테스트할 수 있는 도구 — 성과부터 시작합니다.
+ko | Ver todas || 모두 보기
+ko | Admin · Promoções || 관리자 · 프로모션
+ko | Tempo de jogo || 게임 시간
+ko | desbloqueadas || 잠금 해제됨
+ko | Conquista desbloqueada || 업적 잠금 해제
+ko | tem este jogo || 이 게임을 가지고
+ko | Em jogo || 위기에 처하다
+ko | Voltar ao jogo || 게임으로 돌아가기
+ko | Histórico completo de promoções || 전체 프로모션 내역
+ko | simulação local || 로컬 시뮬레이션
+ko | Se um jogo aparece em mais de uma promoção, o maior desconto é aplicado. || 게임이 두 개 이상의 프로모션에 등장하는 경우 가장 큰 할인이 적용됩니다.
+ko | Buscar na biblioteca... || 도서관을 검색해 보세요...
+ko | Data de início || 시작일
+ko | Usar a data de hoje || 오늘 날짜 사용
+ko | Estado da nuvem || 클라우드 상태
+ko | Painel Administrativo || 관리 패널
+ko | Este jogo ainda não tem conquistas cadastradas. || 이 게임에는 아직 등록된 업적이 없습니다.
+ko | Amigos que jogam || 놀아주는 친구들
+ko | Desbloquear/bloquear conquistas manualmente || 수동으로 업적 잠금 해제/잠금
+ko | Atalho por publisher (MINIntendo, MINIcraft, MINIteam67) || 게시자별 바로가기(MINIntendo, MINIcraft, MINIteam67)
+ko | exibidos || 표시됨
+ko | Progresso total || 전체 진행
+ko | Bloqueada || 막힌
+ko | conquistas desbloqueadas || 업적 잠금 해제
+ko | horas acumuladas || 누적 시간
+ko | Promoções || 프로모션
+ko | Desbloqueie, bloqueie ou resete conquistas do seu próprio perfil para validar o sistema visualmente. Ao desbloquear, um toast aparece no canto inferior, igual à Steam. || 자신의 프로필에서 성과를 잠금 해제, 잠그거나 재설정하여 시스템을 시각적으로 검증하세요. 잠금을 해제하면 Steam과 마찬가지로 하단 모서리에 토스트 메시지가 나타납니다.
+ko | pts || 포인트
+ko | Nenhuma conquista desbloqueada ainda. || 아직 잠금 해제된 업적이 없습니다.
+ko | FAM || 팸
+ko | Apagar TODAS as suas conquistas em todos os jogos? || 모든 게임의 모든 업적을 삭제하시겠습니까?
+ko | Admin · Testes || 관리자 · 테스트
+ko | Desbloquear || 터놓다
+ko | Sincronizado || 동기화됨
+ko | CONQUISTAS || 업적
+ko | Resetar tudo || 모두 재설정
+ko | de || ~의
+ko | Remover promoção || 프로모션 삭제
+ko | Promoções ativas hoje || 오늘부터 진행되는 프로모션
+ko | Voltar ao painel || 대시보드로 돌아가기
+ko | 'exibidos' || '표시'
+ko | Resetar progresso por jogo ou completo || 게임별 진행 상황을 재설정하거나 완료하세요.
+ko | Ver promoções ativas hoje || 오늘 진행 중인 프로모션 보기
+ko | Selecione um jogo na lista ao lado. || 아래 목록에서 게임을 선택하세요.
+ko | Apenas Família Steam || Steam 가족 전용
+ko | Classificação || 분류
+ko | Desbloqueada em || 다음에서 잠금 해제됨
+ko | Em execução || 달리기
+ko | Nenhum amigo possui este jogo ainda. || 아직 이 게임을 소유한 친구가 없습니다.
+ko | Testes do sistema || 시스템 테스트
+ko | Resetar este jogo || 이 게임을 재설정
+ko | Página na loja || 매장 내 페이지
+ko | Bloquear || 차단하다

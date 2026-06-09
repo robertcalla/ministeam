@@ -172,6 +172,30 @@
 
     <aside class="profile-aside">
         <section class="profile-section">
+            <h2>🏆 {{ "Conquistas"|t }} ({{ conq_total_desb }})</h2>
+            {% if conq_recentes %}
+            <div style="display:flex; flex-direction:column; gap:8px;">
+                {% for c in conq_recentes %}
+                <a href="{{ url_for('conquistas_jogo', game_id=c.game_id) }}"
+                   style="display:flex; gap:10px; align-items:center; padding:8px; background:#1b2838; border:1px solid #2a475e; text-decoration:none;">
+                    <div style="font-size:24px; line-height:1; flex-shrink:0;">{{ c.icone }}</div>
+                    <div style="flex:1; min-width:0;">
+                        <div style="color:#beee11; font-size:12px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                            {{ c.nome|t }}
+                        </div>
+                        <div style="color:#8f98a0; font-size:10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                            {{ c.game_name }} · +{{ c.pontos }} {{ "pts"|t }}
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="muted" style="font-size:12px;">{{ "Nenhuma conquista desbloqueada ainda."|t }}</p>
+            {% endif %}
+        </section>
+
+        <section class="profile-section">
             <h2>{{ "Amigos"|t }} ({{ amigos|length }})</h2>
             {% if amigos %}
             <div class="friend-mini-list">

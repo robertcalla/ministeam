@@ -87,6 +87,25 @@
                 <strong>{{ "Idiomas:"|t }}</strong> {{ game.languages | map('t') | join(', ') }}
             </div>
 
+            {% if conq_total > 0 %}
+            <a href="{{ url_for('conquistas_jogo', game_id=game.id) }}"
+               style="display:block; margin: 12px 0; padding: 10px 12px; background: rgba(0,0,0,0.25); border:1px solid #2a475e; text-decoration:none;">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                    <div>
+                        <div style="font-size:11px; color:#8f98a0; text-transform:uppercase;">🏆 {{ "Conquistas"|t }}</div>
+                        <div style="color:#beee11; font-weight:bold; font-size:13px;">
+                            {{ conq_desb }} / {{ conq_total }}
+                            <span style="color:#8f98a0; font-weight:normal; font-size:11px;">{{ "desbloqueadas"|t }}</span>
+                        </div>
+                    </div>
+                    <div style="color:#66c0f4; font-size:12px;">{{ "Ver todas"|t }} ›</div>
+                </div>
+                <div style="height:6px; background:#1b2838; border:1px solid #2a475e; margin-top:6px;">
+                    <div style="height:100%; background: linear-gradient(90deg, #5c7e10, #beee11); width: {{ conq_pct }}%;"></div>
+                </div>
+            </a>
+            {% endif %}
+
             {% if game.id in session.get('library', []) or (session.get('family') and game.id in session['family'].get('library_pool', [])) %}
             <div class="owned-banner" style="background: rgba(121, 160, 22, 0.2); border: 1px solid #79a016; padding: 15px; margin-bottom: 20px; border-radius: 3px;">
                 <strong style="color: #d2efa9; display: block; margin-bottom: 10px;">✔ {{ "Você possui este jogo (ou tem acesso via Família)."|t }}</strong>

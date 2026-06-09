@@ -1,0 +1,5 @@
+# =============================================================================
+# MINISTEAM - Conquistas desbloqueadas pelos usuários
+# Formato: user_id | game_id | conquista_id | data_iso
+# A definição das conquistas (nome, descrição, pontos) vive em GAMES no app.py.
+# =============================================================================

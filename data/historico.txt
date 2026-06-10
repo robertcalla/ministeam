@@ -1,0 +1,5 @@
+# =============================================================================
+# MINISTEAM - Histórico de Transações
+# Cada linha é um objeto JSON representando uma transação concluída.
+# Campos: user_id, data, itens, total, desconto, metodo_pagamento
+# =============================================================================

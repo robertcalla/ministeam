@@ -2639,3 +2639,7 @@ ko | Testes do sistema || 시스템 테스트
 ko | Resetar este jogo || 이 게임을 재설정
 ko | Página na loja || 매장 내 페이지
 ko | Bloquear || 차단하다
+en | Primeiros Passos || First Steps
+en | Primeira Lombriga || First Roundworm
+en | Novo usuário Ministeam. || New user Ministeam.
+pt-br | Great horror atmosphere! Found a few system bugs though. || Ótima atmosfera de terror! Porém, encontrei alguns bugs do sistema.

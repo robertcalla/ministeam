@@ -3,3 +3,5 @@
 # Formato: user_id | game_id | conquista_id | data_iso
 # A definição das conquistas (nome, descrição, pontos) vive em GAMES no app.py.
 # =============================================================================
+104 | 4 | lombri_primeira | 2026-06-11T15:43:27
+104 | 1 | epica_inicio | 2026-06-11T15:45:30

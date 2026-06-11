@@ -551,6 +551,24 @@
             </a>
             {% endfor %}
         </div>
+        <div style="padding: 12px; background: rgba(102, 192, 244, 0.1); border-top: 1px solid #2a475e; border-bottom: 1px solid #2a475e;">
+    <form action="{{ url_for('set_refund_days') }}" method="POST" style="display: flex; flex-direction: column; gap: 6px;">
+        <label style="font-size: 11px; color: #66c0f4; text-transform: uppercase; letter-spacing: 0.5px; font-weight: bold;">
+            🧪 Dias pós-compra (Teste):
+        </label>
+        <div style="display: flex; gap: 6px;">
+            <input type="number" name="dias_simulados" min="0" max="365" 
+                   value="{{ session.get('simulated_refund_days', 0) }}" 
+                   style="flex: 1; background: #0E141B; border: 1px solid #2a475e; color: #fff; padding: 4px 8px; font-size: 12px; outline: none;">
+            <button type="submit" style="background: #2a475e; color: #fff; border: none; padding: 4px 10px; font-size: 11px; font-weight: bold; cursor: pointer;">
+                Definir
+            </button>
+        </div>
+        <span style="font-size: 10px; color: #8f98a0; line-height: 1.2;">
+            (Use 0 ou 14 para aceitar; ou mais para estourar os 14 dias)
+        </span>
+    </form>
+</div>
         <div class="lib-add-game">＋ {{ "Adicionar jogo"|t }}</div>
     </aside>
 

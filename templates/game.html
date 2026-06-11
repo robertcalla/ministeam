@@ -112,7 +112,20 @@
                 <a href="{{ url_for('play_game', game_id=game.id) }}?src=library" class="btn-green" style="padding: 8px 25px; font-weight: bold; text-decoration: none; display: inline-block;">
                     ▶ {{ "Jogar Agora"|t }}
                 </a>
-                <p style="font-size: 11px; color: #8f98a0; margin-top: 10px;">{{ "Você ainda pode comprá-lo como presente para um amigo abaixo."|t }}</p>
+                
+                {% if game.id in session.get('library', []) %}
+                <div style="margin-top: 15px; border-top: 1px solid rgba(121, 160, 22, 0.4); padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong style="color: #d2efa9; font-size: 12px;">{{ "Suporte Ministeam"|t }}</strong>
+                        <p style="font-size: 11px; color: #8f98a0; margin-top: 3px; max-width: 250px;">{{ "Problemas? Solicite reembolso (Máx 2h de jogo e 14 dias de posse)."|t }}</p>
+                    </div>
+                    <a href="{{ url_for('refund_game', game_id=game.id) }}" class="btn-blue" style="background: #2a475e; color: #fff; font-size: 11px; padding: 6px 12px;" onclick="return confirm('{{ 'Tem certeza que deseja solicitar o reembolso deste jogo e revogar a licença?'|t }}')">
+                        {{ "Solicitar Reembolso"|t }}
+                    </a>
+                </div>
+                {% else %}
+                <p style="font-size: 11px; color: #8f98a0; margin-top: 10px;">{{ "Licença via Compartilhamento Familiar. O reembolso só pode ser solicitado pelo comprador original."|t }}</p>
+                {% endif %}
             </div>
             {% endif %}
 

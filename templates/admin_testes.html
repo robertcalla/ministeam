@@ -3,110 +3,292 @@
 {% block title %}{{ "Admin · Testes"|t }} - Ministeam{% endblock %}
 
 {% block content %}
+<style>
+    /* ---- Accordion (HTML nativo details/summary, estilizado tipo Steam) ---- */
+    .acc {
+        background: #1b2838;
+        border: 1px solid #2a475e;
+        margin-bottom: 14px;
+    }
+    .acc > summary {
+        list-style: none;
+        cursor: pointer;
+        padding: 14px 18px;
+        display: flex; align-items: center; gap: 12px;
+        background: rgba(0,0,0,0.25);
+        border-bottom: 1px solid transparent;
+        user-select: none;
+    }
+    .acc > summary::-webkit-details-marker { display: none; }
+    .acc > summary::before {
+        content: "▸";
+        color: #66c0f4;
+        font-size: 14px;
+        transition: transform 0.2s;
+        flex-shrink: 0;
+    }
+    .acc[open] > summary { border-bottom-color: #2a475e; }
+    .acc[open] > summary::before { transform: rotate(90deg); }
+    .acc .acc-title { font-size: 15px; color: #fff; font-weight: bold; }
+    .acc .acc-sub { color: #8f98a0; font-size: 12px; font-weight: normal; margin-left: 6px; }
+    .acc .acc-body { padding: 18px; }
+
+    /* form de criar jogo */
+    .new-game-form { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .new-game-form .full { grid-column: 1 / -1; }
+    .new-game-form .field {
+        display: flex; flex-direction: column; gap: 4px;
+    }
+    .new-game-form label {
+        font-size: 11px; color: #66c0f4;
+        text-transform: uppercase; letter-spacing: 1px;
+    }
+    .new-game-form label .opt { color: #67707a; text-transform: none; letter-spacing: 0; font-size: 11px; }
+    .new-game-form label .req { color: #ff9900; }
+    .new-game-form input, .new-game-form textarea, .new-game-form select {
+        background: #171a21; border: 1px solid #2a475e;
+        color: #c7d5e0; font-size: 13px;
+        padding: 8px 10px;
+        font-family: inherit;
+    }
+    .new-game-form input:focus, .new-game-form textarea:focus, .new-game-form select:focus {
+        outline: none; border-color: #66c0f4;
+    }
+    .new-game-form .hint {
+        font-size: 11px; color: #67707a; margin-top: 2px;
+    }
+    @media (max-width: 720px) { .new-game-form { grid-template-columns: 1fr; } }
+</style>
+
 <div style="display:flex; align-items:center; gap:12px; margin-bottom: 6px;">
     <a href="{{ url_for('admin_index') }}" style="color:#8f98a0; text-decoration:none; font-size:13px;">‹ {{ "Voltar ao painel"|t }}</a>
 </div>
 <div style="display:flex; align-items:center; gap:12px; margin: 6px 0 16px;">
     <h1 style="margin:0;">🧪 {{ "Testes do sistema"|t }}</h1>
-    <span style="font-size:11px; background:#5c7e10; color:#fff; padding:3px 8px; border-radius:3px;">{{ "CONQUISTAS"|t }}</span>
 </div>
 
-<p style="color:#8f98a0; margin-bottom: 18px;">
-    {{ "Desbloqueie, bloqueie ou resete conquistas do seu próprio perfil para validar o sistema visualmente. Ao desbloquear, um toast aparece no canto inferior, igual à Steam."|t }}
-</p>
+<!-- ============================================================ -->
+<!-- ACCORDION 1: CONQUISTAS                                       -->
+<!-- ============================================================ -->
+<details class="acc" open>
+    <summary>
+        <span class="acc-title">🏆 {{ "Conquistas"|t }}</span>
+        <span class="acc-sub">— {{ "desbloqueie, bloqueie ou resete por jogo"|t }}</span>
+    </summary>
+    <div class="acc-body">
+        <p style="color:#8f98a0; margin: 0 0 18px;">
+            {{ "Desbloqueie, bloqueie ou resete conquistas do seu próprio perfil para validar o sistema visualmente. Ao desbloquear, um toast aparece no canto inferior, igual à Steam."|t }}
+        </p>
 
-<!-- Progresso global do admin -->
-<div style="background: rgba(0,0,0,0.25); border:1px solid #2a475e; padding:14px 18px; margin-bottom:22px; display:flex; gap:24px; align-items:center;">
-    <div>
-        <div style="font-size:12px; color:#8f98a0; text-transform:uppercase;">{{ "Progresso total"|t }}</div>
-        <div style="font-size:24px; font-weight:bold; color:#66c0f4;">{{ total_desb }} <span style="color:#8f98a0; font-size:14px; font-weight:normal;">/ {{ total_total }}</span></div>
-    </div>
-    <div style="flex:1; min-width:120px;">
-        {% set pct = ((100 * total_desb / total_total) | round) if total_total else 0 %}
-        <div style="height:10px; background:#1b2838; border:1px solid #2a475e;">
-            <div style="height:100%; background: linear-gradient(90deg, #5c7e10, #beee11); width: {{ pct }}%;"></div>
+        <!-- Progresso global -->
+        <div style="background: rgba(0,0,0,0.25); border:1px solid #2a475e; padding:14px 18px; margin-bottom:22px; display:flex; gap:24px; align-items:center;">
+            <div>
+                <div style="font-size:12px; color:#8f98a0; text-transform:uppercase;">{{ "Progresso total"|t }}</div>
+                <div style="font-size:24px; font-weight:bold; color:#66c0f4;">{{ total_desb }} <span style="color:#8f98a0; font-size:14px; font-weight:normal;">/ {{ total_total }}</span></div>
+            </div>
+            <div style="flex:1; min-width:120px;">
+                {% set pct = ((100 * total_desb / total_total) | round) if total_total else 0 %}
+                <div style="height:10px; background:#1b2838; border:1px solid #2a475e;">
+                    <div style="height:100%; background: linear-gradient(90deg, #5c7e10, #beee11); width: {{ pct }}%;"></div>
+                </div>
+                <div style="font-size:11px; color:#8f98a0; margin-top:4px;">{{ pct }}%</div>
+            </div>
+            <form method="POST" action="{{ url_for('admin_testes') }}" style="margin:0;"
+                  onsubmit="return confirm('{{ "Apagar TODAS as suas conquistas em todos os jogos?"|t }}');">
+                <input type="hidden" name="acao" value="resetar_tudo">
+                <button class="btn-blue" style="background:#7a3030; color:#ffb3b3; font-size:12px; padding:6px 14px;">
+                    🗑 {{ "Resetar tudo"|t }}
+                </button>
+            </form>
         </div>
-        <div style="font-size:11px; color:#8f98a0; margin-top:4px;">{{ pct }}%</div>
-    </div>
-    <form method="POST" action="{{ url_for('admin_testes') }}" style="margin:0;"
-          onsubmit="return confirm('{{ "Apagar TODAS as suas conquistas em todos os jogos?"|t }}');">
-        <input type="hidden" name="acao" value="resetar_tudo">
-        <button class="btn-blue" style="background:#7a3030; color:#ffb3b3; font-size:12px; padding:6px 14px;">
-            🗑 {{ "Resetar tudo"|t }}
-        </button>
-    </form>
-</div>
 
-<!-- Por jogo -->
-<div style="display:flex; flex-direction:column; gap:18px;">
-{% for j in jogos %}
-<div style="background:#1b2838; border:1px solid #2a475e; padding:14px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px;">
-        <div>
-            <h3 style="margin:0; color:#fff;">
-                {{ j.name }}
-                <span style="font-size:12px; color:#8f98a0; font-weight:normal;">· {{ j.publisher }}</span>
-            </h3>
-            <div style="font-size:12px; color:#8f98a0; margin-top:3px;">
-                {{ j.desbloqueadas }} / {{ j.total }} {{ "conquistas desbloqueadas"|t }}
-                {% set pct_j = ((100 * j.desbloqueadas / j.total) | round) if j.total else 0 %}
-                · {{ pct_j }}%
+        <!-- Por jogo -->
+        <div style="display:flex; flex-direction:column; gap:18px;">
+        {% for j in jogos %}
+        <div style="background:rgba(0,0,0,0.15); border:1px solid #2a475e; padding:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px;">
+                <div>
+                    <h3 style="margin:0; color:#fff;">
+                        {{ j.name }}
+                        <span style="font-size:12px; color:#8f98a0; font-weight:normal;">· {{ j.publisher }}</span>
+                    </h3>
+                    <div style="font-size:12px; color:#8f98a0; margin-top:3px;">
+                        {{ j.desbloqueadas }} / {{ j.total }} {{ "conquistas desbloqueadas"|t }}
+                        {% set pct_j = ((100 * j.desbloqueadas / j.total) | round) if j.total else 0 %}
+                        · {{ pct_j }}%
+                    </div>
+                </div>
+                <form method="POST" action="{{ url_for('admin_testes') }}" style="margin:0;">
+                    <input type="hidden" name="acao" value="resetar_jogo">
+                    <input type="hidden" name="game_id" value="{{ j.id }}">
+                    <button class="btn-blue" style="background:#3a2030; color:#ffb3b3; font-size:11px; padding:5px 12px;">
+                        ↺ {{ "Resetar este jogo"|t }}
+                    </button>
+                </form>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:10px;">
+            {% for c in j.conquistas %}
+            <div style="background:#171a21; border:1px solid {% if c.desbloqueada %}#5c7e10{% else %}#2a475e{% endif %};
+                        padding:12px; display:flex; gap:12px; align-items:flex-start;
+                        {% if not c.desbloqueada %}opacity: 0.78;{% endif %}">
+                <div style="font-size:36px; line-height:1; flex-shrink:0;
+                            {% if not c.desbloqueada %}filter: grayscale(1); opacity: 0.5;{% endif %}">
+                    {{ c.icone }}
+                </div>
+                <div style="flex:1;">
+                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                        <strong style="color: {% if c.desbloqueada %}#beee11{% else %}#c7d5e0{% endif %};">{{ c.nome|t }}</strong>
+                        <span style="font-size:10px; background:#2a475e; color:#fff; padding:1px 6px; border-radius:2px;">
+                            {{ c.pontos }} {{ "pts"|t }}
+                        </span>
+                    </div>
+                    <p style="margin:4px 0 8px; font-size:12px; color:#8f98a0;">{{ c.descricao|t }}</p>
+                    {% if c.desbloqueada %}
+                    <div style="font-size:10px; color:#79a016; margin-bottom:6px;">
+                        ✓ {{ "Desbloqueada em"|t }} {{ c.data }}
+                    </div>
+                    <form method="POST" action="{{ url_for('admin_testes') }}" style="margin:0;">
+                        <input type="hidden" name="acao" value="bloquear">
+                        <input type="hidden" name="game_id" value="{{ j.id }}">
+                        <input type="hidden" name="conquista_id" value="{{ c.id }}">
+                        <button class="btn-blue" style="background:#3a2030; color:#ffb3b3; font-size:11px; padding:4px 10px;">
+                            ↺ {{ "Bloquear"|t }}
+                        </button>
+                    </form>
+                    {% else %}
+                    <form method="POST" action="{{ url_for('admin_testes') }}" style="margin:0;">
+                        <input type="hidden" name="acao" value="desbloquear">
+                        <input type="hidden" name="game_id" value="{{ j.id }}">
+                        <input type="hidden" name="conquista_id" value="{{ c.id }}">
+                        <button class="btn-green" style="font-size:11px; padding:4px 12px;">
+                            🔓 {{ "Desbloquear"|t }}
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
             </div>
         </div>
-        <form method="POST" action="{{ url_for('admin_testes') }}" style="margin:0;">
-            <input type="hidden" name="acao" value="resetar_jogo">
-            <input type="hidden" name="game_id" value="{{ j.id }}">
-            <button class="btn-blue" style="background:#3a2030; color:#ffb3b3; font-size:11px; padding:5px 12px;">
-                ↺ {{ "Resetar este jogo"|t }}
-            </button>
-        </form>
-    </div>
-
-    <!-- Lista de conquistas -->
-    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:10px;">
-    {% for c in j.conquistas %}
-    <div style="background:#171a21; border:1px solid {% if c.desbloqueada %}#5c7e10{% else %}#2a475e{% endif %};
-                padding:12px; display:flex; gap:12px; align-items:flex-start;
-                {% if not c.desbloqueada %}opacity: 0.78;{% endif %}">
-        <div style="font-size:36px; line-height:1; flex-shrink:0;
-                    {% if not c.desbloqueada %}filter: grayscale(1); opacity: 0.5;{% endif %}">
-            {{ c.icone }}
+        {% endfor %}
         </div>
-        <div style="flex:1;">
-            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                <strong style="color: {% if c.desbloqueada %}#beee11{% else %}#c7d5e0{% endif %};">{{ c.nome|t }}</strong>
-                <span style="font-size:10px; background:#2a475e; color:#fff; padding:1px 6px; border-radius:2px;">
-                    {{ c.pontos }} {{ "pts"|t }}
+    </div>
+</details>
+
+<!-- ============================================================ -->
+<!-- ACCORDION 2: CRIAR JOGO                                       -->
+<!-- ============================================================ -->
+<details class="acc">
+    <summary>
+        <span class="acc-title">🎮 {{ "Criar novo jogo"|t }}</span>
+        <span class="acc-sub">— {{ "fica salvo igual a qualquer outro jogo do catálogo"|t }}</span>
+    </summary>
+    <div class="acc-body">
+        <p style="color:#8f98a0; margin: 0 0 18px;">
+            {{ "Apenas Nome, Descrição, Preço, Classificação e Publisher são obrigatórios. Campos em branco são preenchidos automaticamente com textos genéricos. A imagem opcional usa a do primeiro jogo como placeholder."|t }}
+        </p>
+
+        <form method="POST" action="{{ url_for('admin_criar_jogo') }}" enctype="multipart/form-data" class="new-game-form">
+            <!-- ===== Obrigatórios ===== -->
+            <div class="field full">
+                <label>{{ "Nome do jogo"|t }} <span class="req">*</span></label>
+                <input type="text" name="name" required maxlength="80" placeholder="{{ 'Ex.: Cavaleiros da Aurora'|t }}">
+            </div>
+            <div class="field full">
+                <label>{{ "Descrição curta"|t }} <span class="req">*</span></label>
+                <textarea name="description" required maxlength="240" rows="2"
+                          placeholder="{{ 'Aparece nos cards da loja, biblioteca e nos comentários.'|t }}"></textarea>
+            </div>
+            <div class="field">
+                <label>{{ "Preço"|t }} (R$) <span class="req">*</span></label>
+                <input type="number" name="price" required min="0" step="0.01" placeholder="49.90">
+            </div>
+            <div class="field">
+                <label>{{ "Classificação etária"|t }} <span class="req">*</span></label>
+                <select name="age_rating" required>
+                    <option value="0">{{ "Livre"|t }}</option>
+                    <option value="10">+10</option>
+                    <option value="16">+16</option>
+                    <option value="18">+18</option>
+                </select>
+            </div>
+            <div class="field full">
+                <label>{{ "Publisher"|t }} <span class="req">*</span></label>
+                <input type="text" name="publisher" required list="lista-publishers" placeholder="MINIntendo">
+                <datalist id="lista-publishers">
+                    {% for p in publishers_existentes %}<option value="{{ p }}">{% endfor %}
+                </datalist>
+                <div class="hint">{{ "Use uma das existentes ou digite uma nova — vira opção em /admin/promo automaticamente."|t }}</div>
+            </div>
+
+            <!-- ===== Opcionais ===== -->
+            <div class="field">
+                <label>{{ "Desenvolvedor"|t }} <span class="opt">({{ "opcional"|t }})</span></label>
+                <input type="text" name="developer" placeholder="{{ 'Estúdio Independente'|t }}">
+            </div>
+            <div class="field">
+                <label>{{ "Data de lançamento"|t }} <span class="opt">({{ "opcional"|t }})</span></label>
+                <input type="text" name="release_date" placeholder="{{ 'Lançamento recente'|t }}">
+            </div>
+
+            <div class="field full">
+                <label>{{ "Descrição longa"|t }} <span class="opt">({{ "opcional — usa a curta se vazia"|t }})</span></label>
+                <textarea name="long_description" rows="3" maxlength="1200"
+                          placeholder="{{ 'Texto completo que aparece na seção Sobre o jogo da página da loja.'|t }}"></textarea>
+            </div>
+
+            <div class="field">
+                <label>{{ "Gêneros"|t }} <span class="opt">({{ "opcional, separados por vírgula"|t }})</span></label>
+                <input type="text" name="genres" placeholder="{{ 'RPG, Ação, Aventura'|t }}">
+            </div>
+            <div class="field">
+                <label>{{ "Tags"|t }} <span class="opt">({{ "opcional, separados por vírgula"|t }})</span></label>
+                <input type="text" name="tags" placeholder="{{ 'Mundo Aberto, Multijogador'|t }}">
+            </div>
+
+            <div class="field">
+                <label>{{ "Recursos"|t }} <span class="opt">({{ "opcional, separados por vírgula"|t }})</span></label>
+                <input type="text" name="features" placeholder="{{ 'Um jogador, Conquistas Steam'|t }}">
+            </div>
+            <div class="field">
+                <label>{{ "Idiomas"|t }} <span class="opt">({{ "opcional, separados por vírgula"|t }})</span></label>
+                <input type="text" name="languages" placeholder="{{ 'Português, Inglês'|t }}">
+            </div>
+
+            <div class="field">
+                <label>{{ "Status de avaliações"|t }} <span class="opt">({{ "opcional"|t }})</span></label>
+                <input type="text" name="reviews" placeholder="{{ 'Muito positivas / Positivas / etc'|t }}">
+            </div>
+            <div class="field">
+                <label>{{ "Contagem de avaliações"|t }} <span class="opt">({{ "opcional"|t }})</span></label>
+                <input type="number" name="review_count" min="0" placeholder="0">
+            </div>
+
+            <div class="field full">
+                <label>{{ "Requisitos mínimos"|t }} <span class="opt">({{ "opcional"|t }})</span></label>
+                <input type="text" name="req_minimo" placeholder="SO: Windows 10 64-bit · CPU: dual-core 2.0 GHz · RAM: 4 GB · 10 GB">
+            </div>
+            <div class="field full">
+                <label>{{ "Requisitos recomendados"|t }} <span class="opt">({{ "opcional"|t }})</span></label>
+                <input type="text" name="req_recomendado" placeholder="SO: Windows 11 64-bit · CPU: quad-core 3.0 GHz · RAM: 8 GB · 10 GB SSD">
+            </div>
+
+            <div class="field full">
+                <label>{{ "Imagem do jogo"|t }} <span class="opt">({{ "opcional, JPG/PNG — usa placeholder se vazia"|t }})</span></label>
+                <input type="file" name="image" accept="image/*">
+                <div class="hint">{{ "Salva como jogo<id>.jpg em static/images automaticamente."|t }}</div>
+            </div>
+
+            <div class="full" style="display:flex; gap:10px; align-items:center; margin-top:6px;">
+                <button type="submit" class="btn-green" style="padding: 10px 22px; font-size: 14px;">
+                    ✓ {{ "Cadastrar jogo"|t }}
+                </button>
+                <span style="color:#67707a; font-size: 12px;">
+                    {{ "Será atribuído um ID automático e o jogo aparece na loja imediatamente."|t }}
                 </span>
             </div>
-            <p style="margin:4px 0 8px; font-size:12px; color:#8f98a0;">{{ c.descricao|t }}</p>
-            {% if c.desbloqueada %}
-            <div style="font-size:10px; color:#79a016; margin-bottom:6px;">
-                ✓ {{ "Desbloqueada em"|t }} {{ c.data }}
-            </div>
-            <form method="POST" action="{{ url_for('admin_testes') }}" style="margin:0;">
-                <input type="hidden" name="acao" value="bloquear">
-                <input type="hidden" name="game_id" value="{{ j.id }}">
-                <input type="hidden" name="conquista_id" value="{{ c.id }}">
-                <button class="btn-blue" style="background:#3a2030; color:#ffb3b3; font-size:11px; padding:4px 10px;">
-                    ↺ {{ "Bloquear"|t }}
-                </button>
-            </form>
-            {% else %}
-            <form method="POST" action="{{ url_for('admin_testes') }}" style="margin:0;">
-                <input type="hidden" name="acao" value="desbloquear">
-                <input type="hidden" name="game_id" value="{{ j.id }}">
-                <input type="hidden" name="conquista_id" value="{{ c.id }}">
-                <button class="btn-green" style="font-size:11px; padding:4px 12px;">
-                    🔓 {{ "Desbloquear"|t }}
-                </button>
-            </form>
-            {% endif %}
-        </div>
+        </form>
     </div>
-    {% endfor %}
-    </div>
-</div>
-{% endfor %}
-</div>
+</details>
 {% endblock %}

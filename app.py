@@ -5,6 +5,7 @@ import os
 import json
 import random
 import re
+import shutil
 
 import i18n
 
@@ -222,6 +223,7 @@ FAMILIAS_FILE   = os.path.join(DATA_DIR, 'familias.txt')
 CARTEIRAS_FILE  = os.path.join(DATA_DIR, 'carteiras.txt')
 SESSOES_FILE    = os.path.join(DATA_DIR, 'sessoes.txt')
 HISTORICO_FILE  = os.path.join(DATA_DIR, 'historico.txt')
+JOGOS_EXTRAS_FILE = os.path.join(DATA_DIR, 'jogos_extras.txt')
 DESEJOS_FILE     = os.path.join(DATA_DIR, 'desejos.txt')
 PROMOCOES_FILE   = os.path.join(DATA_DIR, 'promocoes.txt')
 HISTORICO_PROMOCOES_FILE = os.path.join(DATA_DIR, 'historico_promocoes.txt')
@@ -308,6 +310,15 @@ def _garantir_arquivos():
             f.write("# Campos: user_id, data, itens, total, desconto, metodo_pagamento\n")
             f.write("# =============================================================================\n")
 
+    if not os.path.exists(JOGOS_EXTRAS_FILE):
+        with open(JOGOS_EXTRAS_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Jogos criados via /admin/testes\n")
+            f.write("# Cada linha é um objeto JSON com a MESMA estrutura dos jogos em GAMES no app.py\n")
+            f.write("# (id, name, price, age_rating, description, developer, publisher, etc.).\n")
+            f.write("# Carregados em GAMES no startup do app — indistinguíveis dos jogos hardcoded.\n")
+            f.write("# =============================================================================\n")
+
     if not os.path.exists(DESEJOS_FILE):
         with open(DESEJOS_FILE, 'w', encoding='utf-8') as f:
             f.write("# =============================================================================\n")
@@ -382,6 +393,75 @@ def _garantir_arquivos():
             f.write("# MINISTEAM - Tempo de Jogo (Simulado)\n")
             f.write("# Formato: user_id | game_id | horas_acumuladas\n")
             f.write("# =============================================================================\n")
+
+
+# ---- FUNÇÕES DE JOGOS EXTRAS (cadastrados em runtime via /admin/testes) ----
+
+# Defaults usados pra preencher campos opcionais que o admin não informou.
+# São sempre em pt-br pra que o filtro |t consiga traduzir nos templates.
+_DEFAULTS_JOGO_NOVO = {
+    'description':      'Um novo jogo do catálogo Ministeam.',
+    'developer':        'Estúdio Independente',
+    'publisher':        'Ministeam Publishing',
+    'release_date':     'Lançamento recente',
+    'long_description': 'Mais detalhes sobre este jogo serão adicionados em breve.',
+    'reviews':          'Sem avaliações ainda',
+    'review_count':     0,
+    'req_minimo':       'SO: Windows 10 64-bit · CPU: dual-core 2.0 GHz · RAM: 4 GB · 10 GB',
+    'req_recomendado':  'SO: Windows 11 64-bit · CPU: quad-core 3.0 GHz · RAM: 8 GB · 10 GB SSD',
+}
+_DEFAULTS_LISTAS = {
+    'genres':    ['Indie'],
+    'tags':      ['Novo lançamento'],
+    'features':  ['Um jogador'],
+    'languages': ['Português'],
+}
+
+
+def _proximo_game_id():
+    """Próximo ID livre considerando GAMES já carregado (catálogo + extras)."""
+    nums = [int(k) for k in GAMES.keys() if str(k).isdigit()]
+    return str(max(nums, default=0) + 1)
+
+
+def carregar_jogos_extras():
+    """Lê data/jogos_extras.txt e mescla cada entry em GAMES no startup.
+
+    Chamada uma vez ao iniciar o app. Como GAMES é dict global, é seguro
+    fazer .update — IDs cadastrados em runtime nunca colidem com 1-4 porque
+    _proximo_game_id sempre incrementa a partir do maior.
+    """
+    _garantir_arquivos()
+    try:
+        with open(JOGOS_EXTRAS_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s or s.startswith('#'):
+                    continue
+                try:
+                    jogo = json.loads(s)
+                except json.JSONDecodeError:
+                    continue
+                gid = str(jogo.get('id', ''))
+                if gid:
+                    GAMES[gid] = jogo
+    except FileNotFoundError:
+        pass
+
+
+def salvar_jogo_novo(jogo):
+    """Persiste um jogo em jogos_extras.txt e adiciona ao GAMES em memória."""
+    _garantir_arquivos()
+    GAMES[str(jogo['id'])] = jogo
+    with open(JOGOS_EXTRAS_FILE, 'a', encoding='utf-8') as f:
+        f.write(json.dumps(jogo, ensure_ascii=False) + '\n')
+
+
+def _parsear_lista_csv(texto, fallback):
+    """'a, b, c' → ['a','b','c']. Vazio → fallback."""
+    if not texto or not texto.strip():
+        return list(fallback)
+    return [t.strip() for t in texto.split(',') if t.strip()]
 
 
 # ---- FUNÇÕES DE USUÁRIOS ----
@@ -3157,6 +3237,108 @@ def admin_promo():
     )
 
 
+@app.route('/admin/testes/criar_jogo', methods=['POST'])
+def admin_criar_jogo():
+    """Cadastra um novo jogo no catálogo, persistido em data/jogos_extras.txt.
+
+    Campos obrigatórios (no form): name, price, age_rating, publisher.
+    Os demais ficam opcionais e são preenchidos com defaults se vazios.
+    """
+    nome      = (request.form.get('name') or '').strip()
+    publisher = (request.form.get('publisher') or '').strip()
+    try:
+        price = float((request.form.get('price') or '').replace(',', '.'))
+    except ValueError:
+        price = -1
+    try:
+        age_rating = int(request.form.get('age_rating') or '-1')
+    except ValueError:
+        age_rating = -1
+
+    if not nome:
+        flash("Nome do jogo é obrigatório.", "error")
+        return redirect(url_for('admin_testes'))
+    if price <= 0:
+        flash("Preço inválido (informe um valor maior que zero).", "error")
+        return redirect(url_for('admin_testes'))
+    if age_rating not in (0, 10, 16, 18):
+        flash("Classificação etária inválida (use 0, 10, 16 ou 18).", "error")
+        return redirect(url_for('admin_testes'))
+    if not publisher:
+        flash("Publisher é obrigatório.", "error")
+        return redirect(url_for('admin_testes'))
+
+    gid = _proximo_game_id()
+
+    def _txt(field):
+        v = (request.form.get(field) or '').strip()
+        return v if v else _DEFAULTS_JOGO_NOVO.get(field, '')
+
+    long_descr = (request.form.get('long_description') or '').strip()
+    if not long_descr:
+        # Reutiliza a descrição curta quando a longa fica vazia para evitar
+        # parecer "sem conteúdo" na página do jogo.
+        long_descr = (request.form.get('description') or '').strip() or _DEFAULTS_JOGO_NOVO['long_description']
+
+    try:
+        review_count = int(request.form.get('review_count') or '0')
+        if review_count < 0:
+            review_count = 0
+    except ValueError:
+        review_count = 0
+
+    jogo = {
+        'id':               gid,
+        'name':             nome,
+        'price':            round(price, 2),
+        'age_rating':       age_rating,
+        'description':      _txt('description'),
+        'developer':        _txt('developer'),
+        'publisher':        publisher,
+        'release_date':     _txt('release_date'),
+        'genres':           _parsear_lista_csv(request.form.get('genres'),    _DEFAULTS_LISTAS['genres']),
+        'tags':             _parsear_lista_csv(request.form.get('tags'),      _DEFAULTS_LISTAS['tags']),
+        'features':         _parsear_lista_csv(request.form.get('features'),  _DEFAULTS_LISTAS['features']),
+        'languages':        _parsear_lista_csv(request.form.get('languages'), _DEFAULTS_LISTAS['languages']),
+        'long_description': long_descr,
+        'reviews':          _txt('reviews'),
+        'review_count':     review_count,
+        'req_minimo':       _txt('req_minimo'),
+        'req_recomendado':  _txt('req_recomendado'),
+        # Conquista padrão garante que o auto-unlock do primeiro start funcione
+        # também em jogos criados pelo admin — sem ela `conquistas_do_jogo[0]`
+        # seria None e nada seria desbloqueado.
+        'conquistas':       [{
+            'id':        f'novo_{gid}_inicio',
+            'nome':      'Primeiros Passos',
+            'descricao': f'Inicie {nome} pela primeira vez.',
+            'icone':     '🎮',
+            'pontos':    10,
+        }],
+    }
+
+    # Imagem: upload opcional. Se vazio, copia o primeiro jogo como placeholder
+    # (alternativa seria 404 no template — usar uma cópia é mais amigável).
+    destino_img = os.path.join(os.path.dirname(__file__), 'static', 'images', f'jogo{gid}.jpg')
+    file = request.files.get('image')
+    if file and file.filename:
+        try:
+            file.save(destino_img)
+        except Exception:
+            flash("Não consegui salvar a imagem; usando placeholder.", "error")
+            placeholder = os.path.join(os.path.dirname(__file__), 'static', 'images', 'jogo1.jpg')
+            if os.path.exists(placeholder):
+                shutil.copy(placeholder, destino_img)
+    else:
+        placeholder = os.path.join(os.path.dirname(__file__), 'static', 'images', 'jogo1.jpg')
+        if os.path.exists(placeholder) and not os.path.exists(destino_img):
+            shutil.copy(placeholder, destino_img)
+
+    salvar_jogo_novo(jogo)
+    flash(f"Jogo '{nome}' cadastrado com sucesso (id {gid}).", "sucesso")
+    return redirect(url_for('admin_testes'))
+
+
 @app.route('/admin/testes', methods=['GET', 'POST'])
 def admin_testes():
     """Painel de testes. Por enquanto, exclusivamente para conquistas.
@@ -3234,11 +3416,17 @@ def admin_testes():
             'desbloqueadas': n_desb,
             'total':        len(itens),
         })
+    # Publishers já cadastrados — viram opções no datalist do form de criar jogo.
+    publishers_existentes = sorted({
+        g.get('publisher') for g in GAMES.values() if g.get('publisher')
+    })
     return render_template(
         'admin_testes.html',
         jogos=jogos,
         total_desb=total_desb,
         total_total=total_total,
+        publishers_existentes=publishers_existentes,
+        today_iso=datetime.now().strftime('%Y-%m-%d'),
     )
 
 @app.route('/admin/set_refund_days', methods=['POST'])
@@ -3278,6 +3466,11 @@ def reset_session():
     return redirect(url_for('login'))
 
 
+# Carrega jogos cadastrados via /admin/testes no startup (a importação do
+# módulo já é suficiente — independente do WSGI/CLI usado para rodar).
+_garantir_arquivos()
+carregar_jogos_extras()
+
+
 if __name__ == '__main__':
-    _garantir_arquivos()
     app.run(debug=True)

@@ -3,3 +3,4 @@
 # Cada linha é um objeto JSON representando uma transação concluída.
 # Campos: user_id, data, itens, total, desconto, metodo_pagamento
 # =============================================================================
+{"user_id": "104", "data": "2026-06-11 18:06:09", "itens": [{"name": "Lombriguinha", "price": 120.0, "original_price": 120.0, "discount_pct": 0, "desconto_item": 0.0, "is_gift": false, "recipient_name": ""}, {"name": "Aventura Épica", "price": 150.0, "original_price": 150.0, "discount_pct": 0, "desconto_item": 0.0, "is_gift": false, "recipient_name": ""}, {"name": "Corrida Divertida", "price": 45.0, "original_price": 45.0, "discount_pct": 0, "desconto_item": 0.0, "is_gift": false, "recipient_name": ""}], "total": 315.0, "desconto": 0, "metodo_pagamento": "R$ 100.00 da Carteira, R$ 215.00 via Pix"}

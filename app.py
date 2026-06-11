@@ -1799,7 +1799,8 @@ def garantir_valores_sessao():
         'wallet': 100.00, 'library': [], 'wishlist': [], 'cart': [], 'gifts_sent': {},
         'user_dob': None, 'user_profile': {'name': 'Usuário', 'details': '', 'linguagem': i18n.IDIOMA_PADRAO},
         'family': None, 'family_cooldown': False,
-        'offline_mode': False, 'active_game': None, 'show_pe01_for': None
+        'offline_mode': False, 'active_game': None, 'show_pe01_for': None,
+        'favorites': []
     }
     for chave, valor in padroes.items():
         if chave not in session:
@@ -2472,8 +2473,8 @@ def library():
                            key=lambda x: jogos_disponiveis[x]['name'].lower())
     selected_id = request.args.get('selected', '').strip()
     if selected_id not in jogos_disponiveis:
-        selected_id = ids_ordenados[0] if ids_ordenados else None
-
+        # selected_id = ids_ordenados[0] if ids_ordenados else None
+        selected_id = None
     selecionado = None
     if selected_id:
         game = jogos_disponiveis[selected_id]
@@ -2518,6 +2519,25 @@ def library():
                            ids_minha_biblioteca=ids_minha_biblioteca,
                            tem_familia=tem_familia,
                            selecionado=selecionado)
+
+@app.route('/library/toggle_favorite/<game_id>')
+def toggle_favorite(game_id):
+    """Adiciona ou remove um título da lista de favoritos do usuário."""
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+        
+    favorites = session.get('favorites', [])
+    if game_id in favorites:
+        favorites.remove(game_id)
+        flash("Jogo removido dos favoritos.", "sucesso")
+    else:
+        favorites.append(game_id)
+        flash("Jogo adicionado aos favoritos!", "sucesso")
+        
+    session['favorites'] = favorites
+    session.modified = True
+    # Retorna para a mesma página em que o usuário estava (Mantém o foco)
+    return redirect(request.referrer or url_for('library', selected=game_id))
 
 
 # ==============================================================================
@@ -2832,86 +2852,6 @@ def family_transfer_leadership(member_name):
     return redirect(url_for('family'))
 
 
-# @app.route('/family/play/<game_id>')
-# def family_play(game_id):
-#     if not session.get('family'):
-#         flash("Você não pertence a uma família.", "error")
-#         return redirect(url_for('family'))
-
-#     game_data = GAMES.get(game_id)
-
-#     # Já está executando este mesmo título: nada a fazer (não recontabiliza).
-#     if session.get('active_game') == game_id:
-#         return redirect(url_for('family'))
-
-#     if session.get('active_game') and session.get('active_game') != game_id:
-#         jogo_anterior = GAMES.get(session['active_game'])['name']
-#         flash(f"Bloqueio: Você já está jogando '{jogo_anterior}'. Feche-o primeiro.", "error")
-#         return redirect(url_for('family'))
-
-#     if game_id == '3':
-#         flash("Bloqueio: Este jogo possui restrições do desenvolvedor que impedem o compartilhamento.", "error")
-#         return redirect(url_for('family'))
-
-#     if game_data['age_rating'] > 0:
-#         user_dob_str = session.get('user_dob')
-#         if not user_dob_str:
-#             flash(f"Bloqueio: '{game_data['name']}' é classificado +{game_data['age_rating']} anos. "
-#                   f"Registre sua data de nascimento no perfil.", "error")
-#             return redirect(url_for('family'))
-#         try:
-#             dob      = datetime.strptime(user_dob_str, '%Y-%m-%d')
-#             hoje     = datetime.today()
-#             user_age = hoje.year - dob.year - ((hoje.month, hoje.day) < (dob.month, dob.day))
-#             if user_age < game_data['age_rating']:
-#                 flash(f"Bloqueio: Sua idade verificada ({user_age} anos) é inferior à classificação +{game_data['age_rating']}.", "error")
-#                 return redirect(url_for('family'))
-#         except ValueError:
-#             flash("Erro ao verificar data de nascimento. Atualize seu perfil.", "error")
-#             return redirect(url_for('family'))
-
-#     # Modo Offline: a licença foi validada no último login online, então o jogo
-#     # abre sem ocupar uma licença do pool (não soma +1 em "Em uso por parentes").
-#     if session.get('offline_mode'):
-#         iniciar_sessao_jogo(session['user_id'], session['family']['id'], game_id, modo='offline')
-#         session['active_game'] = game_id
-#         session['show_pe01_for'] = None
-#         session.modified = True
-#         flash("Modo Offline [A01]: Licença validada no último login online. Acesso permitido (não ocupa licença do pool).", "sucesso")
-#         return redirect(url_for('family'))
-
-#     total_licencas = session['family']['licenses'].get(game_id, 0)
-#     if total_licencas == 0:
-#         flash("Bloqueio: Ninguém da sua família comprou este jogo ainda.", "error")
-#         return redirect(url_for('family'))
-
-#     # Licenças ocupadas por OUTROS no momento (o usuário atual ainda não iniciou)
-#     em_uso = em_uso_total(session['family'], game_id)
-#     if em_uso >= total_licencas:
-#         flash(f"Bloqueio: Todas as {total_licencas} licença(s) estão em uso no momento.", "error")
-#         session['show_pe01_for'] = game_id
-#         session.modified = True
-#         return redirect(url_for('family'))
-
-#     # Registra a sessão de forma persistente: continua valendo se trocar de conta.
-#     iniciar_sessao_jogo(session['user_id'], session['family']['id'], game_id, modo='online')
-#     session['active_game']   = game_id
-#     session['show_pe01_for'] = None
-#     session.modified = True
-#     flash(f"'{game_data['name']}' iniciado! Licença temporária alocada. Saves e conquistas são individuais.", "sucesso")
-#     return redirect(url_for('family'))
-
-
-# @app.route('/family/stop')
-# def family_stop():
-#     # Devolve a licença ao pool (decrementa "Em uso por parentes" de forma persistente).
-#     encerrar_sessao_jogo(session['user_id'])
-#     session['active_game'] = None
-#     session.modified = True
-#     flash("Jogo encerrado. A licença foi devolvida ao banco da família.", "sucesso")
-#     return redirect(url_for('family'))
-
-
 @app.route('/play/<game_id>')
 def play_game(game_id):
     if not session.get('logged_in'):
@@ -2922,43 +2862,51 @@ def play_game(game_id):
         flash("Jogo não encontrado.", "error")
         return redirect(url_for('library'))
 
-    # CAPTURA E PERSISTE A ORIGEM: se veio da biblioteca ou da família
+    # Mapeia dinamicamente a URL exata de retorno com base na origem (src)
     src = request.args.get('src', 'library')
-    if src in ('library', 'family'):
-        session['game_source'] = src
+    if src == 'game':
+        return_url = url_for('game', game_id=game_id)
+    elif src == 'family':
+        return_url = url_for('family')
+    else:
+        # Garante que ao voltar para a biblioteca, o jogo atual continue selecionado no painel lateral
+        return_url = url_for('library', selected=game_id)
+
+    session['game_return_url'] = return_url
+    session.modified = True
 
     # 1. Verifica Múltiplas Instâncias
     if session.get('active_game') == game_id:
-        return render_template('playing.html', game=game_data, src=session.get('game_source', 'library'))
+        return render_template('playing.html', game=game_data, return_url=return_url)
         
     if session.get('active_game') and session.get('active_game') != game_id:
         jogo_anterior = GAMES.get(session.get('active_game'))['name']
         flash(f"Bloqueio: Você já está jogando '{jogo_anterior}'. Feche-o primeiro antes de iniciar outro título.", "error")
-        return redirect(url_for(session.get('game_source', 'library')))
+        return redirect(return_url)
 
     # 2. Restrição de Idade
     if game_data['age_rating'] > 0:
         user_dob_str = session.get('user_dob')
         if not user_dob_str or user_dob_str == 'none':
             flash(f"Bloqueio: Sua data de nascimento não está configurada no perfil.", "error")
-            return redirect(url_for(session.get('game_source', 'library')))
+            return redirect(return_url)
         try:
             dob = datetime.strptime(user_dob_str, '%Y-%m-%d')
             hoje = datetime.today()
             user_age = hoje.year - dob.year - ((hoje.month, hoje.day) < (dob.month, dob.day))
             if user_age < game_data['age_rating']:
                 flash(f"Bloqueio: Sua idade ({user_age} anos) é inferior à classificação exigida (+{game_data['age_rating']}).", "error")
-                return redirect(url_for(session.get('game_source', 'library')))
+                return redirect(return_url)
         except ValueError:
             flash("Sua data de nascimento não está configurada corretamente.", "error")
-            return redirect(url_for(session.get('game_source', 'library')))
+            return redirect(return_url)
 
     # 3. Verificação de Licenças Unificadas do Pool
     em_familia = bool(session.get('family'))
     if em_familia:
         if game_id not in session['family']['library_pool']:
             flash("Bloqueio: Ninguém da sua família possui a licença deste jogo.", "error")
-            return redirect(url_for(session.get('game_source', 'library')))
+            return redirect(return_url)
             
         total_licencas = session['family']['licenses'].get(game_id, 0)
         em_uso = em_uso_total(session['family'], game_id)
@@ -2967,7 +2915,7 @@ def play_game(game_id):
             flash(f"Bloqueio: Todas as {total_licencas} licença(s) unificadas deste jogo já estão em uso por outros membros.", "error")
             session['show_pe01_for'] = game_id
             session.modified = True
-            return redirect(url_for(session.get('game_source', 'library')))
+            return redirect(return_url)
             
         if not session.get('offline_mode'):
             iniciar_sessao_jogo(session['user_id'], session['family']['id'], game_id, modo='online')
@@ -2981,8 +2929,6 @@ def play_game(game_id):
             
         if session.get('offline_mode'):
             flash("Modo Offline: Jogo iniciado via cache local.", "sucesso")
-
-    # [ATENÇÃO: Removemos a declaração duplicada que estava aqui!]
 
     # 4. Conquista "primeira vez" do jogo
     conqs = conquistas_do_jogo(game_id)
@@ -2998,30 +2944,26 @@ def play_game(game_id):
                 'pontos':    conquista['pontos'],
             }), 'conquista')
     
-    # 5. Inicia o cronómetro de simulação ANTES de sobrescrever o estado atual
     if session.get('active_game') != game_id:
         session['play_start_time'] = datetime.now().timestamp()
 
-    # 6. AGORA SIM, definimos o jogo como ativo!
     session['active_game'] = game_id
     session['show_pe01_for'] = None
     session.modified = True
 
-    return render_template('playing.html', game=game_data, src=session.get('game_source', 'library'))
-
-    return render_template('playing.html', game=game_data, src=session.get('game_source', 'library'))
+    return render_template('playing.html', game=game_data, return_url=return_url)
 
 
 @app.route('/stop_game')
 def stop_game():
-    destino = session.get('game_source', 'library')
+    # Recupera o destino absoluto persistido na sessão
+    destino = session.pop('game_return_url', url_for('library'))
     
     if session.get('active_game'):
-        # NOVO: Calcula o tempo jogado (Regra: 1 minuto real = 1 hora simulada)
         start_time = session.get('play_start_time')
         if start_time:
             minutos_reais = (datetime.now().timestamp() - start_time) / 60.0
-            horas_simuladas = minutos_reais * 1.0  # Fator de aceleração da simulação
+            horas_simuladas = minutos_reais * 1.0
             adicionar_horas_jogo(session['user_id'], session['active_game'], horas_simuladas)
             session.pop('play_start_time', None)
 
@@ -3032,8 +2974,7 @@ def stop_game():
         session.modified = True
         flash("Jogo encerrado. A licença foi liberada e os saves sincronizados.", "sucesso")
         
-    return redirect(url_for(destino))
-
+    return redirect(destino)
 @app.route('/refund/<game_id>')
 def refund_game(game_id):
     uid = session.get('user_id')

@@ -155,7 +155,7 @@
             // SHIFT + TAB dentro do jogo: Minimiza e volta para a página de origem original
             if (event.shiftKey && event.key === 'Tab') {
                 event.preventDefault();
-                window.location.href = "{{ url_for(src) }}";
+                window.location.href = "{{ return_url }}";
             }
         });
 

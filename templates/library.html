@@ -483,8 +483,8 @@
     <!-- =================== SIDEBAR =================== -->
     <aside class="lib-side">
         <div class="lib-nav-top">
-            <div class="lib-nav-home">{{ "Página inicial"|t }}</div>
-            <div class="lib-nav-icon" title="{{ 'Grade'|t }}">⊞</div>
+            <a href="{{ url_for('library') }}" class="lib-nav-home" style="text-decoration: none;">{{ "Página inicial"|t }}</a>
+            <a href="{{ url_for('index') }}" class="lib-nav-icon" title="{{ 'Ir para a Loja'|t }}" style="text-decoration: none;">⊞</a>
         </div>
         <div class="lib-cat-dropdown">
             <span class="lab">{{ "Jogos e Softwares"|t }}</span>
@@ -525,6 +525,40 @@
             </div>
         </div>
 
+        {# ⭐ SEÇÃO DE FAVORITOS (ESTILO STEAM) ⭐ #}
+        {% set fav_ids = session.get('favorites', []) %}
+        {% set ns_fav = namespace(has_fav=false) %}
+        {% for gid in ids_ordenados %}{% if gid in fav_ids and gid in games %}{% set ns_fav.has_fav = true %}{% endif %}{% endfor %}
+
+        {% if ns_fav.has_fav %}
+        <div class="lib-all-head" style="color: #FFD700; font-weight: bold;">
+            <span class="caret">▾</span> ⭐ {{ "Favoritos"|t }}
+        </div>
+        <div class="lib-list" id="libFavList" style="flex: none; padding-bottom: 0;">
+            {% for gid in ids_ordenados %}
+            {% if gid in fav_ids and gid in games %}
+            {% set g = games[gid] %}
+            {% set is_fam = gid in ids_familia_pool %}
+            <a href="{{ url_for('library', selected=gid) }}"
+               class="lib-item {% if selecionado and selecionado.id == gid %}selected{% endif %}"
+               data-name="{{ g.name|lower }}"
+               data-publisher="{{ g.publisher }}"
+               data-age="{{ g.age_rating }}"
+               data-familia="{{ '1' if is_fam else '0' }}"
+               data-execucao="{{ '1' if session['active_game'] == gid else '0' }}">
+                <img src="{{ url_for('static', filename='images/jogo' ~ g.id ~ '.jpg') }}" alt="">
+                <span class="lib-item-name">{{ g.name }}</span>
+                {% if session['active_game'] == gid %}
+                <span class="lib-item-playing" title="{{ 'Em execução'|t }}"></span>
+                {% elif is_fam %}
+                <span class="lib-item-meta">{{ "FAM"|t }}</span>
+                {% endif %}
+            </a>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        
         <div class="lib-all-head">
             <span class="caret">▾</span> {{ "Todos"|t }}
             <span id="visivelCounter" style="color:#67707A;">({{ games|length }})</span>
@@ -569,7 +603,9 @@
         </span>
     </form>
 </div>
-        <div class="lib-add-game">＋ {{ "Adicionar jogo"|t }}</div>
+        <a href="{{ url_for('index') }}" class="lib-add-game" style="text-decoration: none; display: block; color: #67707A;">
+             ＋ {{ "Adicionar jogo (Ir para a Loja)"|t }}
+        </a>
     </aside>
 
     <!-- =================== MAIN =================== -->
@@ -592,12 +628,11 @@
                 <a href="{{ url_for('stop_game') }}" class="lib-play encerrar">
                     <span class="triangle">■</span> {{ "Encerrar"|t }}
                 </a>
-                <span class="lib-play-arrow">▾</span>
                 {% else %}
                 <a href="{{ url_for('play_game', game_id=s.id) }}?src=library" class="lib-play">
                     <span class="triangle">▶</span> {{ "Jogar"|t }}
                 </a>
-                <span class="lib-play-arrow">▾</span>
+    
                 {% endif %}
 
                 <div class="lib-status-strip">
@@ -633,9 +668,12 @@
                 </div>
 
                 <div class="lib-icons-right">
-                    <span title="{{ 'Configurações'|t }}">⚙</span>
-                    <span title="{{ 'Informações'|t }}">ⓘ</span>
-                    <span title="{{ 'Favoritos'|t }}">♡</span>
+                    <a href="{{ url_for('meu_perfil') }}" title="{{ 'Configurações do Perfil'|t }}" style="color: inherit; text-decoration: none; font-size: 18px;">⚙</a>
+                    <a href="{{ url_for('game', game_id=s.id) }}" title="{{ 'Ver Página na Loja'|t }}" style="color: inherit; text-decoration: none; font-size: 18px;">ⓘ</a>
+                    <a href="{{ url_for('toggle_favorite', game_id=s.id) }}" title="{{ 'Favoritar Jogo'|t }}" 
+                    style="text-decoration: none; font-size: 18px; color: {% if s.id in session.get('favorites', []) %}#FFD700{% else %}#67707A{% endif %};">
+                        {% if s.id in session.get('favorites', []) %}❤︎{% else %}♡{% endif %}
+                    </a>
                 </div>
             </div>
 
@@ -662,8 +700,30 @@
                         </div>
                     </div>
 
-                    <h3 class="lib-section-title">{{ "Atividade"|t }}</h3>
-                    <div class="lib-activity-input">{{ "Diga algo sobre o jogo aos seus amigos..."|t }}</div>
+                    <h3 class="lib-section-title">{{ "Compartilhar Atividade (Escrever Análise)"|t }}</h3>
+                        <div class="lib-card" style="padding: 14px; background: rgba(0, 0, 0, 0.25); border: 1px solid #2a475e; margin-bottom: 14px;">
+                            <form action="{{ url_for('submit_review', game_id=s.id) }}" method="POST" style="display: flex; flex-direction: column; gap: 10px;">
+                                <textarea name="comentario" rows="3" 
+                                        placeholder="{{ 'Diga algo sobre o jogo aos seus amigos... Sua análise também será compartilhada publicamente na Loja!'|t }}" 
+                                        style="width: 100%; padding: 10px; background: #14161c; border: 1px solid #2a475e; color: #fff; resize: vertical; font-size: 13px; outline: none; font-family: inherit;" 
+                                        required></textarea>
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                    <div style="display: flex; gap: 14px; font-size: 13px; color: #8F98A0; align-items: center;">
+                                        <span>{{ "Você recomenda este jogo?"|t }}</span>
+                                        <label style="color: #d2efa9; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                            <input type="radio" name="recomenda" value="sim" checked> 👍 {{ "Sim"|t }}
+                                        </label>
+                                        <label style="color: #ff6b6b; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                            <input type="radio" name="recomenda" value="nao"> 👎 {{ "Não"|t }}
+                                        </label>
+                                    </div>
+                                    <button type="submit" class="btn-green" style="padding: 6px 16px; font-size: 12px; font-weight: bold; border-radius: 2px; cursor: pointer;">
+                                        {{ "Publicar Análise"|t }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
 
                     {% if s.conq_desb > 0 or s.horas > 0 %}
                     <div class="lib-activity-date">{{ "Recente"|t }}</div>
@@ -752,7 +812,41 @@
                 </aside>
             </div>
         {% else %}
-            <div class="lib-empty">{{ "Selecione um jogo na lista ao lado."|t }}</div>
+            {# PAGINA INICIAL DA BIBLIOTECA (VISÃO EM QUADRADOS DA STEAM) #}
+            <div style="padding: 40px 30px;">
+                <h1 style="color: #fff; font-size: 24px; font-weight: 300; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 1.2px;">
+                     {{ "Página Inicial da Biblioteca"|t }}
+                </h1>
+                
+                <h3 class="lib-section-title" style="margin-bottom: 16px; font-size: 13px; color: #66C0F4;">{{ "Todos os Seus Títulos"|t }} ({{ games|length }})</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px;">
+                    {% for gid, g in games.items() %}
+                    <div style="background: #171a21; border: 1px solid #2a475e; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s;" 
+                         onmouseover="this.style.transform='scale(1.03)'; this.style.boxShadow='0 4px 15px rgba(102,192,244,0.35)';" 
+                         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                        <a href="{{ url_for('library', selected=gid) }}" style="text-decoration: none; display: block; position: relative; aspect-ratio: 16/9;">
+                            <img src="{{ url_for('static', filename='images/jogo' ~ g.id ~ '.jpg') }}" alt="{{ g.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            {% if session['active_game'] == gid %}
+                            <div style="position: absolute; top: 6px; right: 6px; background: #79A016; color: white; font-size: 9px; padding: 2px 6px; font-weight: bold; border-radius: 2px; text-transform: uppercase; letter-spacing: 0.5px; animation: pulse 1.5s infinite;">
+                                {{ "Rodando"|t }}
+                            </div>
+                            {% endif %}
+                        </a>
+                        <div style="padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; background: #121a22;">
+                            <a href="{{ url_for('library', selected=gid) }}" style="color: #fff; text-decoration: none; font-size: 13px; font-weight: bold; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 4px;">
+                                {{ g.name }}
+                            </a>
+                            <div style="font-size: 11px; color: #8f98a0; display: flex; justify-content: space-between; align-items: center;">
+                                <span>{{ g.publisher }}</span>
+                                {% if gid in session.get('favorites', []) %}
+                                <span style="color: #FFD700;">❤︎</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         {% endif %}
     </section>
 </div>
@@ -782,12 +876,13 @@
     }
 
     function refiltrar() {
-        if (!list) return;
         var query = (search && search.value || '').toLowerCase().trim();
         var f = coletarFiltros();
         var ativos = f.pubs.length + f.ages.length + f.flags.length;
         var visiveis = 0;
-        list.querySelectorAll('.lib-item').forEach(function (el) {
+        
+        // Altera para monitorar todos os itens da barra lateral
+        document.querySelectorAll('.lib-side .lib-item').forEach(function (el) {
             var matchNome  = !query || (el.dataset.name || '').indexOf(query) !== -1;
             var matchPub   = f.pubs.length === 0 || f.pubs.indexOf(el.dataset.publisher) !== -1;
             var matchAge   = f.ages.length === 0 || f.ages.indexOf(el.dataset.age) !== -1;
@@ -795,8 +890,13 @@
             var matchExec  = f.flags.indexOf('execucao') === -1 || el.dataset.execucao === '1';
             var show = matchNome && matchPub && matchAge && matchFam && matchExec;
             el.style.display = show ? '' : 'none';
-            if (show) visiveis++;
+            
+            // Soma no contador apenas se o elemento pertencer à lista Geral (evita duplicar jogos favoritados)
+            if (show && el.parentElement.id === 'libList') {
+                visiveis++;
+            }
         });
+        
         if (counter) counter.textContent = '(' + visiveis + ')';
         if (filterCount) {
             if (ativos > 0) {

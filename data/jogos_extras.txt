@@ -1,0 +1,6 @@
+# =============================================================================
+# MINISTEAM - Jogos criados via /admin/testes
+# Cada linha é um objeto JSON com a MESMA estrutura dos jogos em GAMES no app.py
+# (id, name, price, age_rating, description, developer, publisher, etc.).
+# Carregados em GAMES no startup do app — indistinguíveis dos jogos hardcoded.
+# =============================================================================

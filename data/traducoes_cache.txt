@@ -2639,6 +2639,217 @@ ko | Testes do sistema || 시스템 테스트
 ko | Resetar este jogo || 이 게임을 재설정
 ko | Página na loja || 매장 내 페이지
 ko | Bloquear || 차단하다
+en | desbloqueou || unlocked
+en | Data || Date
+en | Histórico de compras || Purchase history
+en | Informações || Information
+en | Para mim || For me
+en | Destaque || Emphasis
+en | Itens || Items
+en | Explorar a Loja || Explore the Store
+en | Voltar à Loja || Return to Store
+en | Jogos e Softwares || Games and Software
+en | Acesso || Access
+en | Em execução agora || Running now
+en | alcançadas || achieved
+en | Diga algo sobre o jogo aos seus amigos... || Tell your friends something about the game...
+en | Favoritos || Favorites
+en | Notícias || News
+en | Nenhuma compra realizada ainda || No purchases made yet
+en | recente || recent
+en | acumuladas em || accumulated in
+en | Ver atividade de amigos || View friend activity
+en | Histórico de Compras || Purchase History
+en | Nenhuma atividade ainda. Pressione || No activity yet. press
+en | Total pago || Total paid
+en | Todos || All
+en | Seu histórico ficará disponível aqui assim que você finalizar a primeira compra. || Your history will be available here as soon as you complete your first purchase.
+en | para começar. || to start.
+en | Total de transações || Total transactions
+en | JOGAR || TO PLAY
+en | Atividade || Activity
+en | Forma de pagamento || Payment method
+en | Última sessão || Last session
+en | Desconto || Discount
+en | amigo(s) jogando agora || friend(s) playing now
+en | Limpar filtros || Clear filters
+en | Página inicial || Home page
+en | Filtros || Filters
+en | Encerrar || Close
+en | conquistas || achievements
+en | Adicionar jogo || Add game
+en | Grade || Grid
+en | Presente || Gift
+en | Ver todas as conquistas || See all achievements
+en | Total gasto || Total spent
+en | Visão geral || Overview
+en | Recente || Recent
+en | Economia total (descontos) || Total savings (discounts)
+de | desbloqueou || entsperrt
+de | Data || Datum
+de | Histórico de compras || Kaufhistorie
+de | Informações || Information
+de | Para mim || Für mich
+de | Destaque || Schwerpunkt
+de | Itens || Artikel
+de | Explorar a Loja || Erkunden Sie den Store
+de | Voltar à Loja || Zurück zum Store
+de | Jogos e Softwares || Spiele und Software
+de | Acesso || Zugang
+de | Em execução agora || Läuft jetzt
+de | alcançadas || erreicht
+de | Diga algo sobre o jogo aos seus amigos... || Erzähl deinen Freunden etwas über das Spiel ...
+de | Favoritos || Favoriten
+de | Notícias || Nachricht
+de | Nenhuma compra realizada ainda || Es wurden noch keine Käufe getätigt
+de | recente || jüngste
+de | acumuladas em || angesammelt in
+de | Ver atividade de amigos || Aktivitäten von Freunden anzeigen
+de | Histórico de Compras || Kaufhistorie
+de | Nenhuma atividade ainda. Pressione || Noch keine Aktivität. drücken
+de | Total pago || Insgesamt bezahlt
+de | Todos || Alle
+de | Seu histórico ficará disponível aqui assim que você finalizar a primeira compra. || Ihr Verlauf wird hier verfügbar sein, sobald Sie Ihren ersten Einkauf abgeschlossen haben.
+de | para começar. || beginnen.
+de | Total de transações || Gesamttransaktionen
+de | JOGAR || ZUM SPIELEN
+de | Atividade || Aktivität
+de | Forma de pagamento || Zahlungsart
+de | Última sessão || Letzte Sitzung
+de | Desconto || Rabatt
+de | amigo(s) jogando agora || Freunde spielen gerade
+de | Limpar filtros || Filter löschen
+de | Página inicial || Startseite
+de | Filtros || Filter
+de | Encerrar || Schließen
+de | conquistas || Erfolge
+de | Adicionar jogo || Spiel hinzufügen
+de | Grade || Netz
+de | Presente || Geschenk
+de | Ver todas as conquistas || Alle Erfolge anzeigen
+de | Total gasto || Gesamtausgaben
+de | Visão geral || Überblick
+de | Recente || Jüngste
+de | Economia total (descontos) || Gesamtersparnis (Rabatte)
+zh-cn | desbloqueou || 解锁
+zh-cn | Data || 日期
+zh-cn | Histórico de compras || 购买记录
+zh-cn | Informações || 信息
+zh-cn | Para mim || 为我
+zh-cn | Destaque || 强调
+zh-cn | Itens || 项目
+zh-cn | Explorar a Loja || 探索商店
+zh-cn | Voltar à Loja || 返回商店
+zh-cn | Jogos e Softwares || 游戏和软件
+zh-cn | Acesso || 使用权
+zh-cn | Em execução agora || 正在运行
+zh-cn | alcançadas || 达到了
+zh-cn | Diga algo sobre o jogo aos seus amigos... || 告诉你的朋友一些关于游戏的事情......
+zh-cn | Favoritos || 收藏夹
+zh-cn | Notícias || 消息
+zh-cn | Nenhuma compra realizada ainda || 尚未购买
+zh-cn | recente || 最近的
+zh-cn | acumuladas em || 累积于
+zh-cn | Ver atividade de amigos || 查看好友活动
+zh-cn | Histórico de Compras || 购买记录
+zh-cn | Nenhuma atividade ainda. Pressione || 还没有活动。按
+zh-cn | Total pago || 支付总额
+zh-cn | Todos || 全部
+zh-cn | Seu histórico ficará disponível aqui assim que você finalizar a primeira compra. || 完成首次购买后，您的历史记录将立即显示在此处。
+zh-cn | para começar. || 开始。
+pt-br | Great horror atmosphere! Found a few system bugs though. || Ótima atmosfera de terror! Porém, encontrei alguns bugs do sistema.
+zh-cn | Total de transações || 交易总额
+zh-cn | JOGAR || 玩
+zh-cn | Atividade || 活动
+zh-cn | Forma de pagamento || 付款方式
+zh-cn | Última sessão || 最后一次会议
+zh-cn | Desconto || 折扣
+zh-cn | amigo(s) jogando agora || 朋友正在玩
+zh-cn | Limpar filtros || 清除过滤器
+zh-cn | Página inicial || 主页
+zh-cn | Filtros || 过滤器
+zh-cn | Encerrar || 关闭
+zh-cn | conquistas || 成就
+zh-cn | Adicionar jogo || 添加游戏
+zh-cn | Grade || 网格
+zh-cn | Presente || 礼物
+zh-cn | Ver todas as conquistas || 查看所有成就
+zh-cn | Total gasto || 总支出
+zh-cn | Visão geral || 概述
+zh-cn | Recente || 最近的
+zh-cn | Economia total (descontos) || 总节省（折扣）
+pl | desbloqueou || odblokowany
+pl | Data || Data
+pl | Histórico de compras || Historia zakupów
+pl | Informações || Informacja
+pl | Para mim || Dla mnie
+pl | Destaque || Podkreślenie
+pl | Itens || Rzeczy
+pl | Explorar a Loja || Poznaj Sklep
+pl | Voltar à Loja || Wróć do sklepu
+pl | Jogos e Softwares || Gry i oprogramowanie
+pl | Acesso || Dostęp
+pl | Em execução agora || Biegnę teraz
+pl | alcançadas || osiągnięty
+pl | Diga algo sobre o jogo aos seus amigos... || Powiedz znajomym coś o grze...
+pl | Favoritos || Ulubione
+pl | Notícias || Aktualności
+pl | Nenhuma compra realizada ainda || Nie dokonano jeszcze żadnych zakupów
+pl | recente || ostatni
+pl | acumuladas em || zgromadzone w
+pl | Ver atividade de amigos || Zobacz aktywność znajomych
+pl | Histórico de Compras || Historia zakupów
+pl | Nenhuma atividade ainda. Pressione || Brak aktywności. naciskać
+pl | Total pago || Razem zapłacono
+pl | Todos || Wszystko
+pl | Seu histórico ficará disponível aqui assim que você finalizar a primeira compra. || Twoja historia będzie dostępna tutaj, gdy tylko dokonasz pierwszego zakupu.
+pl | para começar. || zacząć.
+pl | Total de transações || Łączna liczba transakcji
+pl | JOGAR || GRAĆ
+pl | Atividade || Działalność
+pl | Forma de pagamento || Metoda płatności
+pl | Última sessão || Ostatnia sesja
+pl | Desconto || Rabat
+pl | amigo(s) jogando agora || znajomy (znajomi) grają teraz
+pl | Limpar filtros || Wyczyść filtry
+pl | Página inicial || Strona główna
+pl | Filtros || Filtry
+pl | Encerrar || Zamknąć
+pl | conquistas || osiągnięcia
+pl | Adicionar jogo || Dodaj grę
+pl | Grade || Siatka
+pl | Presente || Prezent
+pl | Ver todas as conquistas || Zobacz wszystkie osiągnięcia
+pl | Total gasto || Razem wydane
+pl | Visão geral || Przegląd
+pl | Recente || Ostatni
+pl | Economia total (descontos) || Suma oszczędności (rabaty)
+ko | desbloqueou || 잠금 해제됨
+ko | Data || 날짜
+ko | Histórico de compras || 구매 내역
+ko | Informações || 정보
+ko | Para mim || 나를 위한
+ko | Destaque || 중요성
+ko | Itens || 품목
+ko | Explorar a Loja || 매장 살펴보기
+ko | Voltar à Loja || 매장으로 돌아가기
+ko | Jogos e Softwares || 게임 및 소프트웨어
+ko | Acesso || 입장
+ko | Em execução agora || 지금 실행 중
+ko | alcançadas || 달성
+ko | Diga algo sobre o jogo aos seus amigos... || 친구들에게 게임에 대해 이야기해 주세요...
+ko | Favoritos || 즐겨찾기
+ko | Notícias || 소식
+ko | Nenhuma compra realizada ainda || 아직 구매한 내역이 없습니다.
+ko | recente || 최근의
+ko | acumuladas em || 에 축적
+ko | Ver atividade de amigos || 친구 활동 보기
+ko | Histórico de Compras || 구매 내역
+ko | Nenhuma atividade ainda. Pressione || 아직 활동이 없습니다. 누르다
+ko | Total pago || 지불한 총액
+ko | Todos || 모두
+ko | Seu histórico ficará disponível aqui assim que você finalizar a primeira compra. || 첫 번째 구매를 완료하는 즉시 여기에서 내역을 확인할 수 있습니다.
+ko | para começar. || 시작합니다.
 en | Primeiros Passos || First Steps
 en | Primeira Lombriga || First Roundworm
 en | Novo usuário Ministeam. || New user Ministeam.

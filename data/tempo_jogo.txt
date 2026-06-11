@@ -1,6 +1,4 @@
 # =============================================================================
-# MINISTEAM - Banco de Dados de Carteiras dos Usuários
-# Formato: user_id | saldo
-# Exemplo: 1 | 100.00
+# MINISTEAM - Tempo de Jogo (Simulado)
+# Formato: user_id | game_id | horas_acumuladas
 # =============================================================================
-104 | 150.00

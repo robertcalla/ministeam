@@ -2850,3 +2850,7 @@ ko | Total pago || 지불한 총액
 ko | Todos || 모두
 ko | Seu histórico ficará disponível aqui assim que você finalizar a primeira compra. || 첫 번째 구매를 완료하는 즉시 여기에서 내역을 확인할 수 있습니다.
 ko | para começar. || 시작합니다.
+en | Primeiros Passos || First Steps
+en | Primeira Lombriga || First Roundworm
+en | Novo usuário Ministeam. || New user Ministeam.
+pt-br | Great horror atmosphere! Found a few system bugs though. || Ótima atmosfera de terror! Porém, encontrei alguns bugs do sistema.

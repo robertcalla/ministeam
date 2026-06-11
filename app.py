@@ -230,6 +230,8 @@ HISTORICO_PROMOCOES_FILE = os.path.join(DATA_DIR, 'historico_promocoes.txt')
 COMENTARIOS_FILE = os.path.join(DATA_DIR, 'comentarios.txt')
 CONQUISTAS_USUARIOS_FILE = os.path.join(DATA_DIR, 'conquistas_usuarios.txt')
 AVALIACOES_FILE  = os.path.join(DATA_DIR, 'avaliacoes.txt')
+COMPRAS_FILE     = os.path.join(DATA_DIR, 'compras.txt')
+TEMPO_JOGO_FILE  = os.path.join(DATA_DIR, 'tempo_jogo.txt')
 
 CARTEIRA_INICIAL = 100.00
 LIMITE_TROCAS_USERNAME = 3
@@ -377,6 +379,20 @@ def _garantir_arquivos():
             f.write("1 | 3 | nao | 18/05/2026 | de | 2 | none | Das Spiel hat zu viele Bugs. Ich kann es im Moment nicht empfehlen.\n")
             f.write("1 | 4 | sim | 21/05/2026 | pt-br | 8 | none | A lógica por trás dos puzzles deste jogo é fantástica.\n")
             f.write("2 | 5 | sim | 15/05/2026 | en | 14 | none | Great horror atmosphere! Found a few system bugs though.\n")
+
+    if not os.path.exists(COMPRAS_FILE):
+        with open(COMPRAS_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Registo de Compras (Para Reembolso)\n")
+            f.write("# Formato: user_id | game_id | data_compra | valor_pago\n")
+            f.write("# =============================================================================\n")
+
+    if not os.path.exists(TEMPO_JOGO_FILE):
+        with open(TEMPO_JOGO_FILE, 'w', encoding='utf-8') as f:
+            f.write("# =============================================================================\n")
+            f.write("# MINISTEAM - Tempo de Jogo (Simulado)\n")
+            f.write("# Formato: user_id | game_id | horas_acumuladas\n")
+            f.write("# =============================================================================\n")
 
 
 # ---- FUNÇÕES DE JOGOS EXTRAS (cadastrados em runtime via /admin/testes) ----
@@ -1524,16 +1540,115 @@ def conquistas_recentes_do_usuario(user_id, limite=5):
     return resultado
 
 
-# ---- HORAS JOGADAS (SIMULAÇÃO ESTÁVEL POR USUÁRIO+JOGO) ----
+# # ---- HORAS JOGADAS (SIMULAÇÃO ESTÁVEL POR USUÁRIO+JOGO) ----
+
+# def horas_jogadas(uid, gid):
+#     """Horas jogadas simuladas, estáveis para o mesmo par (usuário, jogo)."""
+#     rng = random.Random(f"{uid}-{gid}-ministeam")
+#     # Distribuição enviesada: maioria com poucas horas, alguns com muitas.
+#     if rng.random() < 0.25:
+#         return round(rng.uniform(40, 320), 1)
+#     return round(rng.uniform(0.5, 60), 1)
+
+# ---- FUNÇÕES DE COMPRA E REEMBOLSO (UC08) ----
+
+def registrar_compra(uid, gid, valor):
+    _garantir_arquivos()
+    with open(COMPRAS_FILE, 'a', encoding='utf-8') as f:
+        f.write(f"{uid} | {gid} | {_data_str_hoje()} | {valor:.2f}\n")
+
+def ler_compra(uid, gid):
+    _garantir_arquivos()
+    uid, gid = str(uid), str(gid)
+    try:
+        with open(COMPRAS_FILE, 'r', encoding='utf-8') as f:
+            for linha in reversed(f.readlines()): # Pega a compra mais recente
+                s = linha.strip()
+                if not s or s.startswith('#'): continue
+                partes = [p.strip() for p in s.split('|')]
+                if partes[0] == uid and partes[1] == gid:
+                    return {'data': partes[2], 'valor': float(partes[3])}
+    except FileNotFoundError: pass
+    return None
+
+def remover_compra(uid, gid):
+    _garantir_arquivos()
+    uid, gid = str(uid), str(gid)
+    linhas_novas = []
+    try:
+        with open(COMPRAS_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                if linha.startswith('#'):
+                    linhas_novas.append(linha)
+                    continue
+                partes = [p.strip() for p in linha.split('|')]
+                if not (partes[0] == uid and partes[1] == gid):
+                    linhas_novas.append(linha)
+        with open(COMPRAS_FILE, 'w', encoding='utf-8') as f:
+            f.writelines(linhas_novas)
+    except FileNotFoundError: pass
+
+# ---- HORAS JOGADAS (SIMULAÇÃO ACELERADA UC08) ----
+
+def ler_horas_jogo(uid, gid):
+    _garantir_arquivos()
+    uid, gid = str(uid), str(gid)
+    try:
+        with open(TEMPO_JOGO_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                s = linha.strip()
+                if not s or s.startswith('#'): continue
+                partes = [p.strip() for p in s.split('|')]
+                if partes[0] == uid and partes[1] == gid:
+                    return float(partes[2])
+    except FileNotFoundError: pass
+    return 0.0
+
+def adicionar_horas_jogo(uid, gid, novas_horas):
+    _garantir_arquivos()
+    uid, gid = str(uid), str(gid)
+    horas_atuais = ler_horas_jogo(uid, gid)
+    total = horas_atuais + novas_horas
+    linhas_novas = []
+    encontrou = False
+    try:
+        with open(TEMPO_JOGO_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                if linha.startswith('#'):
+                    linhas_novas.append(linha)
+                    continue
+                partes = [p.strip() for p in linha.split('|')]
+                if partes[0] == uid and partes[1] == gid:
+                    linhas_novas.append(f"{uid} | {gid} | {total:.2f}\n")
+                    encontrou = True
+                else:
+                    linhas_novas.append(linha)
+    except FileNotFoundError: pass
+    if not encontrou:
+        linhas_novas.append(f"{uid} | {gid} | {total:.2f}\n")
+    with open(TEMPO_JOGO_FILE, 'w', encoding='utf-8') as f:
+        f.writelines(linhas_novas)
+
+def remover_horas_jogo(uid, gid):
+    _garantir_arquivos()
+    uid, gid = str(uid), str(gid)
+    linhas_novas = []
+    try:
+        with open(TEMPO_JOGO_FILE, 'r', encoding='utf-8') as f:
+            for linha in f:
+                if linha.startswith('#'):
+                    linhas_novas.append(linha)
+                    continue
+                partes = [p.strip() for p in linha.split('|')]
+                if not (partes[0] == uid and partes[1] == gid):
+                    linhas_novas.append(linha)
+        with open(TEMPO_JOGO_FILE, 'w', encoding='utf-8') as f:
+            f.writelines(linhas_novas)
+    except FileNotFoundError: pass
 
 def horas_jogadas(uid, gid):
-    """Horas jogadas simuladas, estáveis para o mesmo par (usuário, jogo)."""
-    rng = random.Random(f"{uid}-{gid}-ministeam")
-    # Distribuição enviesada: maioria com poucas horas, alguns com muitas.
-    if rng.random() < 0.25:
-        return round(rng.uniform(40, 320), 1)
-    return round(rng.uniform(0.5, 60), 1)
-
+    """Retorna as horas simuladas jogadas em tempo real pelo utilizador."""
+    return ler_horas_jogo(uid, gid)
 
 # ---- FUNÇÕES DE FAMÍLIA ----
 
@@ -2597,6 +2712,8 @@ def process_payment():
         else:
             if item['id'] not in session['library']:
                 session['library'].append(item['id'])
+                #Regista a transação e o valor pago para eventual reembolso!
+                registrar_compra(session['user_id'], item['id'], item['price'])
                 if session.get('family'):
                     if item['id'] not in session['family']['library_pool']:
                         session['family']['library_pool'].append(item['id'])
@@ -2945,14 +3062,9 @@ def play_game(game_id):
         if session.get('offline_mode'):
             flash("Modo Offline: Jogo iniciado via cache local.", "sucesso")
 
-    session['active_game'] = game_id
-    session['show_pe01_for'] = None
-    session.modified = True
+    # [ATENÇÃO: Removemos a declaração duplicada que estava aqui!]
 
-    # Conquista "primeira vez" do jogo. Desbloqueia a primeira conquista
-    # cadastrada (sempre algo do tipo "Primeiros Passos") se o usuário ainda
-    # não tiver. desbloquear_conquista é idempotente, então rodar várias
-    # vezes não duplica nem regrava — só na primeira de fato.
+    # 4. Conquista "primeira vez" do jogo
     conqs = conquistas_do_jogo(game_id)
     if conqs:
         ok_unlock, _msg, conquista = desbloquear_conquista(
@@ -2965,16 +3077,34 @@ def play_game(game_id):
                 'icone':     conquista['icone'],
                 'pontos':    conquista['pontos'],
             }), 'conquista')
+    
+    # 5. Inicia o cronómetro de simulação ANTES de sobrescrever o estado atual
+    if session.get('active_game') != game_id:
+        session['play_start_time'] = datetime.now().timestamp()
+
+    # 6. AGORA SIM, definimos o jogo como ativo!
+    session['active_game'] = game_id
+    session['show_pe01_for'] = None
+    session.modified = True
+
+    return render_template('playing.html', game=game_data, src=session.get('game_source', 'library'))
 
     return render_template('playing.html', game=game_data, src=session.get('game_source', 'library'))
 
 
 @app.route('/stop_game')
 def stop_game():
-    # Recupera o destino salvo antes de fechar
     destino = session.get('game_source', 'library')
     
     if session.get('active_game'):
+        # NOVO: Calcula o tempo jogado (Regra: 1 minuto real = 1 hora simulada)
+        start_time = session.get('play_start_time')
+        if start_time:
+            minutos_reais = (datetime.now().timestamp() - start_time) / 60.0
+            horas_simuladas = minutos_reais * 1.0  # Fator de aceleração da simulação
+            adicionar_horas_jogo(session['user_id'], session['active_game'], horas_simuladas)
+            session.pop('play_start_time', None)
+
         if session.get('family'):
             encerrar_sessao_jogo(session['user_id'])
             
@@ -2983,6 +3113,70 @@ def stop_game():
         flash("Jogo encerrado. A licença foi liberada e os saves sincronizados.", "sucesso")
         
     return redirect(url_for(destino))
+
+@app.route('/refund/<game_id>')
+def refund_game(game_id):
+    uid = session.get('user_id')
+    if not uid:
+        return redirect(url_for('login'))
+
+    game_data = GAMES.get(game_id)
+    if not game_data:
+        flash("Jogo não encontrado.", "error")
+        return redirect(url_for('index'))
+
+    if game_id not in session.get('library', []):
+        flash("Bloqueio: Você não possui a licença pessoal deste jogo.", "error")
+        return redirect(url_for('game', game_id=game_id))
+
+    compra = ler_compra(uid, game_id)
+    if not compra:
+        flash("Registo de compra não encontrado para avaliação de reembolso (Pode ser um jogo de teste base).", "error")
+        return redirect(url_for('game', game_id=game_id))
+
+   # Escuta os dias simulados se existirem
+    if session.get('simulated_refund_days') is not None:
+        dias_passados = session['simulated_refund_days']
+    else:
+        data_compra = datetime.strptime(compra['data'], "%Y-%m-%d")
+        dias_passados = (datetime.now() - data_compra).days
+    # Validação de 14 dias
+    if dias_passados > 14:
+        flash(f"Reembolso negado: O período de 14 dias para devolução expirou (Comprado há {dias_passados} dias).", "error")
+        return redirect(url_for('game', game_id=game_id))
+
+    # Validação de 2 horas simuladas
+    horas = horas_jogadas(uid, game_id)
+    if horas >= 2.0:
+        flash(f"Reembolso negado: Ultrapassou o limite de 2 horas (Tempo de jogo registado: {horas:.1f}h).", "error")
+        return redirect(url_for('game', game_id=game_id))
+
+    # Fluxo Principal: Processar Reembolso
+    # 1. Devolve o dinheiro à Carteira (mantendo o cêntimo exato pago)
+    session['wallet'] = round(session.get('wallet', 0.0) + compra['valor'], 2)
+    salvar_carteira_usuario(uid, session['wallet'])
+
+    # 2. Revoga a licença da Biblioteca Pessoal
+    session['library'].remove(game_id)
+    salvar_biblioteca_usuario(uid, session['library'])
+
+    # 3. Retira a licença do Pool da Família (RN03)
+    if session.get('family'):
+        if session['family']['licenses'].get(game_id, 0) > 0:
+            session['family']['licenses'][game_id] -= 1
+            if session['family']['licenses'][game_id] == 0:
+                if game_id in session['family']['library_pool']:
+                    session['family']['library_pool'].remove(game_id)
+                del session['family']['licenses'][game_id]
+        atualizar_familia(session['family'])
+
+    # 4. Remove o jogo dos ficheiros de estado para não sujar dados futuros
+    remover_compra(uid, game_id)
+    remover_horas_jogo(uid, game_id)
+    
+    session.modified = True
+    flash(f"Reembolso processado com sucesso! O valor de R$ {compra['valor']:.2f} foi creditado na sua Carteira Steam.", "sucesso")
+    return redirect(url_for('index'))
 
 @app.route('/family/toggle_npc/<game_id>')
 def family_toggle_npc(game_id):
@@ -3294,6 +3488,19 @@ def admin_testes():
         today_iso=datetime.now().strftime('%Y-%m-%d'),
     )
 
+@app.route('/admin/set_refund_days', methods=['POST'])
+def set_refund_days():
+    """Injeta uma quantidade artificial de dias passados para testar o sistema de reembolso."""
+    try:
+        dias = int(request.form.get('dias_simulados', 0))
+    except ValueError:
+        dias = 0
+        
+    session['simulated_refund_days'] = dias
+    session.modified = True
+    flash(f"🧪 Simulação Ativa: Tempo decorrido da compra ajustado para {dias} dias.", "sucesso")
+    return redirect(request.referrer or url_for('index'))
+
 
 # ==============================================================================
 # UTILITÁRIOS
@@ -3308,7 +3515,7 @@ def reset_session():
                     FAMILIAS_FILE, CARTEIRAS_FILE, SESSOES_FILE,
                     HISTORICO_FILE,
                     DESEJOS_FILE, PROMOCOES_FILE, HISTORICO_PROMOCOES_FILE,
-                    COMENTARIOS_FILE, CONQUISTAS_USUARIOS_FILE):
+                    COMENTARIOS_FILE, CONQUISTAS_USUARIOS_FILE, COMPRAS_FILE, TEMPO_JOGO_FILE):
         try:
             if os.path.exists(caminho):
                 os.remove(caminho)
